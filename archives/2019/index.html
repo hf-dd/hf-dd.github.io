@@ -68,7 +68,7 @@
         isCategory: false,
         fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
         scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: 
+        search: true
     }
 </script>
 
@@ -101,48 +101,15 @@
         
 
         
-
-
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
         
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
-                </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
-                        
-                        <li>友情链接</li>
-                        
-                        
-                        <li>关于我</li>
-                        
-                    </ul>
-                </div>
-            </div>
+
+
         
 
         <div id="switch-area" class="switch-area">
@@ -155,9 +122,9 @@
                         
                             <li><a href="/archives/">文章</a></li>
                         
-                            <li><a href="/tags/%E9%9A%8F%E7%AC%94">随笔记</a></li>
-                        
                             <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
                         
                         </ul>
                     </nav>
@@ -176,12 +143,6 @@
                     </nav>
                 </section>
                 
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
-                    </div>
-                </section>
                 
                 
                 
@@ -232,9 +193,9 @@
                 
                     <li><a href="/archives/">文章</a></li>
                 
-                    <li><a href="/tags/%E9%9A%8F%E7%AC%94">随笔记</a></li>
-                
                     <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
                 
                 <div class="clearfix"></div>
                 </ul>
@@ -273,7 +234,7 @@
   <div class="archive-article-inner">
     <header class="archive-article-header">
           <div class="article-meta">
-              <a href="/2019/11/21/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8D%9A%E5%AE%A2/" class="archive-article-date">
+              <a href="/2019/11/21/%E8%BF%9C%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%BC%E5%85%A5%E6%9C%AC%E5%9C%B0/" class="archive-article-date">
       <time datetime="2019-11-21T04:20:56.000Z" itemprop="datePublished">11-21</time>
 </a>
 
@@ -282,7 +243,7 @@
          
   
     <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/21/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8D%9A%E5%AE%A2/">我的第一个博客</a>
+      <a class="archive-article-title" href="/2019/11/21/%E8%BF%9C%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%BC%E5%85%A5%E6%9C%AC%E5%9C%B0/">远程数据库导入本地</a>
     </h1>
   
 
@@ -290,10 +251,6 @@
           
 
           
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
-    </div>
-
         </div>
         <div class="clearfix"></div>
     </header>
@@ -371,8 +328,22 @@
 <script>
     // Open in New Window
     
-        $("a").attr("target", "_blank");
-        $("#scroll a, #toc a").removeAttr("target");
+        var oOpenInNew = {
+            
+            
+             post: ".article-entry a[href], .copyright a[href]", 
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
     
 </script>
 
