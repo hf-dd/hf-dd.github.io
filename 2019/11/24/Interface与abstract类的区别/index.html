@@ -15,12 +15,14 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="标签云">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;index.html">
+<meta name="description" content="接口和抽象类的区别，包含jdk1.8新特性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Interface与abstract类的区别">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;24&#x2F;Interface%E4%B8%8Eabstract%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB&#x2F;index.html">
 <meta property="og:site_name" content="HF Blog">
+<meta property="og:description" content="接口和抽象类的区别，包含jdk1.8新特性">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-11-22T04:34:22.944Z">
+<meta property="og:updated_time" content="2019-11-24T13:32:10.075Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -53,7 +55,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>标签云 | HF Blog</title>
+<title>Interface与abstract类的区别 | HF Blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -63,7 +65,7 @@
         fancybox: true,
         animate: true,
         isHome: false,
-        isPost: false,
+        isPost: true,
         isArchive: false,
         isTag: false,
         isCategory: false,
@@ -211,11 +213,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="page-" class="article article-type-page" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Interface与abstract类的区别" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/tags/index.html" class="article-date">
-      <time datetime="2019-11-22T03:41:50.000Z" itemprop="datePublished">2019-11-22</time>
+      <a href="/2019/11/24/Interface%E4%B8%8Eabstract%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB/" class="article-date">
+      <time datetime="2019-11-24T13:15:02.000Z" itemprop="datePublished">2019-11-24</time>
 </a>
 
 
@@ -230,7 +232,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      标签云
+      Interface与abstract类的区别
     </h1>
   
 
@@ -247,96 +249,91 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <style>
-    .article-meta { display: none; }
-    #container .article .article-title { padding-right: 0; }
-    .article-header {
-        padding: 0;
-        padding-top: 26px;
-        border-left: none;
-        text-align: center;
-    }
-    .article-header:hover { border-left: none; }
-    .article-title { font-size: 1.6em }
-    .article-entry hr { margin: 0;}
-    .article-meta,
-    #container .article-info-post.article-info { display: none;}
-    #container .article .article-title { padding: 0; }
-</style>
+        <p>一.在jdk8之前</p>
+<p>1.抽象类(abstract)中可以普通属性，普通方法，抽象方法，构造方法（但不能实例），和平常的方法一样；</p>
+<p>而接口中只能public final static属性和 public abstract 抽象方法，无构造方法，当然不能实例；</p>
+<p>2.一个类只能继承一个抽象类；一个接口可以继承多个接口；一个类可以同时实现多个接口；</p>
+<p>3.通常使用抽象类表示一个概念（一类事物），而接口表示一种能力</p>
+<p>4.如果子类是接口，父类也必须是接口。</p>
+<p>5.抽象类可以无抽象方法，但有抽象方法的必须是抽象类，抽象方法无方法体。</p>
+<p>6.抽象类表示的是“is-a”关系（继承关系） ，接口表现的是“like-a”关系 (组合关系)，还有is-like-a组合关系， instance of：实例关系 </p>
+<p>二.jdk8之后 </p>
+<p>关于抽象类</p>
+<p>JDK 1.8以前，抽象类的方法默认访问权限为protected</p>
+<p>JDK 1.8时，抽象类的方法默认访问权限变为default</p>
+<p>关于接口</p>
+<p>JDK 1.8以前，接口中的方法必须是public的</p>
+<p>JDK 1.8时，接口中的方法可以是public的，也可以是default的</p>
+<p>接口中可以有default方法和static方法 </p>
+<p>default method in interface 默认方法</p>
+<p>简单说，就是接口可以有实现方法，而且不需要实现类去实现其方法。只需在方法名前面加个default关键字即可。</p>
+<p>JDK 1.9时，接口中的方法可以是private的</p>
 
-
-    <!-- Tag Cloud Page -->
-    <hr>
-<br>
-
-
-<p class="count"></p>
-
-<div class="tags">
-    
-</div>
-<style>
-    .category-list li{
-        display: inline-block;
-        margin: 0 1em .5em 0;
-        padding: 4px;
-        border: 1px solid lightgray;
-        font-size: 1.2rem;
-    }
-    .category-list a { color: gray; }
-    .category-list-item:hover a {
-        color: gray;
-        text-decoration: none;
-    }
-    .category-list-count {
-        margin-left: 2px;
-        font-size: .9rem;
-    }
-    .article-entry ul li:before{ display: none; }
-    .article-inner { text-align: center; }
-    .tags {
-        max-width: 42em;
-        margin: 2em auto;
-        margin-top: 0em;
-    }
-    .tags a {
-        margin-right: 1em;
-        line-height: 65px;
-        border-bottom: 1px solid gray;
-        white-space: nowrap;
-        transition: border-bottom .5s;
-    }
-    .tags a:hover {
-        border-bottom: 3px dotted gray;
-        text-decoration: none;
-    }
-    #count > span {
-        margin: auto .2em;
-        font-weight: bold;
-    }
-</style>
-
-<!-- Count tags and categories -->
-<p id="count">
-        已有<span><script>document.write($(".category-list-item").length)</script></span>个分类，
-        共计<span><script>document.write($(".tags > a").length)</script></span>个标签
-</p>
-<script>
-    $('#count').appendTo('.count');
-</script>
-
-          
-        
       
     </div>
     
   </div>
   
     
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2019/11/24/Interface%E4%B8%8Eabstract%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB/">Interface与abstract类的区别</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
+        <p><span>发布时间:</span>2019-11-24, 21:15:02</p>
+        <p><span>最后更新:</span>2019-11-24, 21:32:10</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/11/24/Interface%E4%B8%8Eabstract%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB/" title="Interface与abstract类的区别">http://yoursite.com/2019/11/24/Interface%E4%B8%8Eabstract%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/24/Interface%E4%B8%8Eabstract%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
 
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2019/11/26/%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B/">
+                    关于锁的那点事!
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2019/11/23/JVM%E5%A0%86%E5%86%85%E5%AD%98%E8%AE%BE%E7%BD%AE%E5%8E%9F%E7%90%86/">
+                    JVM堆内存设置原理
+                </a>
+            </div>
+        
+    </nav>
 
   
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
 
 
 
@@ -354,7 +351,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"标签云　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Interface与abstract类的区别　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -369,6 +366,26 @@
 
     
 
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2019/11/26/%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B/" title="上一篇: 关于锁的那点事!">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2019/11/23/JVM%E5%A0%86%E5%86%85%E5%AD%98%E8%AE%BE%E7%BD%AE%E5%8E%9F%E7%90%86/" title="下一篇: JVM堆内存设置原理">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/12/03/volatile%E5%85%B3%E9%94%AE%E5%AD%97/">volatile关键字</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/30/java%E7%9A%84%E5%8F%8D%E5%B0%84%E5%88%B0%E5%BA%95%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/">java的反射到底是个啥？</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/27/rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/">rest?restful?到底是什么？</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/">理解数数据库事务隔离级别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/26/%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B/">关于锁的那点事!</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/24/Interface%E4%B8%8Eabstract%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB/">Interface与abstract类的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/23/JVM%E5%A0%86%E5%86%85%E5%AD%98%E8%AE%BE%E7%BD%AE%E5%8E%9F%E7%90%86/">JVM堆内存设置原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/final/">final关键字</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/HashMap%E7%9A%84%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">HashMap的底层原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E5%86%85%E9%83%A8%E7%B1%BB/">内部类</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/javac%E5%92%8Cjava%E7%9A%84%E5%8C%BA%E5%88%AB/">javac和java的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/Interger%E6%96%B9%E6%B3%95/">Interger方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A15%E5%A4%A7%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99/">面向对象5大基本原则</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/21/%E8%BF%9C%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%BC%E5%85%A5%E6%9C%AC%E5%9C%B0/">远程数据库导入本地</a></li></ul>
 
 
 

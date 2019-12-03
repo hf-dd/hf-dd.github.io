@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="HF" />
+
+
+
+<meta name="description" content="讲述同步与锁的区别，以及各种常见的锁的概念。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于锁的那点事!">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;26&#x2F;%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B&#x2F;index.html">
+<meta property="og:site_name" content="HF Blog">
+<meta property="og:description" content="讲述同步与锁的区别，以及各种常见的锁的概念。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-26T04:24:25.126Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="HF Blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/apple-touch-icon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>关于锁的那点事! | HF Blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/0.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">HF</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/Email" title="Email"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa QQ" href="/QQ" title="QQ"></a>
+                            
+                                <a class="fa 微信" href="/WX" title="微信"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/" target="_blank" rel="noopener">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/" target="_blank" rel="noopener">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">HF</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/0.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">HF</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/Email" title="Email"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="/QQ" title="QQ"></a>
+                            
+                                <a class="fa 微信" target="_blank" href="/WX" title="微信"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-关于锁的那点事" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/11/26/%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B/" class="article-date">
+      <time datetime="2019-11-26T03:48:22.000Z" itemprop="datePublished">2019-11-26</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于锁的那点事!
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><strong>先来讲讲synchronized与java.util.concurrent.locks.Lock的相同之处和不同之处？</strong></p>
+<p> 主要相同点：Lock能完成synchronized所实现的所有功能<br> 主要不同点：Lock有比synchronized更精确的线程语义和更好的性能。synchronized会自动释放锁，而Lock一定要求程序   员手工释放，并且必须在finally从句中释放。 </p>
+<p> 用法上的不同：<br> synchronized既可以加在方法上，也可以加载特定代码块上，而lock需要显示地指定起始位置和终止位置。<br> synchronized是托管给JVM执行的，lock的锁定是通过代码实现的，它有比synchronized更精确的线程语义。</p>
+<p>性能上的不同：<br> lock接口的实现类ReentrantLock，不仅具有和synchronized相同的并发性和内存语义，还多了超时的获取锁、定时锁、  等候和中断锁等。<br> 在竞争不是很激烈的情况下，synchronized的性能优于ReentrantLock，竞争激烈的情况下synchronized的性能会下降的非常快，而ReentrantLock则基本不变。</p>
+<p>锁机制不同：<br> synchronized获取锁和释放锁的方式都是在块结构中，当获取多个锁时，必须以相反的顺序释放，并且是自动解锁。而Lock则需要开发人员手动释放，并且必须在finally中释放，否则会引起死锁。 </p>
+<p><strong>再来讲讲其他关于锁的概念？</strong></p>
+<p>锁大概有以下名词：<br><strong>自旋锁 ，自旋锁的其他种类</strong>，阻塞锁，可重入锁 ，<strong>读写锁</strong> ，<strong>互斥锁</strong> ，<strong>悲观锁</strong> ，<strong>乐观锁</strong> ，<strong>公平锁</strong> ，<strong>偏向锁</strong>， 对象锁，线程锁，<strong>锁粗化</strong>， <strong>锁消除</strong>，<strong>轻量级锁</strong>，<strong>重量级锁</strong>， 信号量，<strong>独享锁</strong>，<strong>共享锁</strong>，<strong>分段锁</strong>  </p>
+<p> Synchronized，它就是一个：非公平，悲观，独享，互斥，可重入的重量级锁 </p>
+<p> ReentrantLock，它是一个：默认非公平但可实现公平的，悲观，独享，互斥，可重入，重量级锁。 </p>
+<h2 id="公平锁-非公平锁"><a href="#公平锁-非公平锁" class="headerlink" title="公平锁/非公平锁"></a>公平锁/非公平锁</h2><p><strong>公平锁是指多个线程按照申请锁的顺序来获取锁。非公平锁是指多个线程获取锁的顺序并不是按照申请锁的顺序，有可能后申请的线程比先申请的线程优先获取锁</strong>。有可能，会造成优先级反转或者饥饿现象。对于Java ReentrantLock而言，<strong>通过构造函数指定该锁是否是公平锁，默认是非公平锁。</strong>非公平锁的优点在于吞吐量比公平锁大。对于<strong>Synchronized而言，也是一种非公平锁</strong>。由于其并不像ReentrantLock是通过AQS的来实现线程调度，所以并没有任何办法使其变成公平锁。</p>
+<h2 id="乐观锁-悲观锁"><a href="#乐观锁-悲观锁" class="headerlink" title="乐观锁/悲观锁"></a>乐观锁/悲观锁</h2><p>乐观锁与悲观锁不是指具体的什么类型的锁，而是指看待并发同步的角度。<strong>悲观锁认为对于同一个数据的并发操作，一定是会发生修改的，哪怕没有修改，也会认为修改。因此对于同一个数据的并发操作，悲观锁采取加锁的形式</strong>。悲观的认为，不加锁的并发操作一定会出问题。<strong>乐观锁则认为对于同一个数据的并发操作，是不会发生修改的。在更新数据的时候，会采用尝试更新，不断重新的方式更新数据。乐观的认为，不加锁的并发操作是没有事情的。</strong>从上面的描述我们可以看出，<strong>悲观锁适合写操作非常多的场景，乐观锁适合读操作非常多的场景</strong>，不加锁会带来大量的性能提升。<strong>悲观锁在Java中的使用，就是利用各种锁</strong>。<strong>乐观锁在Java中的使用，是无锁编程，常常采用的是CAS算法，典型的例子就是原子类，通过CAS自旋实现原子操作的更新。</strong></p>
+<h2 id="独享锁-共享锁"><a href="#独享锁-共享锁" class="headerlink" title="独享锁/共享锁"></a>独享锁/共享锁</h2><p><strong>独享锁是指该锁一次只能被一个线程所持有。共享锁是指该锁可被多个线程所持有</strong>。<strong>对于Java ReentrantLock而言，其是独享锁。但是对于Lock的另一个实现类ReentrantReadWriteLock，其读锁是共享锁，其写锁是独享锁</strong>。读锁的共享锁可保证并发读是非常高效的，读写，写读 ，写写的过程是互斥的。独享锁与共享锁也是通过AQS来实现的，通过实现不同的方法，来实现独享或者共享。<strong>对于Synchronized而言，当然是独享锁。</strong></p>
+<h2 id="互斥锁-读写锁"><a href="#互斥锁-读写锁" class="headerlink" title="互斥锁/读写锁"></a>互斥锁/读写锁</h2><p>上面讲的独享锁/共享锁就是一种广义的说法，互斥锁/读写锁就是具体的实现。互斥锁在Java中的具体实现就是<strong>ReentrantLock</strong>，<strong>读写锁在Java中的具体实现就是ReentrantReadWriteLock</strong></p>
+<h2 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h2><p>可重入锁又名递归锁，是指在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁。说的有点抽象，下面会有一个代码的示例。对于Java ReentrantLock而言, 他的名字就可以看出是一个可重入锁，<strong>其名字是Reentrant Lock重新进入锁。对于Synchronized而言,也是一个可重入锁。</strong>可重入锁的一个好处是可一定程度<strong>避免死锁</strong>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public sychrnozied void test() &#123;    </span><br><span class="line">		xxxxxx;   </span><br><span class="line">		test2();</span><br><span class="line">&#125; </span><br><span class="line">public sychronized void test2() &#123;    </span><br><span class="line">		yyyyy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上面代码段中，执行 test 方法需要获得当前对象作为监视器的对象锁，但方法中又调用了 test2 的同步方法。</p>
+<ul>
+<li><strong>如果锁是具有可重入性的话，那么该线程在调用 test2 时并不需要再次获得当前对象的锁，可以直接进入 test2 方法进行操作。</strong></li>
+<li><strong>如果锁是不具有可重入性的话，那么该线程在调用 test2 前会等待当前对象锁的释放，实际上该对象锁已被当前线程所持有，不可能再次获得。</strong></li>
+</ul>
+<p>如果锁是不具有可重入性特点的话，<strong>那么线程在调用同步方法、含有锁的方法时就会产生死锁。</strong></p>
+<h2 id="自旋锁-自适应自旋锁"><a href="#自旋锁-自适应自旋锁" class="headerlink" title="自旋锁/自适应自旋锁"></a>自旋锁/自适应自旋锁</h2><p>在Java中，<strong>自旋锁是指尝试获取锁的线程不会立即阻塞，而是采用循环的方式去尝试获取锁</strong>，这样的好处是减少线程上下文切换的消耗，缺点是循环会消耗CPU。</p>
+<h2 id="锁粗化-锁消除"><a href="#锁粗化-锁消除" class="headerlink" title="锁粗化/锁消除"></a>锁粗化/锁消除</h2><p><strong>锁消除</strong>是指虚拟机即时编译器在运行时，<strong>对一些代码上要求同步，但是被检测到不可能存在共享数据竞争的锁进行消除</strong>。</p>
+<h2 id="偏向锁-轻量级锁-重量级锁"><a href="#偏向锁-轻量级锁-重量级锁" class="headerlink" title="偏向锁/轻量级锁/重量级锁"></a>偏向锁/轻量级锁/重量级锁</h2><p><strong>这三种锁是指锁的状态</strong>，并且是针对Synchronized。在Java 5通过引入锁升级的机制来实现高效Synchronized。<strong>这三种锁的状态是通过对象监视器在对象头中的字段来表明的</strong>。</p>
+<p><strong>偏向锁是指一段同步代码一直被一个线程所访问，那么该线程会自动获取锁。降低获取锁的代价</strong>。</p>
+<p><strong>轻量级锁是指当锁是偏向锁的时候，被另一个线程所访问，偏向锁就会升级为轻量级锁，其他线程会通过自旋的形式尝试获取锁</strong>，不会阻塞，提高性能。</p>
+<p><strong>重量级锁是指当锁为轻量级锁的时候，另一个线程虽然是自旋，但自旋不会一直持续下去，当自旋一定次数的时候，还没有获取到锁，就会进入阻塞，该锁膨胀为重量级锁。</strong>重量级锁会让其他申请的线程进入阻塞，性能降低。</p>
+<h2 id="分段锁"><a href="#分段锁" class="headerlink" title="分段锁"></a>分段锁</h2><p>分段锁其实是一种锁的设计，并不是具体的一种锁，<strong>对于ConcurrentHashMap而言，其并发的实现就是通过分段锁的形式来实现高效的并发操作</strong>。我们以ConcurrentHashMap来说一下分段锁的含义以及设计思想，<strong>ConcurrentHashMap中的分段锁称为Segment</strong>，它即类似于HashMap（JDK7与JDK8中HashMap的实现）的结构，即<strong>内部拥有一个Entry数组，数组中的每个元素又是一个链表；同时又是一个ReentrantLock（Segment继承了ReentrantLock)</strong>。</p>
+<p>当需要put元素的时候，并不是对整个hashmap进行加锁，而是<strong>先通过hashcode来知道他要放在那一个分段中，然后对这个分段进行加锁</strong>，所以当多线程put的时候，只要不是放在一个分段中，就实现了真正的并行的插入。</p>
+<p>但是，在统计size的时候，可就是获取hashmap全局信息的时候，就需要获取所有的分段锁才能统计。<strong>分段锁的设计目的是细化锁的粒度，当操作不需要更新整个数组的时候，就仅仅针对数组中的一项进行加锁操作。</strong></p>
+<h2 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h2><p> 两个线程或两个以上线程都在等待对方执行完毕才能继续往下执行的时候就发生了死锁。结果就是这些线程都陷入了无限的等待中。 </p>
+<p> 例如，如果线程1锁住了A，然后尝试对B进行加锁，同时线程2已经锁住了B，接着尝试对A进行加锁，这时死锁就发生了。线程1永远得不到B，线程2也永远得不到A，并且它们永远也不会知道发生了这样的事情。为了得到彼此的对象（A和B），它们将永远阻塞下去。这种情况就是一个死锁。 </p>
+<h2 id="synchronized的可重入怎么实现"><a href="#synchronized的可重入怎么实现" class="headerlink" title="synchronized的可重入怎么实现"></a>synchronized的可重入怎么实现</h2><p>每个锁关联一个线程持有者和一个计数器。当计数器为0时表示该锁没有被任何线程持有，那么任何线程都都可能获得该锁而调用相应方法。当一个线程请求成功后，JVM会记下持有锁的线程，并将计数器计为1。此时其他线程请求该锁，则必须等待。而该持有锁的线程如果再次请求这个锁，就可以再次拿到这个锁，同时计数器会递增。当线程退出一个synchronized方法/块时，计数器会递减，如果计数器为0则释放该锁。 </p>
+<h2 id="非公平锁和公平锁在reetrantlock里的实现过程"><a href="#非公平锁和公平锁在reetrantlock里的实现过程" class="headerlink" title="非公平锁和公平锁在reetrantlock里的实现过程"></a>非公平锁和公平锁在reetrantlock里的实现过程</h2><p> 如果一个锁是公平的，那么锁的获取顺序就应该符合请求的绝对时间顺序，FIFO(队列,先进先出)。对于非公平锁，只要CAS设置同步状态成功，则表示当前线程获取了锁，而公平锁还需要判断当前节点是否有前驱节点，如果有，则表示有线程比当前线程更早请求获取锁，因此需要等待前驱线程获取并释放锁之后才能继续获取锁。 </p>
+<h2 id="CAS是什么？"><a href="#CAS是什么？" class="headerlink" title="CAS是什么？"></a>CAS是什么？</h2><p>CAS是英文单词CompareAndSwap的缩写，中文意思是：比较并替换。CAS需要有3个操作数：内存地址V，旧的预期值A，即将要更新的目标值B。</p>
+<p>CAS指令执行时，当且仅当内存地址V的值与预期值A相等时，将内存地址V的值修改为B，否则就什么都不做。整个比较并替换的操作是一个原子操作。</p>
+<p>参考地址：<a href="https://blog.csdn.net/qq_41931837/article/details/82314478" target="_blank" rel="noopener">https://blog.csdn.net/qq_41931837/article/details/82314478</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2019/11/26/%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B/">关于锁的那点事!</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
+        <p><span>发布时间:</span>2019-11-26, 11:48:22</p>
+        <p><span>最后更新:</span>2019-11-26, 12:24:25</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/11/26/%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B/" title="关于锁的那点事!">http://yoursite.com/2019/11/26/%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/26/%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/">
+                    理解数数据库事务隔离级别
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2019/11/24/Interface%E4%B8%8Eabstract%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB/">
+                    Interface与abstract类的区别
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#公平锁-非公平锁"><span class="toc-number">1.</span> <span class="toc-text">公平锁/非公平锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#乐观锁-悲观锁"><span class="toc-number">2.</span> <span class="toc-text">乐观锁/悲观锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#独享锁-共享锁"><span class="toc-number">3.</span> <span class="toc-text">独享锁/共享锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#互斥锁-读写锁"><span class="toc-number">4.</span> <span class="toc-text">互斥锁/读写锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可重入锁"><span class="toc-number">5.</span> <span class="toc-text">可重入锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自旋锁-自适应自旋锁"><span class="toc-number">6.</span> <span class="toc-text">自旋锁/自适应自旋锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#锁粗化-锁消除"><span class="toc-number">7.</span> <span class="toc-text">锁粗化/锁消除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#偏向锁-轻量级锁-重量级锁"><span class="toc-number">8.</span> <span class="toc-text">偏向锁/轻量级锁/重量级锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分段锁"><span class="toc-number">9.</span> <span class="toc-text">分段锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#死锁"><span class="toc-number">10.</span> <span class="toc-text">死锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#synchronized的可重入怎么实现"><span class="toc-number">11.</span> <span class="toc-text">synchronized的可重入怎么实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非公平锁和公平锁在reetrantlock里的实现过程"><span class="toc-number">12.</span> <span class="toc-text">非公平锁和公平锁在reetrantlock里的实现过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CAS是什么？"><span class="toc-number">13.</span> <span class="toc-text">CAS是什么？</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"关于锁的那点事!　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/" title="上一篇: 理解数数据库事务隔离级别">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2019/11/24/Interface%E4%B8%8Eabstract%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB/" title="下一篇: Interface与abstract类的区别">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/12/03/volatile%E5%85%B3%E9%94%AE%E5%AD%97/">volatile关键字</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/30/java%E7%9A%84%E5%8F%8D%E5%B0%84%E5%88%B0%E5%BA%95%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/">java的反射到底是个啥？</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/27/rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/">rest?restful?到底是什么？</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/">理解数数据库事务隔离级别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/26/%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B/">关于锁的那点事!</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/24/Interface%E4%B8%8Eabstract%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB/">Interface与abstract类的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/23/JVM%E5%A0%86%E5%86%85%E5%AD%98%E8%AE%BE%E7%BD%AE%E5%8E%9F%E7%90%86/">JVM堆内存设置原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/final/">final关键字</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/HashMap%E7%9A%84%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">HashMap的底层原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E5%86%85%E9%83%A8%E7%B1%BB/">内部类</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/javac%E5%92%8Cjava%E7%9A%84%E5%8C%BA%E5%88%AB/">javac和java的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/Interger%E6%96%B9%E6%B3%95/">Interger方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A15%E5%A4%A7%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99/">面向对象5大基本原则</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/21/%E8%BF%9C%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%BC%E5%85%A5%E6%9C%AC%E5%9C%B0/">远程数据库导入本地</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2019 HF
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+             post: ".article-entry a[href], .copyright a[href]", 
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

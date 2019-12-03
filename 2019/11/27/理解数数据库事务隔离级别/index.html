@@ -15,14 +15,14 @@
 
 
 
-<meta name="description" content="简述javac和java命令">
+<meta name="description" content="数据库事务隔离级别，以及脏读，幻读，不可重复读的解释">
 <meta property="og:type" content="article">
-<meta property="og:title" content="javac和java的区别">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;javac%E5%92%8Cjava%E7%9A%84%E5%8C%BA%E5%88%AB&#x2F;index.html">
+<meta property="og:title" content="理解数数据库事务隔离级别">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;27&#x2F;%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB&#x2F;index.html">
 <meta property="og:site_name" content="HF Blog">
-<meta property="og:description" content="简述javac和java命令">
+<meta property="og:description" content="数据库事务隔离级别，以及脏读，幻读，不可重复读的解释">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-11-22T06:45:26.145Z">
+<meta property="og:updated_time" content="2019-11-27T06:25:22.623Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -55,7 +55,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>javac和java的区别 | HF Blog</title>
+<title>理解数数据库事务隔离级别 | HF Blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -213,11 +213,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-javac和java的区别" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-理解数数据库事务隔离级别" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/11/22/javac%E5%92%8Cjava%E7%9A%84%E5%8C%BA%E5%88%AB/" class="article-date">
-      <time datetime="2019-11-22T06:44:47.000Z" itemprop="datePublished">2019-11-22</time>
+      <a href="/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/" class="article-date">
+      <time datetime="2019-11-27T05:51:08.000Z" itemprop="datePublished">2019-11-27</time>
 </a>
 
 
@@ -232,7 +232,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      javac和java的区别
+      理解数数据库事务隔离级别
     </h1>
   
 
@@ -249,12 +249,19 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>cmd中，执行java命令与javac命令的区别：</p>
-<p><strong>javac</strong>：是编译命令，将java源文件编译成.class字节码文件。</p>
-<p>例如：<strong>javac hello.java</strong></p>
-<p>将生成<strong>hello.class</strong>文件。</p>
-<p><strong>java</strong>：是运行字节码文件；由java虚拟机对字节码进行解释和运行。</p>
-<p>例如：<strong>java hello</strong>（相当于运行.exe文件）</p>
+        <h2 id="一、数据库事务隔离级别"><a href="#一、数据库事务隔离级别" class="headerlink" title="一、数据库事务隔离级别"></a><strong>一、数据库事务隔离级别</strong></h2><p> 数据库事务的隔离级别有4个，由低到高依次为Read uncommitted 、Read committed 、Repeatable read 、Serializable ，这四个级别可以逐个解决脏读 、不可重复读 、幻读 这几类问题。</p>
+<p> 注意：我们讨论隔离级别的场景，主要是在多个事务并发 的情况下，因此，接下来的讲解都围绕事务并发。 </p>
+<h3 id="Read-Uncommitted（未提交读）-："><a href="#Read-Uncommitted（未提交读）-：" class="headerlink" title="Read Uncommitted（未提交读） ："></a><strong>Read Uncommitted（未提交读）</strong> ：</h3><p> 事务中的修改，即使没有提交，其他事务也可以看得到，会导致“脏读”、“幻读”和“不可重复读取”。 </p>
+<h3 id="EAD-COMMITTED-（提交读）："><a href="#EAD-COMMITTED-（提交读）：" class="headerlink" title="EAD COMMITTED （提交读）："></a><strong>EAD COMMITTED （提交读）</strong>：</h3><p>大多数主流数据库的默认事务等级，保证了一个事务不会读到另一个并行事务已修改但未提交的数据，避免了“脏读取”，但不能避免“幻读”和“不可重复读取”。该级别适用于大多数系统。 </p>
+<h3 id="REPEATABLE-READ（重复读）-："><a href="#REPEATABLE-READ（重复读）-：" class="headerlink" title="REPEATABLE READ（重复读） ："></a><strong>REPEATABLE READ（重复读）</strong> ：</h3><p>保证了一个事务不会修改已经由另一个事务读取但未提交（回滚）的数据。避免了“脏读取”和“不可重复读取”的情况，但不能避免“幻读”，但是带来了更多的性能损失。 </p>
+<h3 id="erializable-（串行化）："><a href="#erializable-（串行化）：" class="headerlink" title="erializable （串行化）："></a><strong>erializable （串行化）</strong>：</h3><p>最严格的级别，事务串行执行，资源消耗最大； </p>
+<h2 id="二、脏读、不可重复读、幻读"><a href="#二、脏读、不可重复读、幻读" class="headerlink" title="二、脏读、不可重复读、幻读"></a>二、<strong>脏读、不可重复读、幻读</strong></h2><h4 id="脏读（读取未提交数据）"><a href="#脏读（读取未提交数据）" class="headerlink" title="脏读（读取未提交数据）"></a>脏读（读取未提交数据）</h4><p>A事务读取B事务尚未提交的数据，此时如果B事务发生错误并执行回滚操作，那么A事务读取到的数据就是脏数据。就好像原本的数据比较干净、纯粹，此时由于B事务更改了它，这个数据变得不再纯粹。这个时候A事务立即读取了这个脏数据，但事务B良心发现，又用回滚把数据恢复成原来干净、纯粹的样子，而事务A却什么都不知道，最终结果就是事务A读取了此次的脏数据，称为脏读。</p>
+<p><strong>实例</strong>：公司发工资了，领导把5000元打到singo的账号上，但是该事务并未提交，而singo正好去查看账户，发现工资已经到账，是5000元整，非常高 兴。可是不幸的是，领导发现发给singo的工资金额不对，是2000元，于是迅速回滚了事务，修改金额后，将事务提交，最后singo实际的工资只有 2000元，singo空欢喜一场。</p>
+<h3 id="不可重复读（前后多次读取，数据内容不一致）"><a href="#不可重复读（前后多次读取，数据内容不一致）" class="headerlink" title="不可重复读（前后多次读取，数据内容不一致）"></a>不可重复读（前后多次读取，数据内容不一致）</h3><p>是指在一个事务内，多次读同一数据。在这个事务还没有结束时，另外一个事务也访问该同一数据。那么，在第一个事务中的两次读数据之间，由于第二个事务的修改，那么第一个事务两次读到的的数据可能是不一样的。这样就发生了在一个事务内两次读到的数据是不一样的，因此称为是不可重复读。（即不能读到相同的数据内容）</p>
+<p><strong>实例</strong>：singo拿着工资卡去消费，系统读取到卡里确实有2000元，而此时她的老婆也正好在网上转账，把singo工资卡的2000元转到另一账户，并在 singo之前提交了事务，当singo扣款时，系统检查到singo的工资卡已经没有钱，扣款失败，singo十分纳闷</p>
+<h3 id="幻读（前后多次读取，数据总量不一致）"><a href="#幻读（前后多次读取，数据总量不一致）" class="headerlink" title="幻读（前后多次读取，数据总量不一致）"></a>幻读（前后多次读取，数据总量不一致）</h3><p> 事务A在执行读取操作，需要两次统计数据的总量，前一次查询数据总量后，此时事务B执行了新增数据的操作并提交后，这个时候事务A读取的数据总量和之前统计的不一样，就像产生了幻觉一样，平白无故的多了几条数据，成为幻读。</p>
+<p> 实例：singo去银行查询老婆的消费记录，显示一共消费了1000元，正当singo将记录打印出来的时候， singo的老婆正好买完了一个500的包包并付了款，即新增了一条500元的消费记录且提交了事务。此时，singo打印出来的记录显示消费金额为1500元,singo很不解，以为出现了幻觉，幻读就这样产生了。 </p>
+<h3 id="不可重复读和幻读比较："><a href="#不可重复读和幻读比较：" class="headerlink" title="不可重复读和幻读比较："></a><strong>不可重复读和幻读比较：</strong></h3><p>两者有些相似，但是前者针对的是update或delete，后者针对的insert。</p>
 
       
     </div>
@@ -263,13 +270,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/11/22/javac%E5%92%8Cjava%E7%9A%84%E5%8C%BA%E5%88%AB/">javac和java的区别</a></p>
+        <p><span>本文标题:</span><a href="/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/">理解数数据库事务隔离级别</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
-        <p><span>发布时间:</span>2019-11-22, 14:44:47</p>
-        <p><span>最后更新:</span>2019-11-22, 14:45:26</p>
+        <p><span>发布时间:</span>2019-11-27, 13:51:08</p>
+        <p><span>最后更新:</span>2019-11-27, 14:25:22</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/11/22/javac%E5%92%8Cjava%E7%9A%84%E5%8C%BA%E5%88%AB/" title="javac和java的区别">http://yoursite.com/2019/11/22/javac%E5%92%8Cjava%E7%9A%84%E5%8C%BA%E5%88%AB/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/22/javac%E5%92%8Cjava%E7%9A%84%E5%8C%BA%E5%88%AB/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/" title="理解数数据库事务隔离级别">http://yoursite.com/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -282,15 +289,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2019/11/22/%E5%86%85%E9%83%A8%E7%B1%BB/">
-                    内部类
+                <a href="/2019/11/27/rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/">
+                    rest?restful?到底是什么？
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/11/22/Interger%E6%96%B9%E6%B3%95/">
-                    Interger方法
+                <a href="/2019/11/26/%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B/">
+                    关于锁的那点事!
                 </a>
             </div>
         
@@ -302,7 +309,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、数据库事务隔离级别"><span class="toc-number">1.</span> <span class="toc-text">一、数据库事务隔离级别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Read-Uncommitted（未提交读）-："><span class="toc-number">1.1.</span> <span class="toc-text">Read Uncommitted（未提交读） ：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EAD-COMMITTED-（提交读）："><span class="toc-number">1.2.</span> <span class="toc-text">EAD COMMITTED （提交读）：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#REPEATABLE-READ（重复读）-："><span class="toc-number">1.3.</span> <span class="toc-text">REPEATABLE READ（重复读） ：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#erializable-（串行化）："><span class="toc-number">1.4.</span> <span class="toc-text">erializable （串行化）：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、脏读、不可重复读、幻读"><span class="toc-number">2.</span> <span class="toc-text">二、脏读、不可重复读、幻读</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#脏读（读取未提交数据）"><span class="toc-number">2.0.1.</span> <span class="toc-text">脏读（读取未提交数据）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不可重复读（前后多次读取，数据内容不一致）"><span class="toc-number">2.1.</span> <span class="toc-text">不可重复读（前后多次读取，数据内容不一致）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#幻读（前后多次读取，数据总量不一致）"><span class="toc-number">2.2.</span> <span class="toc-text">幻读（前后多次读取，数据总量不一致）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不可重复读和幻读比较："><span class="toc-number">2.3.</span> <span class="toc-text">不可重复读和幻读比较：</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -338,7 +345,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"javac和java的区别　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"理解数数据库事务隔离级别　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -358,7 +365,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/11/22/%E5%86%85%E9%83%A8%E7%B1%BB/" title="上一篇: 内部类">
+            <a href="/2019/11/27/rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/" title="上一篇: rest?restful?到底是什么？">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -366,7 +373,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/11/22/Interger%E6%96%B9%E6%B3%95/" title="下一篇: Interger方法">
+            <a href="/2019/11/26/%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B/" title="下一篇: 关于锁的那点事!">
                 <i class="fa fa-angle-right"></i>
             </a>
         

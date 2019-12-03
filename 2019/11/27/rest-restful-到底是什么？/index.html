@@ -15,12 +15,14 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="标签云">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;index.html">
+<meta name="description" content="老听到Restful风格很有名，不知道什么东西，这篇就讲讲Restful到底是什么。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rest?restful?到底是什么？">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;27&#x2F;rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F&#x2F;index.html">
 <meta property="og:site_name" content="HF Blog">
+<meta property="og:description" content="老听到Restful风格很有名，不知道什么东西，这篇就讲讲Restful到底是什么。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-11-22T04:34:22.944Z">
+<meta property="og:updated_time" content="2019-11-27T11:16:10.431Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -53,7 +55,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>标签云 | HF Blog</title>
+<title>rest?restful?到底是什么？ | HF Blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -63,7 +65,7 @@
         fancybox: true,
         animate: true,
         isHome: false,
-        isPost: false,
+        isPost: true,
         isArchive: false,
         isTag: false,
         isCategory: false,
@@ -211,11 +213,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="page-" class="article article-type-page" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-rest-restful-到底是什么？" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/tags/index.html" class="article-date">
-      <time datetime="2019-11-22T03:41:50.000Z" itemprop="datePublished">2019-11-22</time>
+      <a href="/2019/11/27/rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/" class="article-date">
+      <time datetime="2019-11-27T11:12:07.000Z" itemprop="datePublished">2019-11-27</time>
 </a>
 
 
@@ -230,7 +232,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      标签云
+      rest?restful?到底是什么？
     </h1>
   
 
@@ -247,96 +249,88 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <style>
-    .article-meta { display: none; }
-    #container .article .article-title { padding-right: 0; }
-    .article-header {
-        padding: 0;
-        padding-top: 26px;
-        border-left: none;
-        text-align: center;
-    }
-    .article-header:hover { border-left: none; }
-    .article-title { font-size: 1.6em }
-    .article-entry hr { margin: 0;}
-    .article-meta,
-    #container .article-info-post.article-info { display: none;}
-    #container .article .article-title { padding: 0; }
-</style>
+        <h2 id="1-关于Rest"><a href="#1-关于Rest" class="headerlink" title="1.关于Rest"></a>1.关于Rest</h2><p>rest  :representational state transfer      表述性状态转移,是一种架构风格。</p>
+<p>rest原则：</p>
+<p>   &lt;1&gt;网络上的所有事物都被抽象为资源</p>
+<p>   &lt;2&gt; 每个资源都有一个唯一的资源标识符</p>
+<p>   &lt;3&gt; 同一个资源具有多种表现形式(xml,json等)</p>
+<p>   &lt;4&gt;  对资源的各种操作不会改变资源标识符</p>
+<p>   &lt;5&gt; 所有的操作都是无状态的 </p>
+<h2 id="2-关于Restful"><a href="#2-关于Restful" class="headerlink" title="2.关于Restful"></a>2.关于Restful</h2><p>restful: 遵守了rest 原则 的web服务</p>
+<p>理解：rest与restful相比，多了一个ful,就英语层面来说是一个形容词，restful翻译为中文为： “rest式的”</p>
+<p>是rest式的什么呢？答案是 rest式的应用，rest风格的web服务也是rest式的应用，rest式的web服务是一种ROA(The Resource-Oriented Architecture)(面向资源的架构)，ROA听起来很高大上有没有。。</p>
+<h2 id="3-两者的联系与区别"><a href="#3-两者的联系与区别" class="headerlink" title="3.两者的联系与区别"></a>3.两者的联系与区别</h2><p>restful是由rest派生出来的。</p>
+<p>二.restful用法：</p>
+<p>在Restful之前的操作：<br><a href="http://127.0.0.1/user/query/1" target="_blank" rel="noopener">http://127.0.0.1/user/query/1</a> GET  根据用户id查询用户数据<br><a href="http://127.0.0.1/user/save" target="_blank" rel="noopener">http://127.0.0.1/user/save</a> POST 新增用户<br><a href="http://127.0.0.1/user/update" target="_blank" rel="noopener">http://127.0.0.1/user/update</a> POST 修改用户信息<br><a href="http://127.0.0.1/user/delete" target="_blank" rel="noopener">http://127.0.0.1/user/delete</a> GET/POST 删除用户信息</p>
+<p>RESTful用法：<br><a href="http://127.0.0.1/user/1" target="_blank" rel="noopener">http://127.0.0.1/user/1</a> GET  根据用户id查询用户数据<br><a href="http://127.0.0.1/user" target="_blank" rel="noopener">http://127.0.0.1/user</a>  POST 新增用户<br><a href="http://127.0.0.1/user" target="_blank" rel="noopener">http://127.0.0.1/user</a>  PUT 修改用户信息<br><a href="http://127.0.0.1/user" target="_blank" rel="noopener">http://127.0.0.1/user</a>  DELETE 删除用户信息</p>
+<p>之前的操作是没有问题的,大神认为是有问题的,有什么问题呢?你每次请求的接口或者地址,都在做描述,例如查询的时候用了query,新增的时候用了save,其实完全没有这个必要,我使用了get请求,就是查询.使用post请求,就是新增的请求,我的意图很明显,完全没有必要做描述,这就是为什么有了restful.</p>
+<p>原文链接：<a href="https://blog.csdn.net/weixin_41829196/article/details/79641911" target="_blank" rel="noopener">https://blog.csdn.net/weixin_41829196/article/details/79641911</a></p>
 
-
-    <!-- Tag Cloud Page -->
-    <hr>
-<br>
-
-
-<p class="count"></p>
-
-<div class="tags">
-    
-</div>
-<style>
-    .category-list li{
-        display: inline-block;
-        margin: 0 1em .5em 0;
-        padding: 4px;
-        border: 1px solid lightgray;
-        font-size: 1.2rem;
-    }
-    .category-list a { color: gray; }
-    .category-list-item:hover a {
-        color: gray;
-        text-decoration: none;
-    }
-    .category-list-count {
-        margin-left: 2px;
-        font-size: .9rem;
-    }
-    .article-entry ul li:before{ display: none; }
-    .article-inner { text-align: center; }
-    .tags {
-        max-width: 42em;
-        margin: 2em auto;
-        margin-top: 0em;
-    }
-    .tags a {
-        margin-right: 1em;
-        line-height: 65px;
-        border-bottom: 1px solid gray;
-        white-space: nowrap;
-        transition: border-bottom .5s;
-    }
-    .tags a:hover {
-        border-bottom: 3px dotted gray;
-        text-decoration: none;
-    }
-    #count > span {
-        margin: auto .2em;
-        font-weight: bold;
-    }
-</style>
-
-<!-- Count tags and categories -->
-<p id="count">
-        已有<span><script>document.write($(".category-list-item").length)</script></span>个分类，
-        共计<span><script>document.write($(".tags > a").length)</script></span>个标签
-</p>
-<script>
-    $('#count').appendTo('.count');
-</script>
-
-          
-        
       
     </div>
     
   </div>
   
     
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2019/11/27/rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/">rest?restful?到底是什么？</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
+        <p><span>发布时间:</span>2019-11-27, 19:12:07</p>
+        <p><span>最后更新:</span>2019-11-27, 19:16:10</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/11/27/rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/" title="rest?restful?到底是什么？">http://yoursite.com/2019/11/27/rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/27/rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
 
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2019/11/30/java%E7%9A%84%E5%8F%8D%E5%B0%84%E5%88%B0%E5%BA%95%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/">
+                    java的反射到底是个啥？
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/">
+                    理解数数据库事务隔离级别
+                </a>
+            </div>
+        
+    </nav>
 
   
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-关于Rest"><span class="toc-number">1.</span> <span class="toc-text">1.关于Rest</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-关于Restful"><span class="toc-number">2.</span> <span class="toc-text">2.关于Restful</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-两者的联系与区别"><span class="toc-number">3.</span> <span class="toc-text">3.两者的联系与区别</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
 
 
 
@@ -354,7 +348,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"标签云　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"rest?restful?到底是什么？　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -369,6 +363,26 @@
 
     
 
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2019/11/30/java%E7%9A%84%E5%8F%8D%E5%B0%84%E5%88%B0%E5%BA%95%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/" title="上一篇: java的反射到底是个啥？">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/" title="下一篇: 理解数数据库事务隔离级别">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/12/03/volatile%E5%85%B3%E9%94%AE%E5%AD%97/">volatile关键字</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/30/java%E7%9A%84%E5%8F%8D%E5%B0%84%E5%88%B0%E5%BA%95%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/">java的反射到底是个啥？</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/27/rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/">rest?restful?到底是什么？</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/">理解数数据库事务隔离级别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/26/%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B/">关于锁的那点事!</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/24/Interface%E4%B8%8Eabstract%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB/">Interface与abstract类的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/23/JVM%E5%A0%86%E5%86%85%E5%AD%98%E8%AE%BE%E7%BD%AE%E5%8E%9F%E7%90%86/">JVM堆内存设置原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/final/">final关键字</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/HashMap%E7%9A%84%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">HashMap的底层原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E5%86%85%E9%83%A8%E7%B1%BB/">内部类</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/javac%E5%92%8Cjava%E7%9A%84%E5%8C%BA%E5%88%AB/">javac和java的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/Interger%E6%96%B9%E6%B3%95/">Interger方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A15%E5%A4%A7%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99/">面向对象5大基本原则</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/21/%E8%BF%9C%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%BC%E5%85%A5%E6%9C%AC%E5%9C%B0/">远程数据库导入本地</a></li></ul>
 
 
 
