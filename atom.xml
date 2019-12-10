@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-03T11:09:00.099Z</updated>
+  <updated>2019-12-10T04:17:17.271Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,101 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>网关、路由、DNS、子网掩码、MAC地址的概念</title>
+    <link href="http://yoursite.com/2019/12/10/%E7%BD%91%E5%85%B3%E3%80%81DNS%E3%80%81%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81%E3%80%81MAC%E5%9C%B0%E5%9D%80%E7%9A%84%E6%A6%82%E5%BF%B5/"/>
+    <id>http://yoursite.com/2019/12/10/%E7%BD%91%E5%85%B3%E3%80%81DNS%E3%80%81%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81%E3%80%81MAC%E5%9C%B0%E5%9D%80%E7%9A%84%E6%A6%82%E5%BF%B5/</id>
+    <published>2019-12-10T03:42:17.000Z</published>
+    <updated>2019-12-10T04:17:17.271Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="1-什么是网关"><a href="#1-什么是网关" class="headerlink" title="1.什么是网关"></a>1.什么是网关</h3><p>网关(Gateway)又称网间连接器、协议转换器。网关在传输层上以实现网络互连，是最复杂的网络互连设备，仅用于两个高层协议不同的网络互连。</p><p>大家都知道，从一个房间走到另一个房间，必然要经过一扇门。同样，从一个网络向另一个网络发送信息，也必须经过一道“关口”，这道关口就是网关。顾名思义，网关(Gateway)就是一个网络连接到另一个网络的“关口”。</p><p>按照不同的分类标准，网关也有很多种。TCP/IP协议里的网关是最常用的，在这里我们所讲的“网关”均指TCP/IP协议下的网关。</p><p>那么网关到底是什么呢？网关实质上是一个<strong>网络</strong>通向<strong>其他网络</strong>的<strong>IP地址</strong>。</p><h3 id="2-ip地址又是什么"><a href="#2-ip地址又是什么" class="headerlink" title="2.ip地址又是什么"></a>2.ip地址又是什么</h3><p>IP地址是IP协议提供的一种统一的地址格式，它为互联网上的每一个网络和每一台主机分配一个逻辑地址，以此来屏蔽<strong>物理地址</strong>的差异。</p><p>IP地址是一个32位的二进制数，通常被分割为4个“8位二进制数”（也就是4个字节）。IP地址通常用”点分十进制”表示成（a.b.c.d）的形式，其中，a,b,c,d都是0~255之间的十进制整数。例如，192.168.1.1</p><p>常见的IP地址，分为IPv4与IPv6两大类。目前还有些ip代理软件，但大部分都收费。IPV4就是有4段数字，每一段最大不超过255。</p><h3 id="3-什么是物理地址"><a href="#3-什么是物理地址" class="headerlink" title="3.什么是物理地址"></a>3.什么是物理地址</h3><p>物理地址也就是我们常说的<strong>MAC地址</strong>，MAC是网络中用来标识网卡设备的唯一网络地址。由相关硬件制造商统一分配，每台电脑的MAC地址都是<strong>唯一</strong>的。</p><p>mac地址位于OSI七层网络协议的第二层—<strong>数据链路层</strong>。通常表示为12个16进制数，每2个16进制数之间用冒号隔开，例如08:00:20:0A:8C:6D</p><h4 id="ip和mac区别"><a href="#ip和mac区别" class="headerlink" title="ip和mac区别"></a>ip和mac区别</h4><p>1.IP地址是服务商给你的，mac地址是你的网卡物理地址；</p><p>2.IP地址局域网内可以随便更改，但是mac地址一般不能更改；</p><p>3.长度不同。IP地址为32位，MAC地址为48位；</p><p>4.IP地址应用于OSI第三层，即网络层，而MAC地址应用在OSI第二层，即数据链路层。</p><p>5.总的来说，IP地址在网络中体现的是“<strong>我在哪里</strong>”，而mac地址则在二层通信中体现<strong>“我是谁”</strong></p><h3 id="4-路由"><a href="#4-路由" class="headerlink" title="4.路由"></a>4.路由</h3><p>路由器是互联网络中必不可少的网络设备之一，路由器是一种连接多个网络或网段的网络设备，它能将不同网络或网段之间的数据信息进行“翻译”，以使它们能够相互“读”懂对方的数据，从而构成一个更大的网络。</p><p>在<strong>没有路由器</strong>的情况下，不同的两个网络之间是不能进行TCP/IP通信的，即使是两个网络连接在同一台交换机(或集线器)上，TCP/IP协议也会根据子网掩码(255.255.255.0)判定两个网络中的主机处在不同的网络里。而要实现这两个网络之间的通信，则必须通过<strong>网关</strong>。</p><h3 id="5-什么是DHS"><a href="#5-什么是DHS" class="headerlink" title="5.什么是DHS"></a><strong>5.什么是DHS</strong></h3><p>DNS：域名解析服务器（Domain Name System），是把网址变成IP地址的服务器。</p><p>浏览器输入URL，例如<a href="http://www.baidu.com，DNS服务器就自动帮我们解析这个域名并翻译成了IP地址61.135.169.105。" target="_blank" rel="noopener">www.baidu.com，DNS服务器就自动帮我们解析这个域名并翻译成了IP地址61.135.169.105。</a></p><h3 id="6-子网掩码"><a href="#6-子网掩码" class="headerlink" title="6.子网掩码"></a>6.子网掩码</h3><p>子网掩码是为了区分网络位和主机位，上面我们说到过，一个ip地址是由网络部分和主机部分。正如一个人的名字由姓与名组成。</p><p>那么我们可以把IP地址比作一个人的名字，那么子网掩码就像是一份名单，可以快速的知道那些人同姓，那些人不同姓，把同姓的人分在一组，让他们之前可以互相交流。</p><h4 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a><strong>举个例子</strong></h4><p> 有一个网段是192.168.1.0—–192.168.1.254，这个网段就像一个村子一样，就称它为<strong>安防村</strong>，此这网段有个ip地址是192.168.1.1，我们就叫他安防一，另外一个人叫安防二，它的ip地址为192.168.1.2，我们一看他们，就知道他们是同村的。</p><p>另外有一个网段，是192.168.0.0——192.168.255.254，我们叫它<strong>安村</strong>，村里有个同样有两个ip地址192.168.1.1与192.168.1.2，也叫安防一，安防二，那么问题来了？这个时候，如何区分他们是属于那个村的？<br> 这个时候就需要子网掩码了来判断他们是属于那个网段的，需要把安防一、安防二带到村里去认下，就知道他们是属于那个村了，<strong>安防村</strong>的网段是<strong>255.255.255.0</strong>，<strong>安村</strong>的网段是<strong>255.255.0.0</strong>。</p><p>网络中也会出现类似于“同名”“同姓”的ip地址，如何区分他们到底是属于那个网段，就需要依靠子网掩码了。</p><p>强烈推荐一篇用故事讲解什么是网关，路由，dns的关系的文章，写的很好，大家可以看看奥</p><p>原文出处：<a href="https://blog.csdn.net/sgl520lxl/article/details/51974215" target="_blank" rel="noopener">https://blog.csdn.net/sgl520lxl/article/details/51974215</a></p>]]></content>
+    
+    <summary type="html">
+    
+      这篇主要讲述了几个关于计算机网络常见名词的解析
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>输入一个URL全过程！</title>
+    <link href="http://yoursite.com/2019/12/08/%E8%BE%93%E5%85%A5%E4%B8%80%E4%B8%AAURL%E5%85%A8%E8%BF%87%E7%A8%8B%EF%BC%81/"/>
+    <id>http://yoursite.com/2019/12/08/%E8%BE%93%E5%85%A5%E4%B8%80%E4%B8%AAURL%E5%85%A8%E8%BF%87%E7%A8%8B%EF%BC%81/</id>
+    <published>2019-12-08T06:16:59.000Z</published>
+    <updated>2019-12-08T06:33:50.332Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>简单理解:</strong>  域名解析 –&gt; 发起TCP的3次握手 –&gt; 建立TCP连接后发起http请求 –&gt;  服务器响应http请求，浏览器得到html代码 –&gt; 浏览器解析html代码，并请求html代码中的资源（如js、css、图片等）  –&gt; 浏览器对页面进行渲染呈现给用户。</p><p><strong>（1）域名解析（利用DNS），其实就是根据用户输入的网址去寻找它对应的IP地址，比如输入<a href="http://www.baidu.com它的ip地址为202.108.22.5" target="_blank" rel="noopener">www.baidu.com它的ip地址为202.108.22.5</a></strong></p><p>一般会先去各种缓冲中查找，浏览器缓存，Hosts文件查找，路由器缓存，DNS缓存，都找不到就由DNS解析查找</p><p><strong>（2）建立TCP连接</strong> </p><p><strong>客户端发起请求：</strong></p><ol><li><p><strong>应用层</strong></p><p>DNS解析域名为目的IP，通过IP找到服务器路径，客户端向服务器发起HTTP会话，然后通过运输层TCP协议封装数据包，在TCP协议基础上进行传输。</p></li><li><p><strong>传输层</strong>，这里也就使用了<strong>TCP三次握手</strong></p><p>TCP(为HTTP提供可靠的数据传输)，UDP(DNS使用UDP传输)，HTTP会话会被分成报文段，添加源、目的端口（默认80）；TCP协议进行主要工作。</p></li><li><p><strong>网络层</strong>是把TCP分割好的各种数据包传送给接收方。而要保证确实能传到接收方还需要接收方的MAC地址，也就是物理地址</p></li><li><p>然后才是<strong>链路层</strong>将数据发送到数据链路层传输。至此请求报文已发出，客户端发送请求的阶段结束</p></li></ol><p><strong>服务端接受请求：</strong><br>原路进行处理：链路层—&gt;网络层—&gt;传输层—&gt;应用层然后响应客户端发送报文。</p><p><strong>（3）浏览器进行处理</strong></p><p>服务器通过后台语言程序处理,找到数据返回给浏览器,HTML字符串被浏览器接受后被一句句读取解析,解析到link标签后重新发送请求获取css,解析到sript标签后发送请求获取js,并执行代码</p><p><strong>（4）绘制网页</strong></p><p>然后浏览器会进行渲染，浏览器根据HTML和CSS计算得到渲染树,绘制到屏幕上,js会被执行</p>]]></content>
+    
+    <summary type="html">
+    
+      输入一个URL返回了一个页面的全过程解析！
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>JDK,JRE,JVM的关系</title>
+    <link href="http://yoursite.com/2019/12/07/JDK-JRE-JVM%E7%9A%84%E5%85%B3%E7%B3%BB/"/>
+    <id>http://yoursite.com/2019/12/07/JDK-JRE-JVM%E7%9A%84%E5%85%B3%E7%B3%BB/</id>
+    <published>2019-12-07T05:58:49.000Z</published>
+    <updated>2019-12-07T06:07:04.188Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><p><strong>JDK（Java Development Kit）</strong></p><p>Java开发工具包，Java标准开发包，它提供了编译、运行Java程序所需的各种工具和资源，包括Java编译器、Java运行时环境，以及常用的Java类库等。</p><p><strong>Java Runtime Environment（JRE）</strong></p><p>Java运行环境，并不是一个开发环境，所以没有包含任何开发工具（如编译器和调试器），只是针对于使用Java程序的用户。</p><p><strong>JVM（java virtual machine）</strong></p><p>就是我们常说的java虚拟机，它是整个java实现跨平台的最核心的部分，所有的java程序会首先被编译为.class的类文件，这种类文件可以在虚拟机上执行。</p><p>也就是说class并不直接与机器的操作系统相对应，而是经过虚拟机间接与操作系统交互，由虚拟机将程序解释给本地系统执行。</p><h3 id="2-联系"><a href="#2-联系" class="headerlink" title="2.联系"></a>2.联系</h3><p>JDK是面向开发者的，JRE是面向使用JAVA程序的用户</p><p>JDK包括了Java运行环境JRE、Java工具和Java基础类库</p><p>JRE包含了JVM标准实现及Java核心类库。</p><p>JVM 是 java 编程语言的核心并且具有平台独立性。</p><p>JDK&gt;JRE&gt;JVM</p>]]></content>
+    
+    <summary type="html">
+    
+      JDK,JRE,JVM出现频率不可谓不多，那到底是什么，就让我们来看看
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>时间复杂度常见讲解</title>
+    <link href="http://yoursite.com/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/"/>
+    <id>http://yoursite.com/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/</id>
+    <published>2019-12-04T05:59:02.000Z</published>
+    <updated>2019-12-04T06:27:44.944Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="O-1"><a href="#O-1" class="headerlink" title="O(1)"></a>O(1)</h2><p>O(1)就是最低的时空复杂度了，也就是耗时/耗空间与输入数据大小无关，无论输入数据增大多少倍，耗时/耗空间都不变。 哈希算法就是典型的O(1)时间复杂度，无论数据规模多大，都可以在一次计算后找到目标（不考虑冲突的话），<strong>冲突的话很麻烦的，指向的value会做二次hash到另外一快存储区域。</strong></p><p>例子：比如你面前有十个盒子，分别标着1-10号数字，你要找哪个数字直接就可以看到找出，不用一个一个都看一遍。那如果是N个盒子呢？同理，直接找你要的数字就可以了，所以耗时永远不变，为1.</p><h2 id="O-n"><a href="#O-n" class="headerlink" title="O(n)"></a>O(n)</h2><p>时间复杂度为O(n)，就代表数据量增大几倍，耗时也增大几倍。</p><p>例子：遍历算法，要找到一个数组里面最大的一个数，你需要把n个变量都扫描一遍，操作次数为n，那么算法复杂度就是O(n).</p><h2 id="O（n-2）"><a href="#O（n-2）" class="headerlink" title="O（n^2）"></a>O（n^2）</h2><p>时间复杂度O(n^2)，就代表数据量增大n倍时，耗时增大n的平方倍，这是比O(n)更高的时间复杂度</p><p>例子：冒泡排序，双重循环，用冒泡排序排一个数组，对于n个变量的数组，需要交换变量位置O(n^2)次，那么算法复杂度就是O(n^2)。</p><h2 id="O-log-n"><a href="#O-log-n" class="headerlink" title="O(log n)"></a>O(log n)</h2><p>O(log n)，当数据增大n倍时，耗时增大log n倍（这里的log是以2为底的，比如，当数据增大256倍时，耗时只增大8倍，是比O(n)还要低的时间复杂度）</p><p>例子：二分查找就是O(log n)的算法，每找一次排除一半的可能，256个数据中查找只要找8次就可以找到目标。 </p><h2 id="O-n-log-n"><a href="#O-n-log-n" class="headerlink" title="O(n log n)"></a>O(n log n)</h2><p>O(n log n)同理，就是n乘以log n，当数据增大256倍时，耗时增大256*8=2048倍。这个复杂度高于O(n)低于O(n^2)。</p><p>例子：归并排序，两个顺序序列合并成一个顺序序列，就是O(n log n)的时间复杂度。</p><p>原文地址：<a href="https://blog.csdn.net/lkp1603645756/article/details/85013126" target="_blank" rel="noopener">https://blog.csdn.net/lkp1603645756/article/details/85013126</a></p>]]></content>
+    
+    <summary type="html">
+    
+      这篇讲解O(1)、O(n)、O(n^2)、O(log n)、O(n log n)到底是个什么意思
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>可爱又易懂的贪心算法</title>
+    <link href="http://yoursite.com/2019/12/04/%E5%8F%AF%E7%88%B1%E5%8F%88%E6%98%93%E6%87%82%E7%9A%84%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/"/>
+    <id>http://yoursite.com/2019/12/04/%E5%8F%AF%E7%88%B1%E5%8F%88%E6%98%93%E6%87%82%E7%9A%84%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/</id>
+    <published>2019-12-04T05:53:22.000Z</published>
+    <updated>2019-12-04T05:56:52.844Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="不看后悔啊！"><a href="#不看后悔啊！" class="headerlink" title="不看后悔啊！"></a>不看后悔啊！</h4><p>源文地址：<a href="http://baijiahao.baidu.com/s?id=1642122740570394361&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener">http://baijiahao.baidu.com/s?id=1642122740570394361&amp;wfr=spider&amp;for=pc</a></p>]]></content>
+    
+    <summary type="html">
+    
+      今天本人在学贪心算法的时候，看到了一篇非常有意思的文章，一定要推荐给大家，既开心了，又学到东西了。
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>volatile关键字</title>
