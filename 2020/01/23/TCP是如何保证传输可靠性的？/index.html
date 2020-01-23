@@ -15,14 +15,14 @@
 
 
 
-<meta name="description" content="今天本人在学贪心算法的时候，看到了一篇非常有意思的文章，一定要推荐给大家，既开心了，又学到东西了。">
+<meta name="description" content="讲解TCP可靠传输是如何得到保障的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="可爱又易懂的贪心算法">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;04&#x2F;%E5%8F%AF%E7%88%B1%E5%8F%88%E6%98%93%E6%87%82%E7%9A%84%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95&#x2F;index.html">
+<meta property="og:title" content="TCP是如何保证传输可靠性的？">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;23&#x2F;TCP%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84%EF%BC%9F&#x2F;index.html">
 <meta property="og:site_name" content="HF Blog">
-<meta property="og:description" content="今天本人在学贪心算法的时候，看到了一篇非常有意思的文章，一定要推荐给大家，既开心了，又学到东西了。">
+<meta property="og:description" content="讲解TCP可靠传输是如何得到保障的">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-04T05:56:52.844Z">
+<meta property="og:updated_time" content="2020-01-23T15:36:09.383Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -55,7 +55,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>可爱又易懂的贪心算法 | HF Blog</title>
+<title>TCP是如何保证传输可靠性的？ | HF Blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -213,11 +213,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-可爱又易懂的贪心算法" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-TCP是如何保证传输可靠性的？" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/12/04/%E5%8F%AF%E7%88%B1%E5%8F%88%E6%98%93%E6%87%82%E7%9A%84%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="article-date">
-      <time datetime="2019-12-04T05:53:22.000Z" itemprop="datePublished">2019-12-04</time>
+      <a href="/2020/01/23/TCP%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84%EF%BC%9F/" class="article-date">
+      <time datetime="2020-01-23T13:20:27.000Z" itemprop="datePublished">2020-01-23</time>
 </a>
 
 
@@ -232,7 +232,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      可爱又易懂的贪心算法
+      TCP是如何保证传输可靠性的？
     </h1>
   
 
@@ -249,7 +249,14 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h4 id="不看后悔啊！"><a href="#不看后悔啊！" class="headerlink" title="不看后悔啊！"></a>不看后悔啊！</h4><p>源文地址：<a href="http://baijiahao.baidu.com/s?id=1642122740570394361&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener">http://baijiahao.baidu.com/s?id=1642122740570394361&amp;wfr=spider&amp;for=pc</a></p>
+        <p>首先，要弄懂TCP是如何保证传输可靠的，就必须知道TCP的特点是什么，大家可以根据我的另一篇博客（TCP和UDP的区别）一起结合来看，更加容易明白。</p>
+<h3 id="TCP报文段的首部格式"><a href="#TCP报文段的首部格式" class="headerlink" title="TCP报文段的首部格式"></a>TCP报文段的首部格式</h3><p>20个字节包括源端口和目的端口，序号，确认号，数据偏移 <em>，</em>保留 ，窗口，检验和等等。</p>
+<h4 id="保证方式："><a href="#保证方式：" class="headerlink" title="保证方式："></a>保证方式：</h4><p><strong>检验和</strong>：将发送数据都当做16位整数，相加，进位补在后面，最后取反。</p>
+<p>发送与接收方都要进行检验和操作，不一致则代表数据传输有误，一致就表示数据不一定传输成功。</p>
+<p><strong>确认号和序号</strong>：TCP三次握手建立连接，我们知道TCP传输每个字节都加了序号，每次接收方接收数据也都会返回发送方一个ACK报文，即确认报文，序号也可以排序，这些都可以保证传输可靠性。</p>
+<p><strong>超时重传机制</strong>：发送数据后，迟迟等不到ACK确认报文，就开始重传机制也就是重新发送一遍。等不到ACK有俩种可能。一种是发送数据的时候就丢失了，接收方根本就没看见，另外一种是接收方收到数据了，发送了ACK报文但是丢失了或者超时，发送方接不到。</p>
+<p><strong>流量控制：</strong>（针对点对点）我们知道TCP会根据接收窗口的窗口值来决定发送数据的大小，会进行拆分。所谓流量控制就是让发送方发送数据慢一些，不要让接收方压力太大，一口气接收不过来导致数据丢失。使用的方式就是滑动窗口！</p>
+<p><strong>拥塞控制：</strong>（针对全局）防止过多的数据注入到网络中，这样可以使网络中的路由器或链路过载。解决方式：慢开始，拥塞避免，快重传，快恢复。</p>
 
       
     </div>
@@ -258,13 +265,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/12/04/%E5%8F%AF%E7%88%B1%E5%8F%88%E6%98%93%E6%87%82%E7%9A%84%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/">可爱又易懂的贪心算法</a></p>
+        <p><span>本文标题:</span><a href="/2020/01/23/TCP%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84%EF%BC%9F/">TCP是如何保证传输可靠性的？</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
-        <p><span>发布时间:</span>2019-12-04, 13:53:22</p>
-        <p><span>最后更新:</span>2019-12-04, 13:56:52</p>
+        <p><span>发布时间:</span>2020-01-23, 21:20:27</p>
+        <p><span>最后更新:</span>2020-01-23, 23:36:09</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/12/04/%E5%8F%AF%E7%88%B1%E5%8F%88%E6%98%93%E6%87%82%E7%9A%84%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" title="可爱又易懂的贪心算法">http://yoursite.com/2019/12/04/%E5%8F%AF%E7%88%B1%E5%8F%88%E6%98%93%E6%87%82%E7%9A%84%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/12/04/%E5%8F%AF%E7%88%B1%E5%8F%88%E6%98%93%E6%87%82%E7%9A%84%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2020/01/23/TCP%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84%EF%BC%9F/" title="TCP是如何保证传输可靠性的？">http://yoursite.com/2020/01/23/TCP%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84%EF%BC%9F/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/01/23/TCP%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84%EF%BC%9F/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -276,16 +283,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/">
-                    时间复杂度常见讲解
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/12/03/volatile%E5%85%B3%E9%94%AE%E5%AD%97/">
-                    volatile关键字
+                <a href="/2020/01/22/%E5%88%86%E5%B8%83%E5%BC%8F-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F-%E5%BE%AE%E6%9C%8D%E5%8A%A1/">
+                    分布式-集群模式-微服务
                 </a>
             </div>
         
@@ -297,7 +298,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#不看后悔啊！"><span class="toc-number">1.</span> <span class="toc-text">不看后悔啊！</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP报文段的首部格式"><span class="toc-number">1.</span> <span class="toc-text">TCP报文段的首部格式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#保证方式："><span class="toc-number">1.1.</span> <span class="toc-text">保证方式：</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -333,7 +334,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"可爱又易懂的贪心算法　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"TCP是如何保证传输可靠性的？　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -353,15 +354,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/" title="上一篇: 时间复杂度常见讲解">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/12/03/volatile%E5%85%B3%E9%94%AE%E5%AD%97/" title="下一篇: volatile关键字">
+            <a href="/2020/01/22/%E5%88%86%E5%B8%83%E5%BC%8F-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F-%E5%BE%AE%E6%9C%8D%E5%8A%A1/" title="下一篇: 分布式-集群模式-微服务">
                 <i class="fa fa-angle-right"></i>
             </a>
         

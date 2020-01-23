@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-10T04:17:17.271Z</updated>
+  <updated>2020-01-23T15:36:09.383Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,120 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>TCP是如何保证传输可靠性的？</title>
+    <link href="http://yoursite.com/2020/01/23/TCP%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84%EF%BC%9F/"/>
+    <id>http://yoursite.com/2020/01/23/TCP%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84%EF%BC%9F/</id>
+    <published>2020-01-23T13:20:27.000Z</published>
+    <updated>2020-01-23T15:36:09.383Z</updated>
+    
+    <content type="html"><![CDATA[<p>首先，要弄懂TCP是如何保证传输可靠的，就必须知道TCP的特点是什么，大家可以根据我的另一篇博客（TCP和UDP的区别）一起结合来看，更加容易明白。</p><h3 id="TCP报文段的首部格式"><a href="#TCP报文段的首部格式" class="headerlink" title="TCP报文段的首部格式"></a>TCP报文段的首部格式</h3><p>20个字节包括源端口和目的端口，序号，确认号，数据偏移 <em>，</em>保留 ，窗口，检验和等等。</p><h4 id="保证方式："><a href="#保证方式：" class="headerlink" title="保证方式："></a>保证方式：</h4><p><strong>检验和</strong>：将发送数据都当做16位整数，相加，进位补在后面，最后取反。</p><p>发送与接收方都要进行检验和操作，不一致则代表数据传输有误，一致就表示数据不一定传输成功。</p><p><strong>确认号和序号</strong>：TCP三次握手建立连接，我们知道TCP传输每个字节都加了序号，每次接收方接收数据也都会返回发送方一个ACK报文，即确认报文，序号也可以排序，这些都可以保证传输可靠性。</p><p><strong>超时重传机制</strong>：发送数据后，迟迟等不到ACK确认报文，就开始重传机制也就是重新发送一遍。等不到ACK有俩种可能。一种是发送数据的时候就丢失了，接收方根本就没看见，另外一种是接收方收到数据了，发送了ACK报文但是丢失了或者超时，发送方接不到。</p><p><strong>流量控制：</strong>（针对点对点）我们知道TCP会根据接收窗口的窗口值来决定发送数据的大小，会进行拆分。所谓流量控制就是让发送方发送数据慢一些，不要让接收方压力太大，一口气接收不过来导致数据丢失。使用的方式就是滑动窗口！</p><p><strong>拥塞控制：</strong>（针对全局）防止过多的数据注入到网络中，这样可以使网络中的路由器或链路过载。解决方式：慢开始，拥塞避免，快重传，快恢复。</p>]]></content>
+    
+    <summary type="html">
+    
+      讲解TCP可靠传输是如何得到保障的
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>分布式-集群模式-微服务</title>
+    <link href="http://yoursite.com/2020/01/22/%E5%88%86%E5%B8%83%E5%BC%8F-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F-%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    <id>http://yoursite.com/2020/01/22/%E5%88%86%E5%B8%83%E5%BC%8F-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F-%E5%BE%AE%E6%9C%8D%E5%8A%A1/</id>
+    <published>2020-01-22T07:53:23.000Z</published>
+    <updated>2020-01-22T08:40:39.432Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="分布式"><a href="#分布式" class="headerlink" title="分布式"></a>分布式</h3><p>将一个大的系统划分为多个业务模块，业务模块分别部署到不同的机器上，各个业务模块之间通过接口进行数据交互，区别分布式的方式是根据不同机器不同业务。</p><h3 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h3><p>集群模式是不同服务器部署同一套服务对外访问，实现服务的负载均衡。一般配置Nginx的负载容器实现。</p><h3 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h3><p> 微服务是一种面向服务的<strong>架构(SOA)风格</strong>，是很小的服务（松耦合），小到一个服务只对应一个单一的功能，只做一件事。这个服务可以单独部署运行，服务之间可以通过远程调用RPC（SpringCloud、Dubbo、Dubbox、Hessian、HttpClient、thrift等）来相互交互。</p><p>微服务与分布式的细微差别是，微服务的应用不一定是分散在多个服务器上，他也可以是同一个服务器。</p>]]></content>
+    
+    <summary type="html">
+    
+      分布式-集群模式-微服务的概念以及区分
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ThreadLocl</title>
+    <link href="http://yoursite.com/2020/01/21/ThreadLocl%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%81/"/>
+    <id>http://yoursite.com/2020/01/21/ThreadLocl%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%81/</id>
+    <published>2020-01-21T12:42:15.000Z</published>
+    <updated>2020-01-21T13:09:10.261Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h3><p>用与之密切相关的俩个类来讲述ThreadLocal的工作原理：</p><p>分别是ThreadLocalMap，Thread。</p><p>其中ThreadLocalMap类的定义是在ThreadLocal类中，真正的引用却是在Thread类中。</p><p>ThreadLocalMap中用于存储数据的entry定义：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">static class Entry extends WeakReference&lt;ThreadLocal&lt;?&gt;&gt; &#123;</span><br><span class="line">           /** The value associated with this ThreadLocal. */</span><br><span class="line">           Object value;</span><br><span class="line">           </span><br><span class="line">           Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">               super(k);</span><br><span class="line">               value = v;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure><p>我们可以发现Map的key是ThreadLocal类的实例对象，value为用户的值。</p><p>所以根据上面可知，线程共享变量缓存如下：</p><p>线程共享变量缓存如下：</p><p><strong>Thread.ThreadLocalMap&lt;ThreadLocal, Object&gt;</strong></p><p>1、<strong>Thread: 当前线程，可以通过Thread.currentThread()获取。</strong></p><p>2、<strong>ThreadLocal：ThreadLocal实例对象。</strong></p><p>3、<strong>Object: 当前线程共享变量。</strong></p><p>ThreadLocal.get，ThreadLocal.set，ThreadLocal.remove方法都是从当前线程中获取ThreadLocalMap&lt;<strong>ThreadLocal, Object</strong>&gt;，然后获取或设置共享变量Object。</p><h3 id="作用："><a href="#作用：" class="headerlink" title="作用："></a>作用：</h3><p>每个线程独自拥有一个变量，并非是共享的（<strong>提供线程内的局部变量，这种变量在线程的生命周期内起作用</strong>）</p><p>final修饰的int型的threadLocalHashCode用来区分一个线程多个ThreadLocal对象</p><h3 id="内存泄漏问题（弱引用）："><a href="#内存泄漏问题（弱引用）：" class="headerlink" title="内存泄漏问题（弱引用）："></a>内存泄漏问题（弱引用）：</h3><p>当线程没有结束，但是ThreadLocal已经被回收，则可能导致线程中存在ThreadLocalMap&lt;<strong>null</strong>, <strong>Object</strong>&gt;的键值对，造成内存泄露。</p><h4 id="解决方法："><a href="#解决方法：" class="headerlink" title="解决方法："></a>解决方法：</h4><p>1、使用完线程共享变量后，显示调用ThreadLocalMap.remove方法清除线程共享变量。</p><p>2、JDK建议ThreadLocal定义为private static，这样ThreadLocal的弱引用问题则不存在了。</p>]]></content>
+    
+    <summary type="html">
+    
+      理解ThreadLocl的工作原理
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Sleep和Wait!</title>
+    <link href="http://yoursite.com/2020/01/19/Sleep%E5%92%8CWait/"/>
+    <id>http://yoursite.com/2020/01/19/Sleep%E5%92%8CWait/</id>
+    <published>2020-01-19T12:32:31.000Z</published>
+    <updated>2020-01-19T12:44:35.921Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="sleep"><a href="#sleep" class="headerlink" title="sleep"></a>sleep</h2><p>继承自Thread类，无释放锁，必须捕获异常，让当前线程休眠指定时间，也可由interrupt()方法来唤醒，静态方法，任何地方可以使用。</p><h2 id="wait"><a href="#wait" class="headerlink" title="wait"></a>wait</h2><p>继承自Object类，释放了锁（使得其他线程可以使用同步控制块或者方法），无需捕获异常，由notify,notifyAll方法唤醒，实例方法，只能在同步控制方法或者同步控制块里面使用。</p><h3 id="为什么wait只能在同步控制方法或者同步控制块里面使用？"><a href="#为什么wait只能在同步控制方法或者同步控制块里面使用？" class="headerlink" title="为什么wait只能在同步控制方法或者同步控制块里面使用？"></a>为什么wait只能在同步控制方法或者同步控制块里面使用？</h3><p>wait()暂停的是持有锁的对象，所以想调用wait()必须为:对象.wait();</p><p>notify()唤醒的是等待锁的对象，调用：对象.notify()</p><p>因为要对持有锁的线程操作，所以要使用在同步中，因为只有同步才具有锁。</p><p><strong>锁可以是任意对象，所以任意对象调用的方法一定是定义在Object类中</strong></p>]]></content>
+    
+    <summary type="html">
+    
+      Sleep和Wait的区别，简显易懂
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Nosql</title>
+    <link href="http://yoursite.com/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/"/>
+    <id>http://yoursite.com/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/</id>
+    <published>2020-01-19T02:25:01.000Z</published>
+    <updated>2020-01-19T03:06:51.693Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="MongoDB"><a href="#MongoDB" class="headerlink" title="MongoDB:"></a>MongoDB:</h2><p>概念：文档型数据库,类似json格式,它在许多场景下可用于<strong>替代</strong>统的关系型数据库或键/值存储方式。</p><p>特点：有权限验证类似RBAC，本身就是持久化数据库。</p><p>使用场景：主要解决海量数据的访问效率问题。比如网站的评论海量数据。</p><p>优点：</p><p>1.可处理大规模单表，容易分隔表。</p><p>2.非常高的插入速度。</p><p>3.高查询，支持二维空间索引，例如管道，快速定位。</p><p>缺点：</p><p>1.不支持事务（主要）</p><p>2.占用空间大</p><p>3.没有成熟维护工具</p><h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis:"></a>Redis:</h2><p>概念：开源的可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。</p><p>特点：有权限验证，不过是全局的。Redis 所有数据都是放在内存中的，持久化是使用 RDB 方式或者 aof 方式。</p><p>使用场景：适用于对读写效率要求都很高，数据变化快等。例如：网站的点赞，计算，实时数据</p><p>支持五种数据类型：string（字符串），hash（哈希），list（列表），set（集合）及zset(sorted set：有序集合)。</p><p>优点：</p><p>1.支持事务</p><p>2.数据存在内存，读写非常快</p><p>缺点：</p><p>由于 Redis 是内存数据库,所以,单台机器,存储的数据量,跟机器本身的内存大小。虽然 Redis 本身有 Key 过期策略,但是还是需要提前预估和节约内存</p><h2 id="HBase"><a href="#HBase" class="headerlink" title="HBase:"></a>HBase:</h2><p>概念：是 Apache Hadoop 中的一个子项目，实现语言java,HBase 依托于 Hadoop 的 HDFS（分布式文件系统）作为最基本存储基础单元。</p><p>特点：支持数十亿行X上百万列，不会出现单点故障，堪比MySQL的随机访问性能。</p><p>使用场景：</p><p>1.bigtable类型的数据存储</p><p>2.bigtable类型的数据存储</p><p>3.bigtable类型的数据存储</p><p>优点：</p><p>1.存储容量大，一个表可以容纳上亿行，上百万列</p><p>2.通过版本检索</p><p>3.可有效避免单点故障</p><p>缺点:</p><p>1.其API更适用于Java项目</p><p>2.占用空间大,依赖多，配置麻烦</p>]]></content>
+    
+    <summary type="html">
+    
+      NoSql型Redis和MongoDB和HBase的区别，优劣，使用场景
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>TCP和UDP的区别？</title>
+    <link href="http://yoursite.com/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/"/>
+    <id>http://yoursite.com/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/</id>
+    <published>2019-12-21T07:06:44.000Z</published>
+    <updated>2020-01-22T05:56:07.597Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="传输控制协议TCP"><a href="#传输控制协议TCP" class="headerlink" title="传输控制协议TCP"></a>传输控制协议TCP</h3><p>1.TCP是<strong>面向连接</strong>的运输层协议。传送数据前需用三次握手方式进行连接，传送完毕后，必须释放已经建立的TCP连接。</p><p>2.TCP连接只能有俩个<strong>端点</strong>，即只能一对一，点对点。</p><p>3.TCP提供<strong>可靠支付</strong>的服务，无差错，不丢失，不重复，按序到达。</p><p>4.TCP提供<strong>全双工通信</strong>（通信双方都可作为传送者，接收者，且可以同时传输接收）</p><p>5.TCP面向<strong>字节流</strong>，流是指的是流入到进程或从进程流出的字节序列。</p><p>6.TCP不关心应用程序一次把多长的报文发送到TCP的缓存，而是根据对方给出的<strong>窗口值</strong>和当前<strong>网络拥塞</strong>的程度来决定一个报文段应包含多少个字节</p><p>7.首部20个字节（源端口和目的端口，序号，确认号，数据偏移 <em>，</em>保留 ）。</p><h3 id="用户数据报协议UDP"><a href="#用户数据报协议UDP" class="headerlink" title="用户数据报协议UDP"></a>用户数据报协议UDP</h3><p>1.UDP是<strong>无连接</strong>的协议，传输数据前不需要建立连接，减小了开销和时延。</p><p>2.UDP连接支持一对一，一对多，多对一，多对多的交互通信。</p><p>3.UDP使用尽最大努力支付，即<strong>不可靠支付</strong>。</p><p>4.UDP<strong>没有拥塞控制</strong>，因此网络出现的拥塞不会使源主机的发送速率降低。</p><p>5.UDP<strong>面向报文</strong>，应用层交给UDP多长的报文，UDP就照样发送，既不合并，也不拆分，即一次发送一个报文</p><p>6.UDP发送的报文长度是应用进程给出的。</p><p>7.首部8个字节。</p>]]></content>
+    
+    <summary type="html">
+    
+      TCP和UDP哪里不同，具体表现在哪里？
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>网关、路由、DNS、子网掩码、MAC地址的概念</title>
@@ -40,9 +154,9 @@
     <link href="http://yoursite.com/2019/12/08/%E8%BE%93%E5%85%A5%E4%B8%80%E4%B8%AAURL%E5%85%A8%E8%BF%87%E7%A8%8B%EF%BC%81/"/>
     <id>http://yoursite.com/2019/12/08/%E8%BE%93%E5%85%A5%E4%B8%80%E4%B8%AAURL%E5%85%A8%E8%BF%87%E7%A8%8B%EF%BC%81/</id>
     <published>2019-12-08T06:16:59.000Z</published>
-    <updated>2019-12-08T06:33:50.332Z</updated>
+    <updated>2019-12-12T06:17:25.064Z</updated>
     
-    <content type="html"><![CDATA[<p><strong>简单理解:</strong>  域名解析 –&gt; 发起TCP的3次握手 –&gt; 建立TCP连接后发起http请求 –&gt;  服务器响应http请求，浏览器得到html代码 –&gt; 浏览器解析html代码，并请求html代码中的资源（如js、css、图片等）  –&gt; 浏览器对页面进行渲染呈现给用户。</p><p><strong>（1）域名解析（利用DNS），其实就是根据用户输入的网址去寻找它对应的IP地址，比如输入<a href="http://www.baidu.com它的ip地址为202.108.22.5" target="_blank" rel="noopener">www.baidu.com它的ip地址为202.108.22.5</a></strong></p><p>一般会先去各种缓冲中查找，浏览器缓存，Hosts文件查找，路由器缓存，DNS缓存，都找不到就由DNS解析查找</p><p><strong>（2）建立TCP连接</strong> </p><p><strong>客户端发起请求：</strong></p><ol><li><p><strong>应用层</strong></p><p>DNS解析域名为目的IP，通过IP找到服务器路径，客户端向服务器发起HTTP会话，然后通过运输层TCP协议封装数据包，在TCP协议基础上进行传输。</p></li><li><p><strong>传输层</strong>，这里也就使用了<strong>TCP三次握手</strong></p><p>TCP(为HTTP提供可靠的数据传输)，UDP(DNS使用UDP传输)，HTTP会话会被分成报文段，添加源、目的端口（默认80）；TCP协议进行主要工作。</p></li><li><p><strong>网络层</strong>是把TCP分割好的各种数据包传送给接收方。而要保证确实能传到接收方还需要接收方的MAC地址，也就是物理地址</p></li><li><p>然后才是<strong>链路层</strong>将数据发送到数据链路层传输。至此请求报文已发出，客户端发送请求的阶段结束</p></li></ol><p><strong>服务端接受请求：</strong><br>原路进行处理：链路层—&gt;网络层—&gt;传输层—&gt;应用层然后响应客户端发送报文。</p><p><strong>（3）浏览器进行处理</strong></p><p>服务器通过后台语言程序处理,找到数据返回给浏览器,HTML字符串被浏览器接受后被一句句读取解析,解析到link标签后重新发送请求获取css,解析到sript标签后发送请求获取js,并执行代码</p><p><strong>（4）绘制网页</strong></p><p>然后浏览器会进行渲染，浏览器根据HTML和CSS计算得到渲染树,绘制到屏幕上,js会被执行</p>]]></content>
+    <content type="html"><![CDATA[<p><strong>简单理解:</strong>  域名解析 –&gt; 发起TCP的3次握手 –&gt; 建立TCP连接后发起http请求 –&gt;  服务器响应http请求，浏览器得到html代码 –&gt; 浏览器解析html代码，并请求html代码中的资源（如js、css、图片等）  –&gt; 浏览器对页面进行渲染呈现给用户。</p><p><strong>（1）域名解析（利用DNS）</strong></p><p>其实就是根据用户输入的网址去寻找它对应的IP地址，比如输入<a href="http://www.baidu.com它的ip地址为202.108.22.5" target="_blank" rel="noopener">www.baidu.com它的ip地址为202.108.22.5</a></p><p>一般会先去各种缓冲中查找，浏览器缓存，Hosts文件查找，路由器缓存，DNS缓存，都找不到就由DNS解析查找</p><p><strong>（2）建立TCP连接</strong> </p><p><strong>客户端发起请求：</strong></p><ol><li><p><strong>应用层</strong></p><p>DNS解析域名为目的IP，通过IP找到服务器路径，客户端向服务器发起HTTP会话，然后通过运输层TCP协议封装数据包，在TCP协议基础上进行传输。</p></li><li><p><strong>传输层</strong>，这里也就使用了<strong>TCP三次握手</strong></p><p>TCP(为HTTP提供可靠的数据传输)，UDP(DNS使用UDP传输)，HTTP会话会被分成报文段，添加源、目的端口（默认80）；TCP协议进行主要工作。</p></li><li><p><strong>网络层</strong>是把TCP分割好的各种数据包传送给接收方。而要保证确实能传到接收方还需要接收方的MAC地址，也就是物理地址</p></li><li><p>然后才是<strong>链路层</strong>将数据发送到数据链路层传输。至此请求报文已发出，客户端发送请求的阶段结束</p></li></ol><p><strong>服务端接受请求：</strong><br>原路进行处理：链路层—&gt;网络层—&gt;传输层—&gt;应用层然后响应客户端发送报文。</p><p><strong>（3）浏览器进行处理</strong></p><p>服务器通过后台语言程序处理,找到数据返回给浏览器,HTML字符串被浏览器接受后被一句句读取解析,解析到link标签后重新发送请求获取css,解析到sript标签后发送请求获取js,并执行代码</p><p><strong>（4）绘制网页</strong></p><p>然后浏览器会进行渲染，浏览器根据HTML和CSS计算得到渲染树,绘制到屏幕上,js会被执行</p>]]></content>
     
     <summary type="html">
     
@@ -116,9 +230,9 @@
     <link href="http://yoursite.com/2019/12/03/volatile%E5%85%B3%E9%94%AE%E5%AD%97/"/>
     <id>http://yoursite.com/2019/12/03/volatile%E5%85%B3%E9%94%AE%E5%AD%97/</id>
     <published>2019-12-03T10:50:01.000Z</published>
-    <updated>2019-12-03T11:09:00.099Z</updated>
+    <updated>2020-01-23T06:34:37.476Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="1-保证内存可见性"><a href="#1-保证内存可见性" class="headerlink" title="1. 保证内存可见性"></a>1. 保证内存可见性</h2><p>​        所有线程的共享变量都存储在主内存中，每一个线程都有一个独有的工作内存，每个线程不直接操作在主内存中的变量，而是将主内存上变量的副本放进自己的工作内存中，只操作工作内存中的数据。当修改完毕后，再把修改后的结果放回到主内存中。每个线程都只操作自己工作内存中的变量，无法直接访问对方工作内存中的变量，线程间变量值的传递需要通过主内存来完成。</p><p>​        单线程环境下不会出现问题，而多线程会出现问题，会出现脏数据。</p><p>​        而volatile关键字可以使当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看得到修改的值。所以说保证了内存可见性。</p><h2 id="2-禁止指令重排序"><a href="#2-禁止指令重排序" class="headerlink" title="2. 禁止指令重排序"></a>2. 禁止指令重排序</h2><p>​        指令的执行顺序并不一定会像我们编写的顺序那样执行，为了保证执行上的效率，JVM可能会对指令进行重排序。</p><p>​        而volatile关键字可以禁止指令重排序，即程序执行的顺序按照代码的先后顺序执行。</p><h2 id="3-不保证原子性"><a href="#3-不保证原子性" class="headerlink" title="3.不保证原子性"></a>3.不保证原子性</h2><p>​        也就是说，对volatile修饰的变量进行的操作，不保证多线程安全。</p><h2 id="4-单例模式的双重锁为什么要加volatile？"><a href="#4-单例模式的双重锁为什么要加volatile？" class="headerlink" title="4.单例模式的双重锁为什么要加volatile？"></a>4.单例模式的双重锁为什么要加volatile？</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton instance;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line"><span class="keyword">synchronized</span>(Singleton<span class="class">.<span class="keyword">class</span>)</span>&#123;</span><br><span class="line"> <span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line"> instance =<span class="keyword">new</span> Singleton();</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>需要volatile关键字的原因是，在并发情况下，如果没有volatile关键字，在第5行会出现问题。instance = new TestInstance();可以分解为3行伪代码</p><p>a.为instance分配内存</p><p>b.初始化instance</p><p>c.将instance变量指向分配的内存空间</p><p>上面的代码在编译运行时，可能会出现重排序从a-b-c排序为a-c-b。在多线程的情况下会出现以下问题。当线程A在执行第5行代码时，B线程进来执行到第2行代码。假设此时A执行的过程中发生了指令重排序，即先执行了a和c，没有执行b。那么由于A线程执行了c导致instance指向了一段地址，所以B线程判断instance不为null，会直接跳到第6行并返回一个未初始化的对象。</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="1-保证内存可见性"><a href="#1-保证内存可见性" class="headerlink" title="1. 保证内存可见性"></a>1. 保证内存可见性</h2><p>​        所有线程的共享变量都存储在主内存中，每一个线程都有一个独有的工作内存，每个线程不直接操作在主内存中的变量，而是将主内存上变量的副本放进自己的工作内存中，只操作工作内存中的数据。当修改完毕后，再把修改后的结果放回到主内存中。每个线程都只操作自己工作内存中的变量，无法直接访问对方工作内存中的变量，线程间变量值的传递需要通过主内存来完成。</p><p>​        单线程环境下不会出现问题，而多线程会出现问题，会出现脏数据。</p><p>​        而volatile关键字可以使当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看得到修改的值。所以说保证了内存可见性。</p><h2 id="2-禁止指令重排序"><a href="#2-禁止指令重排序" class="headerlink" title="2. 禁止指令重排序"></a>2. 禁止指令重排序</h2><p>​        指令的执行顺序并不一定会像我们编写的顺序那样执行，为了保证执行上的效率，JVM可能会对指令进行重排序。</p><p>​        而volatile关键字可以禁止指令重排序，即程序执行的顺序按照代码的先后顺序执行。</p><h2 id="3-不保证原子性"><a href="#3-不保证原子性" class="headerlink" title="3.不保证原子性"></a>3.不保证原子性</h2><p>​        也就是说，对volatile修饰的变量进行的操作，不保证多线程安全。</p><h2 id="4-单例模式的双重锁为什么要加volatile？"><a href="#4-单例模式的双重锁为什么要加volatile？" class="headerlink" title="4.单例模式的双重锁为什么要加volatile？"></a>4.单例模式的双重锁为什么要加volatile？</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton instance;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line"><span class="keyword">synchronized</span>(Singleton<span class="class">.<span class="keyword">class</span>)</span>&#123;</span><br><span class="line"> <span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line"> instance =<span class="keyword">new</span> Singleton();</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>需要volatile关键字的原因是，在并发情况下，如果没有volatile关键字，在第5行会出现问题。instance = new TestInstance();可以分解为3行伪代码</p><p>a.为instance分配内存</p><p>b.初始化instance</p><p>c.将instance变量指向分配的内存空间</p><p>上面的代码在编译运行时，可能会出现重排序从a-b-c排序为a-c-b。在多线程的情况下会出现以下问题。当线程A在执行第5行代码时，B线程进来执行到第2行代码。假设此时A执行的过程中发生了指令重排序，即先执行了a和c，没有执行b。那么由于A线程执行了c导致instance指向了一段地址，所以B线程判断instance不为null，会直接跳到第6行并返回一个未初始化的对象。</p><h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS:"></a>CAS:</h3><p>CAS有3个操作数，内存值V，旧的预期值A，要修改的新值B。当且仅当预期值A和内存值V相同时，将内存值V修改为B，否则什么都不做。</p>]]></content>
     
     <summary type="html">
     
@@ -173,9 +287,9 @@
     <link href="http://yoursite.com/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/"/>
     <id>http://yoursite.com/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/</id>
     <published>2019-11-27T05:51:08.000Z</published>
-    <updated>2019-12-03T11:15:17.200Z</updated>
+    <updated>2020-01-21T06:01:25.318Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="一、数据库事务隔离级别"><a href="#一、数据库事务隔离级别" class="headerlink" title="一、数据库事务隔离级别"></a><strong>一、数据库事务隔离级别</strong></h2><p> 数据库事务的隔离级别有4个，由低到高依次为Read uncommitted 、Read committed 、Repeatable read 、Serializable ，这四个级别可以逐个解决脏读 、不可重复读 、幻读 这几类问题。</p><p> 注意：我们讨论隔离级别的场景，主要是在多个事务并发 的情况下，因此，接下来的讲解都围绕事务并发。 </p><h3 id="Read-Uncommitted（未提交读）-："><a href="#Read-Uncommitted（未提交读）-：" class="headerlink" title="Read Uncommitted（未提交读） ："></a><strong>Read Uncommitted（未提交读）</strong> ：</h3><p> 事务中的修改，即使没有提交，其他事务也可以看得到，会导致“脏读”、“幻读”和“不可重复读取”。 </p><h3 id="EAD-COMMITTED-（提交读）："><a href="#EAD-COMMITTED-（提交读）：" class="headerlink" title="EAD COMMITTED （提交读）："></a><strong>EAD COMMITTED （提交读）</strong>：</h3><p>大多数主流数据库的默认事务等级，保证了一个事务不会读到另一个并行事务已修改但未提交的数据，避免了“脏读取”，但不能避免“幻读”和“不可重复读取”。该级别适用于大多数系统。 </p><h3 id="REPEATABLE-READ（重复读）-："><a href="#REPEATABLE-READ（重复读）-：" class="headerlink" title="REPEATABLE READ（重复读） ："></a><strong>REPEATABLE READ（重复读）</strong> ：</h3><p>保证了一个事务不会修改已经由另一个事务读取但未提交（回滚）的数据。避免了“脏读取”和“不可重复读取”的情况，但不能避免“幻读”，但是带来了更多的性能损失。 </p><h3 id="erializable-（串行化）："><a href="#erializable-（串行化）：" class="headerlink" title="erializable （串行化）："></a><strong>erializable （串行化）</strong>：</h3><p>最严格的级别，事务串行执行，资源消耗最大； </p><h2 id="二、脏读、不可重复读、幻读"><a href="#二、脏读、不可重复读、幻读" class="headerlink" title="二、脏读、不可重复读、幻读"></a>二、<strong>脏读、不可重复读、幻读</strong></h2><h3 id="脏读（读取未提交数据）"><a href="#脏读（读取未提交数据）" class="headerlink" title="脏读（读取未提交数据）"></a>脏读（读取未提交数据）</h3><p>A事务读取B事务尚未提交的数据，此时如果B事务发生错误并执行回滚操作，那么A事务读取到的数据就是脏数据。就好像原本的数据比较干净、纯粹，此时由于B事务更改了它，这个数据变得不再纯粹。这个时候A事务立即读取了这个脏数据，但事务B良心发现，又用回滚把数据恢复成原来干净、纯粹的样子，而事务A却什么都不知道，最终结果就是事务A读取了此次的脏数据，称为脏读。</p><p><strong>实例</strong>：公司发工资了，领导把5000元打到singo的账号上，但是该事务并未提交，而singo正好去查看账户，发现工资已经到账，是5000元整，非常高 兴。可是不幸的是，领导发现发给singo的工资金额不对，是2000元，于是迅速回滚了事务，修改金额后，将事务提交，最后singo实际的工资只有 2000元，singo空欢喜一场。</p><h3 id="不可重复读（前后多次读取，数据内容不一致）"><a href="#不可重复读（前后多次读取，数据内容不一致）" class="headerlink" title="不可重复读（前后多次读取，数据内容不一致）"></a>不可重复读（前后多次读取，数据内容不一致）</h3><p>是指在一个事务内，多次读同一数据。在这个事务还没有结束时，另外一个事务也访问该同一数据。那么，在第一个事务中的两次读数据之间，由于第二个事务的修改，那么第一个事务两次读到的的数据可能是不一样的。这样就发生了在一个事务内两次读到的数据是不一样的，因此称为是不可重复读。（即不能读到相同的数据内容）</p><p><strong>实例</strong>：singo拿着工资卡去消费，系统读取到卡里确实有2000元，而此时她的老婆也正好在网上转账，把singo工资卡的2000元转到另一账户，并在 singo之前提交了事务，当singo扣款时，系统检查到singo的工资卡已经没有钱，扣款失败，singo十分纳闷</p><h3 id="幻读（前后多次读取，数据总量不一致）"><a href="#幻读（前后多次读取，数据总量不一致）" class="headerlink" title="幻读（前后多次读取，数据总量不一致）"></a>幻读（前后多次读取，数据总量不一致）</h3><p> 事务A在执行读取操作，需要两次统计数据的总量，前一次查询数据总量后，此时事务B执行了新增数据的操作并提交后，这个时候事务A读取的数据总量和之前统计的不一样，就像产生了幻觉一样，平白无故的多了几条数据，成为幻读。</p><p> 实例：singo去银行查询老婆的消费记录，显示一共消费了1000元，正当singo将记录打印出来的时候， singo的老婆正好买完了一个500的包包并付了款，即新增了一条500元的消费记录且提交了事务。此时，singo打印出来的记录显示消费金额为1500元,singo很不解，以为出现了幻觉，幻读就这样产生了。 </p><h3 id="不可重复读和幻读比较："><a href="#不可重复读和幻读比较：" class="headerlink" title="不可重复读和幻读比较："></a><strong>不可重复读和幻读比较：</strong></h3><p>两者有些相似，但是前者针对的是update或delete，后者针对的insert。</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="一、数据库事务隔离级别"><a href="#一、数据库事务隔离级别" class="headerlink" title="一、数据库事务隔离级别"></a><strong>一、数据库事务隔离级别</strong></h2><p> 数据库事务的隔离级别有4个，由低到高依次为Read uncommitted 、Read committed 、Repeatable read 、Serializable ，这四个级别可以逐个解决脏读 、不可重复读 、幻读 这几类问题。</p><p> 注意：我们讨论隔离级别的场景，主要是在多个事务并发 的情况下，因此，接下来的讲解都围绕事务并发。 </p><h3 id="Read-Uncommitted（未提交读）-："><a href="#Read-Uncommitted（未提交读）-：" class="headerlink" title="Read Uncommitted（未提交读） ："></a><strong>Read Uncommitted（未提交读）</strong> ：</h3><p> 事务中的修改，即使没有提交，其他事务也可以看得到，会导致“脏读”、“幻读”和“不可重复读取”。 </p><h3 id="EAD-COMMITTED-（提交读）："><a href="#EAD-COMMITTED-（提交读）：" class="headerlink" title="EAD COMMITTED （提交读）："></a><strong>EAD COMMITTED （提交读）</strong>：</h3><p>大多数主流数据库的默认事务等级，保证了一个事务不会读到另一个并行事务已修改但未提交的数据，避免了“脏读取”，但不能避免“幻读”和“不可重复读取”。该级别适用于大多数系统。 </p><h3 id="REPEATABLE-READ（重复读）-："><a href="#REPEATABLE-READ（重复读）-：" class="headerlink" title="REPEATABLE READ（重复读） ："></a><strong>REPEATABLE READ（重复读）</strong> ：</h3><p>保证了一个事务不会修改已经由另一个事务读取但未提交（回滚）的数据。避免了“脏读取”和“不可重复读取”的情况，但不能避免“幻读”，但是带来了更多的性能损失。 </p><h3 id="Serializable-（串行化）："><a href="#Serializable-（串行化）：" class="headerlink" title="Serializable （串行化）："></a><strong>Serializable （串行化）</strong>：</h3><p>最严格的级别，事务串行执行，资源消耗最大； </p><h2 id="二、脏读、不可重复读、幻读"><a href="#二、脏读、不可重复读、幻读" class="headerlink" title="二、脏读、不可重复读、幻读"></a>二、<strong>脏读、不可重复读、幻读</strong></h2><h3 id="脏读（读取未提交数据）"><a href="#脏读（读取未提交数据）" class="headerlink" title="脏读（读取未提交数据）"></a>脏读（读取未提交数据）</h3><p>A事务读取B事务尚未提交的数据，此时如果B事务发生错误并执行回滚操作，那么A事务读取到的数据就是脏数据。就好像原本的数据比较干净、纯粹，此时由于B事务更改了它，这个数据变得不再纯粹。这个时候A事务立即读取了这个脏数据，但事务B良心发现，又用回滚把数据恢复成原来干净、纯粹的样子，而事务A却什么都不知道，最终结果就是事务A读取了此次的脏数据，称为脏读。</p><p><strong>实例</strong>：公司发工资了，领导把5000元打到singo的账号上，但是该事务并未提交，而singo正好去查看账户，发现工资已经到账，是5000元整，非常高 兴。可是不幸的是，领导发现发给singo的工资金额不对，是2000元，于是迅速回滚了事务，修改金额后，将事务提交，最后singo实际的工资只有 2000元，singo空欢喜一场。</p><h3 id="不可重复读（前后多次读取，数据内容不一致）"><a href="#不可重复读（前后多次读取，数据内容不一致）" class="headerlink" title="不可重复读（前后多次读取，数据内容不一致）"></a>不可重复读（前后多次读取，数据内容不一致）</h3><p>是指在一个事务内，多次读同一数据。在这个事务还没有结束时，另外一个事务也访问该同一数据。那么，在第一个事务中的两次读数据之间，由于第二个事务的修改，那么第一个事务两次读到的的数据可能是不一样的。这样就发生了在一个事务内两次读到的数据是不一样的，因此称为是不可重复读。（即不能读到相同的数据内容）</p><p><strong>实例</strong>：singo拿着工资卡去消费，系统读取到卡里确实有2000元，而此时她的老婆也正好在网上转账，把singo工资卡的2000元转到另一账户，并在 singo之前提交了事务，当singo扣款时，系统检查到singo的工资卡已经没有钱，扣款失败，singo十分纳闷</p><h3 id="幻读（前后多次读取，数据总量不一致）"><a href="#幻读（前后多次读取，数据总量不一致）" class="headerlink" title="幻读（前后多次读取，数据总量不一致）"></a>幻读（前后多次读取，数据总量不一致）</h3><p> 事务A在执行读取操作，需要两次统计数据的总量，前一次查询数据总量后，此时事务B执行了新增数据的操作并提交后，这个时候事务A读取的数据总量和之前统计的不一样，就像产生了幻觉一样，平白无故的多了几条数据，成为幻读。</p><p> 实例：singo去银行查询老婆的消费记录，显示一共消费了1000元，正当singo将记录打印出来的时候， singo的老婆正好买完了一个500的包包并付了款，即新增了一条500元的消费记录且提交了事务。此时，singo打印出来的记录显示消费金额为1500元,singo很不解，以为出现了幻觉，幻读就这样产生了。 </p><h3 id="不可重复读和幻读比较："><a href="#不可重复读和幻读比较：" class="headerlink" title="不可重复读和幻读比较："></a><strong>不可重复读和幻读比较：</strong></h3><p>两者有些相似，但是前者针对的是update或delete，后者针对的insert。</p>]]></content>
     
     <summary type="html">
     
@@ -268,108 +382,13 @@
     <link href="http://yoursite.com/2019/11/22/HashMap%E7%9A%84%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     <id>http://yoursite.com/2019/11/22/HashMap%E7%9A%84%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/</id>
     <published>2019-11-22T07:15:02.000Z</published>
-    <updated>2019-11-23T09:59:30.903Z</updated>
+    <updated>2020-01-23T06:23:53.043Z</updated>
     
     <content type="html"><![CDATA[<h3 id="一-HashMap的原理"><a href="#一-HashMap的原理" class="headerlink" title="一.HashMap的原理"></a><strong>一.HashMap的原理</strong></h3><p>当两个不同的键对象的hashcode相同时会发生什么？ 它们会储存在同一个bucket位置的链表中。键对象的equals()方法用来找到键值对。</p><p> HashMap的好处非常多，我们会经常用到HashMap和ConcurrentHashMap。 </p><p>HashMap 是内部基于哈希表实现，该类继承AbstractMap，实现Map接口。</p><p>HashMap中的key、value可以为null，很显然只能有一个key为null的键值对，但是允许有多个值为null的键值对；由于它的键可以是为空的，所以，所以我们不能用get（key）判断是否有这个键，而应该用containsKey（）这个方法来判断是否有这个键；</p><p>HashMap数据结构的优点    1.适合海量数据   2.o(1)的随机访问速度，不是可遍历。</p><p> HashMap默认容量为16，且要求容量一定为2的整数次幂。 </p><h3 id="二-HashMap和Hashtable的区别"><a href="#二-HashMap和Hashtable的区别" class="headerlink" title="二.HashMap和Hashtable的区别"></a><strong>二.HashMap和Hashtable的区别</strong></h3><p> HashMap和Hashtable都实现了Map接口，但决定用哪一个之前先要弄清楚它们之间的分别。主要的区别有：线程安全性，同步(synchronization)，以及速度 </p><p>1.HashMap允许将 null 作为一个 entry 的 key 或者 value，而 Hashtable 不允许。</p><p>2.HashMap是非synchronized，而Hashtable是synchronized，这意味着Hashtable是线程安全的，多个线程可以共享一个Hashtable；而如果没有正确的同步的话，多个线程是不能共享HashMap的。Java 5提供了ConcurrentHashMap，它是HashTable的替代，比HashTable的扩展性更好。 </p><p>3.由于Hashtable是线程安全的也是synchronized，所以在单线程环境下它比HashMap要慢。如果你不需要同步，只需要单一线程，那么使用HashMap性能要好过Hashtable。 </p><p>4.HashMap不能保证随着时间的推移Map中的元素次序是不变的。 </p><p>5.HashMap可以通过下面的语句进行同步：<br>Map m = Collections.synchronizeMap(hashMap); </p><p>6.Properties 类 继承了 Hashtable 类，而 Hashtable 类则继承Dictionary 类</p><h3 id="三-HashMap和HashSet的区别"><a href="#三-HashMap和HashSet的区别" class="headerlink" title="三.HashMap和HashSet的区别"></a>三.HashMap和HashSet的区别</h3><p> 1.HashMap实现了Map接口 ,HashSet实现了Set接口 </p><p> 2.HashMap储存键值对 ,HashSet仅仅存储对象 </p><p>3.HashSet仅仅存储对象 , ,HashSet使用add()方法将元素放入set中 </p><p>4.HashMap中使用键对象来计算hashcode值 , HashSet使用成员对象来计算hashcode值，对于两个对象来说hashcode可能相同，所以equals()方法用来判断对象的相等性，如果两个对象不同的话，那么返回false </p><p>5.HashSet较HashMap来说比较慢 </p><h3 id="四-CurrentHashMap和HashMap的区别"><a href="#四-CurrentHashMap和HashMap的区别" class="headerlink" title="四.CurrentHashMap和HashMap的区别"></a>四.CurrentHashMap和HashMap的区别</h3><p>在jdk1.5的时候就出来了CurrentHashMap来弥补HashMap的线程不安全的特性；CurrentHashMap，是将HashMap分成了很多个片（一般默认是16片），引入了分段锁的概念，然后对每一片加锁，具体可以理解成一把大的Map分解成N个小的HashTable，根据key.hashCode()来决定放到哪一个片上；</p><p>由于安全机制的原因，HashMap的效率比HashTable，CurrentHashMap的效率高；但是由于CurrentHashMap加锁的高效性,HashTable是整个加锁，他的效率比HashTable高； 总的来说 <strong>HashMap&gt;CurrentHashMap&gt;HashTable;</strong></p><p>CurrentHashMap的问题还得单独拿出来说一下，东西挺多的，等我在另外一篇博客总结一下吧。</p><h3 id="五-最重要的来了，面试题！"><a href="#五-最重要的来了，面试题！" class="headerlink" title="五.最重要的来了，面试题！"></a><strong>五.最重要的来了，面试题！</strong></h3><p> 1.“你知道HashMap的工作原理吗？” “你知道HashMap的get()方法的工作原理吗？” 答案如下:</p><p> HashMap是基于hashing的原理，我们使用put(key,  value)存储对象到HashMap中，使用get(key)从HashMap中获取对象。当我们给put()方法传递键和值时，我们先对键调用hashCode()方法，返回的hashCode用于找到bucket位置来储存Entry对象。”这里关键点在于指出，HashMap是在bucket中储存键对象和值对象，作为Map.Entry。这一点有助于理解获取对象的逻辑。 </p><p> 2.下个问题可能是关于HashMap中的碰撞探测(collision detection)以及碰撞的解决方法： </p><p> “当两个对象的hashcode相同会发生什么？”      因为hashcode相同，所以它们的bucket位置相同，‘碰撞’会发生。因为HashMap使用链表存储对象，这个Entry(包含有键值对的Map.Entry对象)会存储在链表中。 </p><p> “如果两个键的hashcode相同，你如何获取值对象？”    当我们调用get()方法，HashMap会使用键对象的hashcode找到bucket位置 ,找到bucket位置之后，会调用keys.equals()方法去找到链表中正确的节点，最终找到要找的值对象。完美的答案！  </p><p>3.’’如果HashMap的大小超过了负载因子(load factor)定义的容量，怎么办?’’ :</p><p>默认的负载因子大小为0.75，也就是说，当一个map填满了75%的bucket时候，和其它集合类(如ArrayList等)一样，将会创建原来HashMap大小的两倍的bucket数组，来重新调整map的大小，并将原来的对象放入新的bucket数组中。这个过程叫作rehashing，因为它调用hash方法找到新的bucket位置。 </p><p>4.“你了解重新调整HashMap大小存在什么问题吗？” </p><p>当重新调整HashMap大小的时候，确实存在条件竞争，因为如果两个线程都发现HashMap需要重新调整大小了，它们会同时试着调整大小。在调整大小的过程中，存储在链表中的元素的次序会反过来，因为移动到新的bucket位置的时候，HashMap并不会将元素放在链表的尾部，而是放在头部，这是为了避免尾部遍历(tail  traversing)。如果条件竞争发生了，那么就死循环了。这个时候，你可以质问面试官，为什么这么奇怪，要在多线程的环境下使用HashMap呢？ </p><p>5.为什么String, Interger这样的wrapper类适合作为键？ </p><p>一些优秀的开发者会指出使用不可变的、声明作final的对象，并且采用合适的equals()和hashCode()方法的话，将会减少碰撞的发生，提高效率。不可变性使得能够缓存不同键的hashcode，这将提高整个获取对象的速度，使用String，Interger这样的wrapper类作为键是非常好的选择。 </p><p> 我们可以使用自定义的对象作为键吗？ 这是前一个问题的延伸。当然你可能使用任何对象作为键，只要它遵守了equals()和hashCode()方法的定义规则，并且当对象插入到Map中之后将不会再改变了。如果这个自定义对象时不可变的，那么它已经满足了作为键的条件，因为当它创建之后就已经不能改变了。 </p><p> 6.我们可以使用CocurrentHashMap来代替Hashtable吗？</p><p>这是另外一个很热门的面试题，因为ConcurrentHashMap越来越多人用了。我们知道Hashtable是synchronized的，但是ConcurrentHashMap同步性能更好，因为它仅仅根据同步级别对map的一部分进行上锁。ConcurrentHashMap当然可以代替HashTable，但是HashTable提供更强的线程安全性 </p><p>这已经是非常全的内容和面经了，东西虽然多，但是非常重要，希望我自己也能滚瓜乱熟！</p><p>借鉴文章地址：<a href="https://blog.csdn.net/suifeng629/article/details/82179996" target="_blank" rel="noopener">https://blog.csdn.net/suifeng629/article/details/82179996</a></p>]]></content>
     
     <summary type="html">
     
       HashMap的原理以及和HashTable，CurrentHashMap，TreeMap的区别，程序员新手老生常谈的问题，必看！通俗易懂，而且全，有面试的更加推荐奥！
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>内部类</title>
-    <link href="http://yoursite.com/2019/11/22/%E5%86%85%E9%83%A8%E7%B1%BB/"/>
-    <id>http://yoursite.com/2019/11/22/%E5%86%85%E9%83%A8%E7%B1%BB/</id>
-    <published>2019-11-22T07:00:47.000Z</published>
-    <updated>2019-11-22T07:07:48.101Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="/.com//C:%5CUsers%5Cqq%5CDesktop%5Cprogram%5CHexoBlog%5Csource_posts%5C%E5%86%85%E9%83%A8%E7%B1%BB%5C%E5%86%85%E9%83%A8%E7%B1%BB.png" alt="内部类"></p>]]></content>
-    
-    <summary type="html">
-    
-      内部类大全，拿走不谢！
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>javac和java的区别</title>
-    <link href="http://yoursite.com/2019/11/22/javac%E5%92%8Cjava%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-    <id>http://yoursite.com/2019/11/22/javac%E5%92%8Cjava%E7%9A%84%E5%8C%BA%E5%88%AB/</id>
-    <published>2019-11-22T06:44:47.000Z</published>
-    <updated>2019-11-22T06:45:26.145Z</updated>
-    
-    <content type="html"><![CDATA[<p>cmd中，执行java命令与javac命令的区别：</p><p><strong>javac</strong>：是编译命令，将java源文件编译成.class字节码文件。</p><p>例如：<strong>javac hello.java</strong></p><p>将生成<strong>hello.class</strong>文件。</p><p><strong>java</strong>：是运行字节码文件；由java虚拟机对字节码进行解释和运行。</p><p>例如：<strong>java hello</strong>（相当于运行.exe文件）</p>]]></content>
-    
-    <summary type="html">
-    
-      简述javac和java命令
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Interger方法</title>
-    <link href="http://yoursite.com/2019/11/22/Interger%E6%96%B9%E6%B3%95/"/>
-    <id>http://yoursite.com/2019/11/22/Interger%E6%96%B9%E6%B3%95/</id>
-    <published>2019-11-22T06:43:28.000Z</published>
-    <updated>2019-11-22T06:44:21.544Z</updated>
-    
-    <content type="html"><![CDATA[<p>  Integer.parseInt(“”);是将字符串类型转换为int的基础数据类型 </p><p>  Integer.valueOf(“”)是将字符串类型数据转换为Integer对象 </p><p>  Integer.intValue();是将Integer对象中的数据取出，返回一个基础数据类型int </p><p>牛客的一道例题：</p><p>  a = Integer.parseInt(“1024”);  </p><p>  b = Integer.valueOf(“1024”).intValue();     </p><p>小伙伴认为是什么呢？</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a和b都是整数类型变量并且它们的值相等</span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      Interger包装类常用方法，面试用奥
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>面向对象5大基本原则</title>
-    <link href="http://yoursite.com/2019/11/22/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A15%E5%A4%A7%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99/"/>
-    <id>http://yoursite.com/2019/11/22/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A15%E5%A4%A7%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99/</id>
-    <published>2019-11-22T06:42:11.000Z</published>
-    <updated>2019-11-22T06:43:01.971Z</updated>
-    
-    <content type="html"><![CDATA[<p> <strong>单一职责原则（SRP）</strong>：一个类，最好只做一件事，只有一个引起它的变化。单一职责原则可以看做是低耦合、高内聚在面向对象原则上的引申，将职责定义为引起变化的原因，以提高内聚性来减少引起变化的原因。<br> <strong>开放封闭原则（OCP）</strong>：软件实体应该是可扩展的，而不可修改的。也就是，对扩展开放，对修改封闭的。<br> <strong>Liskov替换原则（LSP）</strong>：子类必须能够替换其基类。这一思想体现为对继承机制的约束规范，只有子类能够替换基类时，才能保证系统在运行期内识别子类，这是保证继承复用的基础。<br> <strong>依赖倒置原则（DIP）</strong>：依赖于抽象。具体而言就是高层模块不依赖于底层模块，二者都同依赖于抽象；抽象不依赖于具体，具体依赖于抽象。<br> <strong>接口隔离原则（ISP）</strong>：使用多个小的专门的接口，而不要使用一个大的总接口 。</p><p>很多同学或者新手学了java也挺长时间了，但五大基本原则有的还都没有听说过，最近在牛客网刷题，既然考出来了就给大家放上去吧。看看，嘻嘻！</p>]]></content>
-    
-    <summary type="html">
-    
-      java面向对象
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>远程数据库导入本地</title>
-    <link href="http://yoursite.com/2019/11/21/%E8%BF%9C%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%BC%E5%85%A5%E6%9C%AC%E5%9C%B0/"/>
-    <id>http://yoursite.com/2019/11/21/%E8%BF%9C%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%BC%E5%85%A5%E6%9C%AC%E5%9C%B0/</id>
-    <published>2019-11-21T04:20:56.000Z</published>
-    <updated>2019-11-22T05:14:09.987Z</updated>
-    
-    <content type="html"><![CDATA[<p>本人在刚上大三的时候，和同学接了一个小项目，是一个老师的监督管理系统，也是第一次有稍稍多的数据量（小声哔哔，对我这种菜鸟已经算多了)几千条左右。那时，朋友将数据全部都导入到了他的MySql中，并修改了部分，我去和他要，他让我自己导入进去，没办法只能上网搜索，没想到还挺简单。这次，记录下来也是为了让自己记住，下次可以一起性搞定！</p><p>一.Ctrl+R 打开CMD</p><p>二.输入                                                                                                                                                    <strong>mysqldump -h 111.111.111.111  -uROSE -pPASSWORD  –port  3306   –opt   –compress  sdbname</strong>  </p><p><strong>–skip-lock-tables |  mysql -h  localhost  -uroot -proot  dbname</strong></p><p>三.<font color="red">注意事项</font>(千万注意，我就是弄混了，输错了好几遍！)</p><p><strong>111.111.111.111</strong> 远程服务器ip </p><p><strong>ROSE</strong> 远程数据库用户名</p><p><strong>PASSWORD</strong> 远程数据库用户密码</p><p><strong>3306</strong> 远程数据库使用的端口</p><p><strong>sdbname</strong> 要导入的源数据库名</p><p><strong>dbname</strong> 要导入的目的数据库名</p><p>转载地址： <a href="https://blog.csdn.net/gj591851/article/details/45287953" target="_blank" rel="noopener">https://blog.csdn.net/gj591851/article/details/45287953</a> </p>]]></content>
-    
-    <summary type="html">
-    
-      这篇讲解如何将远程数据库导入本地数据库
     
     </summary>
     
