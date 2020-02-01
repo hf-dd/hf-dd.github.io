@@ -15,14 +15,14 @@
 
 
 
-<meta name="description" content="Sleep和Wait的区别，简显易懂">
+<meta name="description" content="深入理解JVM的垃圾回收机制GC！">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Sleep,和Wait!">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;19&#x2F;Sleep%E5%92%8CWait&#x2F;index.html">
+<meta property="og:title" content="JVM的垃圾回收机制！">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;25&#x2F;JVM%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%81&#x2F;index.html">
 <meta property="og:site_name" content="HF Blog">
-<meta property="og:description" content="Sleep和Wait的区别，简显易懂">
+<meta property="og:description" content="深入理解JVM的垃圾回收机制GC！">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-01-30T12:47:15.761Z">
+<meta property="og:updated_time" content="2020-01-29T03:44:23.105Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -55,7 +55,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Sleep,和Wait! | HF Blog</title>
+<title>JVM的垃圾回收机制！ | HF Blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -213,11 +213,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-Sleep和Wait" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-JVM的垃圾回收机制！" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2020/01/19/Sleep%E5%92%8CWait/" class="article-date">
-      <time datetime="2020-01-19T12:32:31.000Z" itemprop="datePublished">2020-01-19</time>
+      <a href="/2020/01/25/JVM%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%81/" class="article-date">
+      <time datetime="2020-01-25T13:48:11.000Z" itemprop="datePublished">2020-01-25</time>
 </a>
 
 
@@ -232,7 +232,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Sleep,和Wait!
+      JVM的垃圾回收机制！
     </h1>
   
 
@@ -249,12 +249,50 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="sleep"><a href="#sleep" class="headerlink" title="sleep"></a>sleep</h3><p>继承自Thread类，无释放锁，会给低优先级线程运行的机会，必须捕获异常，让当前线程休眠指定时间，也可由interrupt()方法来唤醒，静态方法，任何地方可以使用，执行sleep()方法后转入阻塞状态。</p>
-<h3 id="yield"><a href="#yield" class="headerlink" title="yield"></a><strong>yield</strong></h3><p>yield()方法只会给相同优先级或更高优先级的线程以运行的机会，无需捕获异常，执行yield()方法后转入就绪状态。</p>
-<h3 id="wait"><a href="#wait" class="headerlink" title="wait"></a>wait</h3><p>继承自Object类，释放了锁（使得其他线程可以使用同步控制块或者方法），无需捕获异常，由notify,notifyAll方法唤醒，实例方法，只能在同步控制方法或者同步控制块里面使用。</p>
-<h3 id="为什么wait只能在同步控制方法或者同步控制块里面使用？"><a href="#为什么wait只能在同步控制方法或者同步控制块里面使用？" class="headerlink" title="为什么wait只能在同步控制方法或者同步控制块里面使用？"></a>为什么wait只能在同步控制方法或者同步控制块里面使用？</h3><p>wait()暂停的是持有锁的对象，所以想调用wait()必须为:对象.wait();</p>
-<p>因为要对持有锁的线程操作，所以要使用在同步中，因为只有同步才具有锁。</p>
-<p><strong>锁可以是任意对象，所以任意对象调用的方法一定是定义在Object类中</strong></p>
+        <h3 id="1-类加载器子系统"><a href="#1-类加载器子系统" class="headerlink" title="1.类加载器子系统"></a>1.类加载器子系统</h3><p>Java的动态类加载功能是由类加载器子系统处理。采用的是双亲委派机制（加载类先交给上层父类加载）</p>
+<p>启动类加载器 (BootStrap class Loader)：启动时初始加载一些包，<strong>rt.jar</strong>，根加载器，拥有最高权限。</p>
+<p>扩展类加载器(Extension class Loader)：加载扩展功能的一些jar包。</p>
+<p>应用程序类加载器(System ClassLoader)：加载class path下的所有类。</p>
+<h3 id="2-运行时数据区"><a href="#2-运行时数据区" class="headerlink" title="2.运行时数据区"></a>2.运行时数据区</h3><p>方法区（Method Area）：所有类，静态变量，静态方法，成员方法，常量，共享（线程不安全）。</p>
+<p>堆区（Heap Area）：所有对象和他的实例new出来的，数组，共享（不安全）。</p>
+<p>栈区（Stack Area）：局部变量，对象的引用，每个线程创建（安全）。</p>
+<p>程序计数器：（唯一一个不抛出OOM）保存当前线程执行的内存地址。安全</p>
+<p>本地方法栈：为JVM使用到的native方法服务。</p>
+<h3 id="3-GC（垃圾回收）"><a href="#3-GC（垃圾回收）" class="headerlink" title="3.GC（垃圾回收）"></a>3.GC（垃圾回收）</h3><p>GC的作用：  排查内存溢出，排查内存泄漏，性能调优，排查并发瓶颈</p>
+<p>GC做了什么：哪些内存需要回收？什么时候回收？如何回收？</p>
+<h4 id="哪些内存需要回收？"><a href="#哪些内存需要回收？" class="headerlink" title="哪些内存需要回收？"></a>哪些内存需要回收？</h4><p>回收已经”死“的内存，哪些已”死“？</p>
+<p>对象没有引用，作用域发生未捕获异常，程序在作用域正常执行完毕，程序执行了System.exit()，程序发生意外终止（被杀进程等）</p>
+<p><strong>判断已死方法</strong>：最早的引用计数法，引用一个对象时，计数器加一，引用失效，减一。为0时判断已死，有弊端，无法解决循环引用问题，所有java不使用该方法。而采用的方法为<strong>可达性分析算法</strong>，从根节点GC ROOT开始，向下寻找它的引用节点，没有找到的节点就是无用可回收节点。</p>
+<p>可作为GC Roots的对象包含以下几种：</p>
+<ol>
+<li>虚拟机栈中引用的对象。</li>
+<li>方法区中静态属性引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>本地方法栈中(Native方法)引用的对象</li>
+</ol>
+<h4 id="什么时候回收？"><a href="#什么时候回收？" class="headerlink" title="什么时候回收？"></a>什么时候回收？</h4><p>引用的分类：强引用（只要强引用在，永远不回收），软引用（内存够，就不回收，不够就回收了），弱引用（不管内存够不够都回收），虚引用（每次都回收）。</p>
+<p><strong>可达性分析算法</strong>后标记的无用节点，并不是直接回收，会再进行一次筛选判断有必要执行finalize()，没有则死，有则得到一次最后逃脱死亡的机会。</p>
+<p><strong>类被回收的条件</strong>：该类的所有实例都已经被回收(即在Java堆中不存在任何该类的实例)，加载该类的ClassLoader已被回收，该类对应的Class对象没有任何其他地方被引用，无法在任何地方通过反射访问该类的方法。</p>
+<h4 id="如何回收？"><a href="#如何回收？" class="headerlink" title="如何回收？"></a>如何回收？</h4><p><strong>标记-清除算法</strong>：先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象。</p>
+<p>缺点：效率低，会产生内存碎片。</p>
+<p><strong>复制算法</strong>：将内存分成大小相同俩块，每次只用一块。第一块回收完，将活着的对象放到另外一块，第一块彻底清理，下次一样。效率高，不会产生内存碎片。</p>
+<p><strong>标记-整理算法</strong>：在标记-清除算法的基础上，回收后将存活对象都推到左端空闲区域，解决内存碎片问题。</p>
+<p><strong>JVM的优化：</strong>采用分代回收方式。</p>
+<p>新生代内存的回收（minor GC）主要采用复制算法，新生代分成三部分，Eden,  Survivor  From，Survivor To=8:1:1。 将Eden和From区存活对象，放入To区，清空前面俩区，下次就是Eden和To到From，Survivor内存不够时，存入老年代。</p>
+<p>老年代内存回收（Full GC，Major GC）主要采用标记-整理算法。</p>
+<p>区别：新生代，每次有大量对象产生，大量对象被回收，次数频繁，因此采用效率高，速度快的复制算法。</p>
+<p>老年代，对象存活率高，没有额外空间对它进行分配，采用标记-整理算法，次数少，Major GC的速度一般会比Minor GC慢10倍以上。</p>
+<p><strong>JVM垃圾回收器</strong>：串行（Serial），并行（Parallel,ParNew），并发（CMS）</p>
+<p>Serial收集器：JVM需要进行垃圾回收的时候，需要中断所有的用户线程，知道它回收结束为止.</p>
+<p>串行回收方式适合低端机器，是Client模式下的默认收集器，对CPU和内存的消耗不高，适合用户交互比较少，后台任务较多的系统。</p>
+<p>Serial收集器默认新旧生代的回收器搭配为Serial+ SerialOld.</p>
+<p> ParNew收集器：多CPU模式下的首选回收器，也是Server模式下的默认收集器。</p>
+<p>ParallelScavenge收集器：又被称为是吞吐量优先的收集器。    </p>
+<p>ParallelOld收集器：是老生代并行收集器的一种，使用标记整理算法、是老生代吞吐量优先的一个收集器。</p>
+<p><strong>CMS</strong>：又称响应时间优先(最短回收停顿)的回收器，使用并发模式回收垃圾，使用标记-清除算法。</p>
+<p>过程为：初始标记，并发标记，重新标记，并发清除。</p>
+<p>优点：并发收集、低停顿。</p>
+<p>缺点：CMS收集器对CPU资源非常敏感，占CPU资源，且总吞吐量下降，基于标志-清除算法，会产生碎片。</p>
 
       
     </div>
@@ -263,13 +301,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2020/01/19/Sleep%E5%92%8CWait/">Sleep,和Wait!</a></p>
+        <p><span>本文标题:</span><a href="/2020/01/25/JVM%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%81/">JVM的垃圾回收机制！</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
-        <p><span>发布时间:</span>2020-01-19, 20:32:31</p>
-        <p><span>最后更新:</span>2020-01-30, 20:47:15</p>
+        <p><span>发布时间:</span>2020-01-25, 21:48:11</p>
+        <p><span>最后更新:</span>2020-01-29, 11:44:23</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2020/01/19/Sleep%E5%92%8CWait/" title="Sleep,和Wait!">http://yoursite.com/2020/01/19/Sleep%E5%92%8CWait/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/01/19/Sleep%E5%92%8CWait/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2020/01/25/JVM%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%81/" title="JVM的垃圾回收机制！">http://yoursite.com/2020/01/25/JVM%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%81/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/01/25/JVM%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%81/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -282,15 +320,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2020/01/21/ThreadLocl%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%81/">
-                    ThreadLocl
+                <a href="/2020/01/27/%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/">
+                    进程的通信方式?
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">
-                    Nosql
+                <a href="/2020/01/23/TCP%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84%EF%BC%9F/">
+                    TCP是如何保证传输可靠性的？
                 </a>
             </div>
         
@@ -302,7 +340,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#sleep"><span class="toc-number">1.</span> <span class="toc-text">sleep</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#yield"><span class="toc-number">2.</span> <span class="toc-text">yield</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wait"><span class="toc-number">3.</span> <span class="toc-text">wait</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么wait只能在同步控制方法或者同步控制块里面使用？"><span class="toc-number">4.</span> <span class="toc-text">为什么wait只能在同步控制方法或者同步控制块里面使用？</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-类加载器子系统"><span class="toc-number">1.</span> <span class="toc-text">1.类加载器子系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-运行时数据区"><span class="toc-number">2.</span> <span class="toc-text">2.运行时数据区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-GC（垃圾回收）"><span class="toc-number">3.</span> <span class="toc-text">3.GC（垃圾回收）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#哪些内存需要回收？"><span class="toc-number">3.1.</span> <span class="toc-text">哪些内存需要回收？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#什么时候回收？"><span class="toc-number">3.2.</span> <span class="toc-text">什么时候回收？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#如何回收？"><span class="toc-number">3.3.</span> <span class="toc-text">如何回收？</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -338,7 +376,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"Sleep,和Wait!　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"JVM的垃圾回收机制！　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -358,7 +396,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2020/01/21/ThreadLocl%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%81/" title="上一篇: ThreadLocl">
+            <a href="/2020/01/27/%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" title="上一篇: 进程的通信方式?">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -366,7 +404,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" title="下一篇: Nosql">
+            <a href="/2020/01/23/TCP%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84%EF%BC%9F/" title="下一篇: TCP是如何保证传输可靠性的？">
                 <i class="fa fa-angle-right"></i>
             </a>
         

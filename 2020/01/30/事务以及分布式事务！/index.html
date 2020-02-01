@@ -15,14 +15,14 @@
 
 
 
-<meta name="description" content="Sleep和Wait的区别，简显易懂">
+<meta name="description" content="面试高频的事务，必须总结一番">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Sleep,和Wait!">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;19&#x2F;Sleep%E5%92%8CWait&#x2F;index.html">
+<meta property="og:title" content="事务以及分布式事务！">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;30&#x2F;%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%81&#x2F;index.html">
 <meta property="og:site_name" content="HF Blog">
-<meta property="og:description" content="Sleep和Wait的区别，简显易懂">
+<meta property="og:description" content="面试高频的事务，必须总结一番">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-01-30T12:47:15.761Z">
+<meta property="og:updated_time" content="2020-01-30T04:55:16.777Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -55,7 +55,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Sleep,和Wait! | HF Blog</title>
+<title>事务以及分布式事务！ | HF Blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -213,11 +213,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-Sleep和Wait" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-事务以及分布式事务！" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2020/01/19/Sleep%E5%92%8CWait/" class="article-date">
-      <time datetime="2020-01-19T12:32:31.000Z" itemprop="datePublished">2020-01-19</time>
+      <a href="/2020/01/30/%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%81/" class="article-date">
+      <time datetime="2020-01-30T03:27:02.000Z" itemprop="datePublished">2020-01-30</time>
 </a>
 
 
@@ -232,7 +232,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Sleep,和Wait!
+      事务以及分布式事务！
     </h1>
   
 
@@ -249,12 +249,30 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="sleep"><a href="#sleep" class="headerlink" title="sleep"></a>sleep</h3><p>继承自Thread类，无释放锁，会给低优先级线程运行的机会，必须捕获异常，让当前线程休眠指定时间，也可由interrupt()方法来唤醒，静态方法，任何地方可以使用，执行sleep()方法后转入阻塞状态。</p>
-<h3 id="yield"><a href="#yield" class="headerlink" title="yield"></a><strong>yield</strong></h3><p>yield()方法只会给相同优先级或更高优先级的线程以运行的机会，无需捕获异常，执行yield()方法后转入就绪状态。</p>
-<h3 id="wait"><a href="#wait" class="headerlink" title="wait"></a>wait</h3><p>继承自Object类，释放了锁（使得其他线程可以使用同步控制块或者方法），无需捕获异常，由notify,notifyAll方法唤醒，实例方法，只能在同步控制方法或者同步控制块里面使用。</p>
-<h3 id="为什么wait只能在同步控制方法或者同步控制块里面使用？"><a href="#为什么wait只能在同步控制方法或者同步控制块里面使用？" class="headerlink" title="为什么wait只能在同步控制方法或者同步控制块里面使用？"></a>为什么wait只能在同步控制方法或者同步控制块里面使用？</h3><p>wait()暂停的是持有锁的对象，所以想调用wait()必须为:对象.wait();</p>
-<p>因为要对持有锁的线程操作，所以要使用在同步中，因为只有同步才具有锁。</p>
-<p><strong>锁可以是任意对象，所以任意对象调用的方法一定是定义在Object类中</strong></p>
+        <h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><p>事务提供一种“要么什么都不做，要么都做”的机制，她有ACID四大特性：</p>
+<p>原子性（A）：一个事务是一个不可分割的工作单位，要么都做，要么都不做。</p>
+<p>一致性（C）：事务必须是使数据库从一个一致性状态变到另一个一致性状态。一致状态是指数据库中的数据应满足完整性约束。</p>
+<p>隔离性（I）：多个事务并发执行时，一个事务的执行不应影响其他事务的执行。</p>
+<p>持久性（D）：已被提交的事务对数据库的修改应该永久性的。</p>
+<p><strong>单机事务</strong>：事务的隔离性是通过数据库锁的机制实现的，持久性通过redo log（重做日志）来实现，原子性和一致性通过Undo log来实现。</p>
+<h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><p><strong>XA协议</strong>包含<strong>两阶段提交（2PC）</strong>和<strong>三阶段提交（3PC）</strong>两种实现。</p>
+<p><strong>两阶段提交（2PC）</strong>：包含俩个角色<strong>事务协调者</strong>TM和<strong>事务参与者</strong>AP。</p>
+<p><strong>第一阶段</strong>：事务协调者首先向所有的事务参与者发送Prepare请求。每个参与者执行相关事务操作Undo Log和Redo Log，如果参与者执行成功，暂时不提交事务，而是向事务协调节点返回“完成”消息。得到了所有参与者成功消息后，进入第二阶段。</p>
+<p><strong>第二阶段</strong>：因为前面都是成功消息，事务协调者会向所有事务参与者发送Commit请求，接到请求后事务参与者各自会进行事务提交，释放锁，然后返回协调者“完成”消息。整个流程完成。</p>
+<p><strong>出错流程</strong>：第一阶段如果都发送Prepare请求后，有一个或多个参与者返回了错误消息，必须进行回滚，所以第二阶段事务协调者会向所有参与者发送Abort请求，之后所有参与者进行回滚，回滚操作依照Undo Log来进行。</p>
+<p>缺点：<strong>1.性能问题</strong>，只有所有节点都准备好，事务才能提交，很明显性能很差。<strong>2.协调者单点故障问题</strong>，事务协调者一宕机，基本就全完了。<strong>3.丢失消息导致的不一致问题</strong>，不同事务参与者因为消息的丢失，导致节点数据不一样了。</p>
+<p><strong>解决方法：</strong></p>
+<p><strong>XA三阶段提交</strong>：在两阶段提交的基础上增加了CanCommit阶段，并且引入了超时机制。有效解决了协调者单点故障的问题，协调者挂掉，其他参与者超时得不到消息会自行本地commit。</p>
+<p><strong>MQ事务</strong>：引入了消息中间件（助理），负责消息的传递和事务执行状态的询问。这样就降低了系统间的耦合度，解决了性能问题。</p>
+<p><strong>TCC事务</strong>：TCC指的是Try(尝试)、Confirm（确认）、Cancle（取消）,其核心思想是：针对每个操作，都要注册一个与其对应的确认和补偿（撤销）操作。跟两阶段提交（2PC）比起来，实现以及流程相对简单了一些，但数据的一致性比2PC也要差一些。</p>
+<p><strong>拓展：</strong></p>
+<p>CAP定理</p>
+<p>CAP原则又称CAP定理，指的是在一个分布式系统中，WEB服务无法同时满足以下3个特性：</p>
+<pre><code>一致性(Consistency) ： 在分布式系统中数据一旦更新，所有数据变动都是同步的
+
+可用性(Availability) ： 好的响应性能，每个操作都必须有预期的响应结束
+
+分区容错性(Partition tolerance) ： 在网络分区的情况下，即使出现单个节点无法可用，系统依然正常对外提供服务</code></pre><p>首先在分布式系统中，横向扩展策略依赖于数据分区，所以一般会在一致性和可用性上做出牺牲。</p>
 
       
     </div>
@@ -263,13 +281,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2020/01/19/Sleep%E5%92%8CWait/">Sleep,和Wait!</a></p>
+        <p><span>本文标题:</span><a href="/2020/01/30/%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%81/">事务以及分布式事务！</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
-        <p><span>发布时间:</span>2020-01-19, 20:32:31</p>
-        <p><span>最后更新:</span>2020-01-30, 20:47:15</p>
+        <p><span>发布时间:</span>2020-01-30, 11:27:02</p>
+        <p><span>最后更新:</span>2020-01-30, 12:55:16</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2020/01/19/Sleep%E5%92%8CWait/" title="Sleep,和Wait!">http://yoursite.com/2020/01/19/Sleep%E5%92%8CWait/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/01/19/Sleep%E5%92%8CWait/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2020/01/30/%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%81/" title="事务以及分布式事务！">http://yoursite.com/2020/01/30/%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%81/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/01/30/%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%81/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -282,15 +300,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2020/01/21/ThreadLocl%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%81/">
-                    ThreadLocl
+                <a href="/2020/01/31/BIO-NIO-AIO/">
+                    BIO,NIO,AIO
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">
-                    Nosql
+                <a href="/2020/01/27/%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/">
+                    进程的通信方式?
                 </a>
             </div>
         
@@ -302,7 +320,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#sleep"><span class="toc-number">1.</span> <span class="toc-text">sleep</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#yield"><span class="toc-number">2.</span> <span class="toc-text">yield</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wait"><span class="toc-number">3.</span> <span class="toc-text">wait</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么wait只能在同步控制方法或者同步控制块里面使用？"><span class="toc-number">4.</span> <span class="toc-text">为什么wait只能在同步控制方法或者同步控制块里面使用？</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#事务"><span class="toc-number">1.</span> <span class="toc-text">事务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分布式事务"><span class="toc-number">2.</span> <span class="toc-text">分布式事务</span></a></li></ol>
         
     </div>
     <style>
@@ -338,7 +356,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"Sleep,和Wait!　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"事务以及分布式事务！　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -358,7 +376,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2020/01/21/ThreadLocl%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%81/" title="上一篇: ThreadLocl">
+            <a href="/2020/01/31/BIO-NIO-AIO/" title="上一篇: BIO,NIO,AIO">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -366,7 +384,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" title="下一篇: Nosql">
+            <a href="/2020/01/27/%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" title="下一篇: 进程的通信方式?">
                 <i class="fa fa-angle-right"></i>
             </a>
         

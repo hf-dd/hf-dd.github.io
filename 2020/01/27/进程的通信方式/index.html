@@ -15,14 +15,14 @@
 
 
 
-<meta name="description" content="Sleep和Wait的区别，简显易懂">
+<meta name="description" content="进程间通信IPC的几种方式？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Sleep,和Wait!">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;19&#x2F;Sleep%E5%92%8CWait&#x2F;index.html">
+<meta property="og:title" content="进程的通信方式?">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;27&#x2F;%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F&#x2F;index.html">
 <meta property="og:site_name" content="HF Blog">
-<meta property="og:description" content="Sleep和Wait的区别，简显易懂">
+<meta property="og:description" content="进程间通信IPC的几种方式？">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-01-30T12:47:15.761Z">
+<meta property="og:updated_time" content="2020-01-31T13:28:45.558Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -55,7 +55,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Sleep,和Wait! | HF Blog</title>
+<title>进程的通信方式? | HF Blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -213,11 +213,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-Sleep和Wait" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-进程的通信方式" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2020/01/19/Sleep%E5%92%8CWait/" class="article-date">
-      <time datetime="2020-01-19T12:32:31.000Z" itemprop="datePublished">2020-01-19</time>
+      <a href="/2020/01/27/%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" class="article-date">
+      <time datetime="2020-01-27T13:09:36.000Z" itemprop="datePublished">2020-01-27</time>
 </a>
 
 
@@ -232,7 +232,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Sleep,和Wait!
+      进程的通信方式?
     </h1>
   
 
@@ -249,12 +249,18 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="sleep"><a href="#sleep" class="headerlink" title="sleep"></a>sleep</h3><p>继承自Thread类，无释放锁，会给低优先级线程运行的机会，必须捕获异常，让当前线程休眠指定时间，也可由interrupt()方法来唤醒，静态方法，任何地方可以使用，执行sleep()方法后转入阻塞状态。</p>
-<h3 id="yield"><a href="#yield" class="headerlink" title="yield"></a><strong>yield</strong></h3><p>yield()方法只会给相同优先级或更高优先级的线程以运行的机会，无需捕获异常，执行yield()方法后转入就绪状态。</p>
-<h3 id="wait"><a href="#wait" class="headerlink" title="wait"></a>wait</h3><p>继承自Object类，释放了锁（使得其他线程可以使用同步控制块或者方法），无需捕获异常，由notify,notifyAll方法唤醒，实例方法，只能在同步控制方法或者同步控制块里面使用。</p>
-<h3 id="为什么wait只能在同步控制方法或者同步控制块里面使用？"><a href="#为什么wait只能在同步控制方法或者同步控制块里面使用？" class="headerlink" title="为什么wait只能在同步控制方法或者同步控制块里面使用？"></a>为什么wait只能在同步控制方法或者同步控制块里面使用？</h3><p>wait()暂停的是持有锁的对象，所以想调用wait()必须为:对象.wait();</p>
-<p>因为要对持有锁的线程操作，所以要使用在同步中，因为只有同步才具有锁。</p>
-<p><strong>锁可以是任意对象，所以任意对象调用的方法一定是定义在Object类中</strong></p>
+        <h3 id="进程间通信IPC"><a href="#进程间通信IPC" class="headerlink" title="进程间通信IPC"></a>进程间通信IPC</h3><p>进程间通信（IPC，InterProcess Communication）是指在不同进程之间传播或交换信息。</p>
+<p>每个进程各自有不同的用户地址空间,任何一个进程的全局变量在另一个进程中都看不到，所以进程之间要交换数据必须通过内核,在内核中开辟一块缓冲区,进程A把数据从用户空间拷到内核缓冲区,进程B再从内核缓冲区把数据读走,内核提供的这种机制称为进程间通信。</p>
+<h3 id="IPC通信方式"><a href="#IPC通信方式" class="headerlink" title="IPC通信方式"></a>IPC通信方式</h3><p>管道（无名管道，高级管道，命名管道），消息队列，信号量机制，共享内存，套接字。</p>
+<p><strong>无名管道（匿名管道）pipe：</strong>管道是一种半双工的通信方式，数据只能单向流动，而且只能在具有亲缘关系的进程间使用。进程的亲缘关系通常是指父子进程关系兄弟进程关系。</p>
+<p>当一个管道建立时，它会创建两个文件描述符：<code>fd[0]</code>为读而打开，<code>fd[1]</code>为写而打开。基于字节流</p>
+<p>例如父进程数据流入子进程，关闭父进程的读端 fd[0] 与子进程的写端 fd[1]，让数据从父进程写端流入子进程读端，反之同理。</p>
+<p><strong>高级管道（popen）：</strong>将另一个程序当做一个新的进程在当前程序进程中启动，则它算是当前程序的子进程，这种方式我们成为高级管道方式。</p>
+<p><strong>命名管道（FIFO）：</strong>FIFO也是半双工的通信方式，允许无亲缘关系进程间的通信。FIFO有路径名与之相关联，是一种文件类型。</p>
+<p><strong>消息队列：</strong>消息的链接表，存放在内核中。一个消息队列由一个标识符（即<strong>队列ID</strong>）来标识。可以直接在进程间传送消息，较高级，可被多线程所共享，面向记录（数据特定格式），可实现随机查询，不一定要按先进先出次序读取。</p>
+<p><strong>信号量机制：</strong>信号量加一减一，简单PV操作，实现同步和互斥，操作系统都讲过。</p>
+<p><strong>共享内存：</strong>指两个或多个进程共享一个给定的存储区。共享内存就是映射一段能被其他进程所访问的内存，这段共享内存由一个进程创建，但多个进程都可以访问。共享内存是最快的 IPC 方式（因为直接对内存进行存取），它是针对其他进程间通信方式运行效率低而专门设计的。因为多个进程可以同时操作，所以需要进行同步，通常信号量+共享内存结合在一起使用。</p>
+<p><strong>套接字：</strong>它和别的通信方式最主要不同的是可用于不同机器间的进程通信。</p>
 
       
     </div>
@@ -263,13 +269,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2020/01/19/Sleep%E5%92%8CWait/">Sleep,和Wait!</a></p>
+        <p><span>本文标题:</span><a href="/2020/01/27/%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/">进程的通信方式?</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
-        <p><span>发布时间:</span>2020-01-19, 20:32:31</p>
-        <p><span>最后更新:</span>2020-01-30, 20:47:15</p>
+        <p><span>发布时间:</span>2020-01-27, 21:09:36</p>
+        <p><span>最后更新:</span>2020-01-31, 21:28:45</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2020/01/19/Sleep%E5%92%8CWait/" title="Sleep,和Wait!">http://yoursite.com/2020/01/19/Sleep%E5%92%8CWait/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/01/19/Sleep%E5%92%8CWait/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2020/01/27/%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" title="进程的通信方式?">http://yoursite.com/2020/01/27/%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/01/27/%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -282,15 +288,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2020/01/21/ThreadLocl%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%81/">
-                    ThreadLocl
+                <a href="/2020/01/30/%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%81/">
+                    事务以及分布式事务！
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">
-                    Nosql
+                <a href="/2020/01/25/JVM%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%81/">
+                    JVM的垃圾回收机制！
                 </a>
             </div>
         
@@ -302,7 +308,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#sleep"><span class="toc-number">1.</span> <span class="toc-text">sleep</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#yield"><span class="toc-number">2.</span> <span class="toc-text">yield</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wait"><span class="toc-number">3.</span> <span class="toc-text">wait</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么wait只能在同步控制方法或者同步控制块里面使用？"><span class="toc-number">4.</span> <span class="toc-text">为什么wait只能在同步控制方法或者同步控制块里面使用？</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#进程间通信IPC"><span class="toc-number">1.</span> <span class="toc-text">进程间通信IPC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IPC通信方式"><span class="toc-number">2.</span> <span class="toc-text">IPC通信方式</span></a></li></ol>
         
     </div>
     <style>
@@ -338,7 +344,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"Sleep,和Wait!　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"进程的通信方式?　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -358,7 +364,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2020/01/21/ThreadLocl%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%81/" title="上一篇: ThreadLocl">
+            <a href="/2020/01/30/%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%81/" title="上一篇: 事务以及分布式事务！">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -366,7 +372,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" title="下一篇: Nosql">
+            <a href="/2020/01/25/JVM%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%81/" title="下一篇: JVM的垃圾回收机制！">
                 <i class="fa fa-angle-right"></i>
             </a>
         

@@ -15,14 +15,14 @@
 
 
 
-<meta name="description" content="Sleep和Wait的区别，简显易懂">
+<meta name="description" content="Java中BIO、NIO和AIO的区别和应用场景">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Sleep,和Wait!">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;19&#x2F;Sleep%E5%92%8CWait&#x2F;index.html">
+<meta property="og:title" content="BIO,NIO,AIO">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;31&#x2F;BIO-NIO-AIO&#x2F;index.html">
 <meta property="og:site_name" content="HF Blog">
-<meta property="og:description" content="Sleep和Wait的区别，简显易懂">
+<meta property="og:description" content="Java中BIO、NIO和AIO的区别和应用场景">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-01-30T12:47:15.761Z">
+<meta property="og:updated_time" content="2020-01-31T07:15:47.928Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -55,7 +55,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Sleep,和Wait! | HF Blog</title>
+<title>BIO,NIO,AIO | HF Blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -213,11 +213,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-Sleep和Wait" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-BIO-NIO-AIO" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2020/01/19/Sleep%E5%92%8CWait/" class="article-date">
-      <time datetime="2020-01-19T12:32:31.000Z" itemprop="datePublished">2020-01-19</time>
+      <a href="/2020/01/31/BIO-NIO-AIO/" class="article-date">
+      <time datetime="2020-01-31T05:50:18.000Z" itemprop="datePublished">2020-01-31</time>
 </a>
 
 
@@ -232,7 +232,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Sleep,和Wait!
+      BIO,NIO,AIO
     </h1>
   
 
@@ -249,12 +249,15 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="sleep"><a href="#sleep" class="headerlink" title="sleep"></a>sleep</h3><p>继承自Thread类，无释放锁，会给低优先级线程运行的机会，必须捕获异常，让当前线程休眠指定时间，也可由interrupt()方法来唤醒，静态方法，任何地方可以使用，执行sleep()方法后转入阻塞状态。</p>
-<h3 id="yield"><a href="#yield" class="headerlink" title="yield"></a><strong>yield</strong></h3><p>yield()方法只会给相同优先级或更高优先级的线程以运行的机会，无需捕获异常，执行yield()方法后转入就绪状态。</p>
-<h3 id="wait"><a href="#wait" class="headerlink" title="wait"></a>wait</h3><p>继承自Object类，释放了锁（使得其他线程可以使用同步控制块或者方法），无需捕获异常，由notify,notifyAll方法唤醒，实例方法，只能在同步控制方法或者同步控制块里面使用。</p>
-<h3 id="为什么wait只能在同步控制方法或者同步控制块里面使用？"><a href="#为什么wait只能在同步控制方法或者同步控制块里面使用？" class="headerlink" title="为什么wait只能在同步控制方法或者同步控制块里面使用？"></a>为什么wait只能在同步控制方法或者同步控制块里面使用？</h3><p>wait()暂停的是持有锁的对象，所以想调用wait()必须为:对象.wait();</p>
-<p>因为要对持有锁的线程操作，所以要使用在同步中，因为只有同步才具有锁。</p>
-<p><strong>锁可以是任意对象，所以任意对象调用的方法一定是定义在Object类中</strong></p>
+        <p>1.同步：使用同步IO时，Java自己处理IO读写。</p>
+<p>2.异步：使用异步IO时，Java将IO读写委托给OS处理，需要将数据缓冲区地址和大小传给OS，完成后OS通知Java处理（回调）。</p>
+<p>3.阻塞：使用阻塞IO时，Java调用会一直阻塞到读写完成才返回。</p>
+<p>4.非阻塞：使用非阻塞IO时，如果不能立马读写，Java调用会马上返回，当IO事件分发器通知可读写时在进行读写，不断循环直到读写完成。</p>
+<p>下面是重点了（敲黑板！）！</p>
+<p>1.BIO：<strong>同步并阻塞</strong>，服务器的实现模式是<strong>一个连接一个线程</strong>，即客户端有连接请求时服务器端就需要启动一个线程进行处理，可能造成不必要的线程开销，当然，这种情况可以通过线程池机制改善，但并不能从本质上消除这个弊端。</p>
+<p>2.NIO：在JDK1.4以前，Java的IO模型一直是BIO，但从JDK1.4开始，JDK引入的新的IO模型NIO，它是<strong>同步非阻塞</strong>的。而服务器的实现模式是<strong>多个请求一个线程</strong>，即请求会注册到多路复用器Selector上，<strong>多路复用器</strong>轮询到连接有IO请求时才启动一个线程处理。    </p>
+<p>3.AIO：JDK1.7发布了NIO2.0，这就是真正意义上的<strong>异步非阻塞</strong>，服务器的实现模式为<strong>多个有效请求一个线程</strong>，客户端的IO请求<strong>都是由OS先完成再通知</strong>服务器应用去启动线程处理（回调）。</p>
+<p>应用场景：并发连接数不多时采用BIO，因为它编程和调试都非常简单，但如果涉及到高并发的情况，应选择NIO（连接数目多且连接比较短）或AIO（连接数目多且连接比较长），更好的建议是采用成熟的网络通信框架Netty。</p>
 
       
     </div>
@@ -263,13 +266,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2020/01/19/Sleep%E5%92%8CWait/">Sleep,和Wait!</a></p>
+        <p><span>本文标题:</span><a href="/2020/01/31/BIO-NIO-AIO/">BIO,NIO,AIO</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
-        <p><span>发布时间:</span>2020-01-19, 20:32:31</p>
-        <p><span>最后更新:</span>2020-01-30, 20:47:15</p>
+        <p><span>发布时间:</span>2020-01-31, 13:50:18</p>
+        <p><span>最后更新:</span>2020-01-31, 15:15:47</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2020/01/19/Sleep%E5%92%8CWait/" title="Sleep,和Wait!">http://yoursite.com/2020/01/19/Sleep%E5%92%8CWait/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/01/19/Sleep%E5%92%8CWait/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2020/01/31/BIO-NIO-AIO/" title="BIO,NIO,AIO">http://yoursite.com/2020/01/31/BIO-NIO-AIO/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/01/31/BIO-NIO-AIO/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -282,15 +285,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2020/01/21/ThreadLocl%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%81/">
-                    ThreadLocl
+                <a href="/2020/02/01/Git%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%89%E4%B8%AA%E5%91%BD%E4%BB%A4%EF%BC%81/">
+                    Git常用的三个命令！
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">
-                    Nosql
+                <a href="/2020/01/30/%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%81/">
+                    事务以及分布式事务！
                 </a>
             </div>
         
@@ -302,7 +305,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#sleep"><span class="toc-number">1.</span> <span class="toc-text">sleep</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#yield"><span class="toc-number">2.</span> <span class="toc-text">yield</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wait"><span class="toc-number">3.</span> <span class="toc-text">wait</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么wait只能在同步控制方法或者同步控制块里面使用？"><span class="toc-number">4.</span> <span class="toc-text">为什么wait只能在同步控制方法或者同步控制块里面使用？</span></a></li></ol>
+            
         
     </div>
     <style>
@@ -338,7 +341,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"Sleep,和Wait!　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"BIO,NIO,AIO　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -358,7 +361,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2020/01/21/ThreadLocl%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%81/" title="上一篇: ThreadLocl">
+            <a href="/2020/02/01/Git%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%89%E4%B8%AA%E5%91%BD%E4%BB%A4%EF%BC%81/" title="上一篇: Git常用的三个命令！">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -366,7 +369,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" title="下一篇: Nosql">
+            <a href="/2020/01/30/%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%81/" title="下一篇: 事务以及分布式事务！">
                 <i class="fa fa-angle-right"></i>
             </a>
         
