@@ -15,14 +15,14 @@
 
 
 
-<meta name="description" content="NoSql型Redis和MongoDB和HBase的区别，优劣，使用场景">
+<meta name="description" content="MD5都听说过，如何大致理解它，今天就来说说">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Nosql">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;19&#x2F;redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF&#x2F;index.html">
+<meta property="og:title" content="MD5！！">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;02&#x2F;MD5%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F&#x2F;index.html">
 <meta property="og:site_name" content="HF Blog">
-<meta property="og:description" content="NoSql型Redis和MongoDB和HBase的区别，优劣，使用场景">
+<meta property="og:description" content="MD5都听说过，如何大致理解它，今天就来说说">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-01-19T03:06:51.693Z">
+<meta property="og:updated_time" content="2020-02-02T05:50:54.259Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -55,7 +55,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Nosql | HF Blog</title>
+<title>MD5！！ | HF Blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -213,11 +213,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-redis和MongoDB的使用场景" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-MD5是个啥？" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" class="article-date">
-      <time datetime="2020-01-19T02:25:01.000Z" itemprop="datePublished">2020-01-19</time>
+      <a href="/2020/02/02/MD5%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/" class="article-date">
+      <time datetime="2020-02-02T05:23:56.000Z" itemprop="datePublished">2020-02-02</time>
 </a>
 
 
@@ -232,7 +232,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Nosql
+      MD5！！
     </h1>
   
 
@@ -249,39 +249,12 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="MongoDB"><a href="#MongoDB" class="headerlink" title="MongoDB:"></a>MongoDB:</h2><p>概念：文档型数据库,类似json格式,它在许多场景下可用于<strong>替代</strong>统的关系型数据库或键/值存储方式。</p>
-<p>特点：有权限验证类似RBAC，本身就是持久化数据库。</p>
-<p>使用场景：主要解决海量数据的访问效率问题。比如网站的评论海量数据。</p>
-<p>优点：</p>
-<p>1.可处理大规模单表，容易分隔表。</p>
-<p>2.非常高的插入速度。</p>
-<p>3.高查询，支持二维空间索引，例如管道，快速定位。</p>
-<p>缺点：</p>
-<p>1.不支持事务（主要）</p>
-<p>2.占用空间大</p>
-<p>3.没有成熟维护工具</p>
-<h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis:"></a>Redis:</h2><p>概念：开源的可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。</p>
-<p>特点：有权限验证，不过是全局的。Redis 所有数据都是放在内存中的，持久化是使用 RDB 方式或者 aof 方式。</p>
-<p>使用场景：适用于对读写效率要求都很高，数据变化快等。例如：网站的点赞，计算，实时数据</p>
-<p>支持五种数据类型：string（字符串），hash（哈希），list（列表），set（集合）及zset(sorted set：有序集合)。</p>
-<p>优点：</p>
-<p>1.支持事务</p>
-<p>2.数据存在内存，读写非常快</p>
-<p>缺点：</p>
-<p>由于 Redis 是内存数据库,所以,单台机器,存储的数据量,跟机器本身的内存大小。虽然 Redis 本身有 Key 过期策略,但是还是需要提前预估和节约内存</p>
-<h2 id="HBase"><a href="#HBase" class="headerlink" title="HBase:"></a>HBase:</h2><p>概念：是 Apache Hadoop 中的一个子项目，实现语言java,HBase 依托于 Hadoop 的 HDFS（分布式文件系统）作为最基本存储基础单元。</p>
-<p>特点：支持数十亿行X上百万列，不会出现单点故障，堪比MySQL的随机访问性能。</p>
-<p>使用场景：</p>
-<p>1.bigtable类型的数据存储</p>
-<p>2.bigtable类型的数据存储</p>
-<p>3.bigtable类型的数据存储</p>
-<p>优点：</p>
-<p>1.存储容量大，一个表可以容纳上亿行，上百万列</p>
-<p>2.通过版本检索</p>
-<p>3.可有效避免单点故障</p>
-<p>缺点:</p>
-<p>1.其API更适用于Java项目</p>
-<p>2.占用空间大,依赖多，配置麻烦</p>
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>今天写简历的时候回想起自己所写项目的难点，突然想起了MD5加密，当初的难点虽然非常多，但是这个尤为记忆深刻！现在还记得，当初找到了一个MD5加密工具类，然后给自己的密码加了密，数据库中的密码就变成了类似b8c37e33defde51cf91e1e03e51657da这样的东西。当时就觉的很厉害也没注意，没想到更厉害的还在后面，我不小心把密码忘了，再登录已经登不上去，没办法只能去改数据库的密码了，没想到改了还是登不上去，这就叫我很纳闷了，还能这样的，今天就来看看他为什么。</p>
+<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>首先，MD5 是摘要算法而不是加密算法，属于Hash算法一代，是一种单向加密算法，可以将输入的信息加密转换为128位固定长度的散列值，用于检验数据传输过程中的完整性。一般配合加盐来使用。</p>
+<p><strong>摘要算法</strong>是单向的，即明文可以通过摘要算法生成摘要结果，但反之则不能通过摘要结果还原成明文（<strong>意思就是不可逆，不能解密</strong>）。</p>
+<p>而<strong>加密算法</strong>是双向的，即可以从明文通过加密算法生成密文，反之也可以通过解密算法将密文还原成明文。</p>
+<p>加密算法，可以分可逆加密，不可逆加密，可逆加密又分为对称加密与非对称加密（RSA公钥加密算法，公钥是可发布的供任何人使用，私钥则为自己所有，供解密之用。）</p>
+<p><strong>摘要算法主要用来检查明文是否发生过变动，而加密算法则用来传递不能让第三方知晓的内容。</strong></p>
 
       
     </div>
@@ -290,13 +263,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">Nosql</a></p>
+        <p><span>本文标题:</span><a href="/2020/02/02/MD5%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/">MD5！！</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
-        <p><span>发布时间:</span>2020-01-19, 10:25:01</p>
-        <p><span>最后更新:</span>2020-01-19, 11:06:51</p>
+        <p><span>发布时间:</span>2020-02-02, 13:23:56</p>
+        <p><span>最后更新:</span>2020-02-02, 13:50:54</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" title="Nosql">http://yoursite.com/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2020/02/02/MD5%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/" title="MD5！！">http://yoursite.com/2020/02/02/MD5%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/02/MD5%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -309,15 +282,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2020/01/19/Sleep%E5%92%8CWait/">
-                    Sleep,和Wait!
+                <a href="/2020/02/02/Get%E5%92%8CPost%E7%9A%84%E5%8C%BA%E5%88%AB/">
+                    Get和Post的区别
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/">
-                    TCP和UDP的区别？
+                <a href="/2020/02/01/Redis%E5%92%8Cmysql%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7/">
+                    Redis和mysql的数据一致性
                 </a>
             </div>
         
@@ -329,7 +302,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MongoDB"><span class="toc-number">1.</span> <span class="toc-text">MongoDB:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis"><span class="toc-number">2.</span> <span class="toc-text">Redis:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HBase"><span class="toc-number">3.</span> <span class="toc-text">HBase:</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#引言"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a></li></ol>
         
     </div>
     <style>
@@ -365,7 +338,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"Nosql　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"MD5！！　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -385,7 +358,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2020/01/19/Sleep%E5%92%8CWait/" title="上一篇: Sleep,和Wait!">
+            <a href="/2020/02/02/Get%E5%92%8CPost%E7%9A%84%E5%8C%BA%E5%88%AB/" title="上一篇: Get和Post的区别">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -393,7 +366,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/" title="下一篇: TCP和UDP的区别？">
+            <a href="/2020/02/01/Redis%E5%92%8Cmysql%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7/" title="下一篇: Redis和mysql的数据一致性">
                 <i class="fa fa-angle-right"></i>
             </a>
         

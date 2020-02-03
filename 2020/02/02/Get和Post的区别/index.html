@@ -15,14 +15,14 @@
 
 
 
-<meta name="description" content="NoSql型Redis和MongoDB和HBase的区别，优劣，使用场景">
+<meta name="description" content="get和post,问出来必须知道的几个点">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Nosql">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;19&#x2F;redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF&#x2F;index.html">
+<meta property="og:title" content="Get和Post的区别">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;02&#x2F;Get%E5%92%8CPost%E7%9A%84%E5%8C%BA%E5%88%AB&#x2F;index.html">
 <meta property="og:site_name" content="HF Blog">
-<meta property="og:description" content="NoSql型Redis和MongoDB和HBase的区别，优劣，使用场景">
+<meta property="og:description" content="get和post,问出来必须知道的几个点">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-01-19T03:06:51.693Z">
+<meta property="og:updated_time" content="2020-02-02T13:17:06.865Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -55,7 +55,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Nosql | HF Blog</title>
+<title>Get和Post的区别 | HF Blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -213,11 +213,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-redis和MongoDB的使用场景" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Get和Post的区别" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" class="article-date">
-      <time datetime="2020-01-19T02:25:01.000Z" itemprop="datePublished">2020-01-19</time>
+      <a href="/2020/02/02/Get%E5%92%8CPost%E7%9A%84%E5%8C%BA%E5%88%AB/" class="article-date">
+      <time datetime="2020-02-02T12:54:35.000Z" itemprop="datePublished">2020-02-02</time>
 </a>
 
 
@@ -232,7 +232,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Nosql
+      Get和Post的区别
     </h1>
   
 
@@ -249,39 +249,20 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="MongoDB"><a href="#MongoDB" class="headerlink" title="MongoDB:"></a>MongoDB:</h2><p>概念：文档型数据库,类似json格式,它在许多场景下可用于<strong>替代</strong>统的关系型数据库或键/值存储方式。</p>
-<p>特点：有权限验证类似RBAC，本身就是持久化数据库。</p>
-<p>使用场景：主要解决海量数据的访问效率问题。比如网站的评论海量数据。</p>
-<p>优点：</p>
-<p>1.可处理大规模单表，容易分隔表。</p>
-<p>2.非常高的插入速度。</p>
-<p>3.高查询，支持二维空间索引，例如管道，快速定位。</p>
-<p>缺点：</p>
-<p>1.不支持事务（主要）</p>
-<p>2.占用空间大</p>
-<p>3.没有成熟维护工具</p>
-<h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis:"></a>Redis:</h2><p>概念：开源的可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。</p>
-<p>特点：有权限验证，不过是全局的。Redis 所有数据都是放在内存中的，持久化是使用 RDB 方式或者 aof 方式。</p>
-<p>使用场景：适用于对读写效率要求都很高，数据变化快等。例如：网站的点赞，计算，实时数据</p>
-<p>支持五种数据类型：string（字符串），hash（哈希），list（列表），set（集合）及zset(sorted set：有序集合)。</p>
-<p>优点：</p>
-<p>1.支持事务</p>
-<p>2.数据存在内存，读写非常快</p>
-<p>缺点：</p>
-<p>由于 Redis 是内存数据库,所以,单台机器,存储的数据量,跟机器本身的内存大小。虽然 Redis 本身有 Key 过期策略,但是还是需要提前预估和节约内存</p>
-<h2 id="HBase"><a href="#HBase" class="headerlink" title="HBase:"></a>HBase:</h2><p>概念：是 Apache Hadoop 中的一个子项目，实现语言java,HBase 依托于 Hadoop 的 HDFS（分布式文件系统）作为最基本存储基础单元。</p>
-<p>特点：支持数十亿行X上百万列，不会出现单点故障，堪比MySQL的随机访问性能。</p>
-<p>使用场景：</p>
-<p>1.bigtable类型的数据存储</p>
-<p>2.bigtable类型的数据存储</p>
-<p>3.bigtable类型的数据存储</p>
-<p>优点：</p>
-<p>1.存储容量大，一个表可以容纳上亿行，上百万列</p>
-<p>2.通过版本检索</p>
-<p>3.可有效避免单点故障</p>
-<p>缺点:</p>
-<p>1.其API更适用于Java项目</p>
-<p>2.占用空间大,依赖多，配置麻烦</p>
+        <p><strong>不同：</strong></p>
+<p>1.get参数通过URL传递，post放在Request body中，所以相对来说get更加安全。</p>
+<p>2.get传递数据是通过URL进行传递，对传递的数据长度是受到URL大小的限制，URL最大长度是2048个字符。post没有长度限制，可发送更多数据</p>
+<p>2.get传递数据是通过URL进行传递，对传递的数据长度是受到URL大小的限制，URL最大长度是2048个字符。post没有长度限制</p>
+<p>3.get后退不会有影响，post后退会重新进行提交</p>
+<p>4.get产生一个TCP数据包（header和data一起发送），post产生两个TCP数据包（先发送header，再发送data）。也就是get请求一次，post俩次（不是都俩次，火狐听说就一次）。get效率高，post传输慢。</p>
+<p>5.get请求可以被缓存，post不可以被缓存</p>
+<p>6.get请求只URL编码，post支持多种编码方式</p>
+<p>7.get只支持ASCII字符，post没有字符类型限制</p>
+<p>8.get请求参数会留在历史记录中，post请求不会留在历史记录</p>
+<p><strong>相同：</strong></p>
+<p>GET和POST是什么？HTTP协议中的两种发送请求的方法。</p>
+<p> HTTP是什么？HTTP是基于TCP/IP的关于数据如何在万维网中如何通信的协议。</p>
+<p>GET和POST本质上就是TCP链接，并无差别。但是由于HTTP的规定和浏览器/服务器的限制，导致他们在应用过程中体现出一些不同。</p>
 
       
     </div>
@@ -290,13 +271,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">Nosql</a></p>
+        <p><span>本文标题:</span><a href="/2020/02/02/Get%E5%92%8CPost%E7%9A%84%E5%8C%BA%E5%88%AB/">Get和Post的区别</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
-        <p><span>发布时间:</span>2020-01-19, 10:25:01</p>
-        <p><span>最后更新:</span>2020-01-19, 11:06:51</p>
+        <p><span>发布时间:</span>2020-02-02, 20:54:35</p>
+        <p><span>最后更新:</span>2020-02-02, 21:17:06</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" title="Nosql">http://yoursite.com/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2020/02/02/Get%E5%92%8CPost%E7%9A%84%E5%8C%BA%E5%88%AB/" title="Get和Post的区别">http://yoursite.com/2020/02/02/Get%E5%92%8CPost%E7%9A%84%E5%8C%BA%E5%88%AB/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/02/Get%E5%92%8CPost%E7%9A%84%E5%8C%BA%E5%88%AB/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -308,16 +289,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2020/01/19/Sleep%E5%92%8CWait/">
-                    Sleep,和Wait!
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/">
-                    TCP和UDP的区别？
+                <a href="/2020/02/02/MD5%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/">
+                    MD5！！
                 </a>
             </div>
         
@@ -329,7 +304,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MongoDB"><span class="toc-number">1.</span> <span class="toc-text">MongoDB:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis"><span class="toc-number">2.</span> <span class="toc-text">Redis:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HBase"><span class="toc-number">3.</span> <span class="toc-text">HBase:</span></a></li></ol>
+            
         
     </div>
     <style>
@@ -365,7 +340,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"Nosql　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Get和Post的区别　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -385,15 +360,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2020/01/19/Sleep%E5%92%8CWait/" title="上一篇: Sleep,和Wait!">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/" title="下一篇: TCP和UDP的区别？">
+            <a href="/2020/02/02/MD5%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/" title="下一篇: MD5！！">
                 <i class="fa fa-angle-right"></i>
             </a>
         

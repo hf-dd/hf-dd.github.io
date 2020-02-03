@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-02-01T16:00:17.903Z</updated>
+  <updated>2020-02-02T13:17:06.865Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,44 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Get和Post的区别</title>
+    <link href="http://yoursite.com/2020/02/02/Get%E5%92%8CPost%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
+    <id>http://yoursite.com/2020/02/02/Get%E5%92%8CPost%E7%9A%84%E5%8C%BA%E5%88%AB/</id>
+    <published>2020-02-02T12:54:35.000Z</published>
+    <updated>2020-02-02T13:17:06.865Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>不同：</strong></p><p>1.get参数通过URL传递，post放在Request body中，所以相对来说get更加安全。</p><p>2.get传递数据是通过URL进行传递，对传递的数据长度是受到URL大小的限制，URL最大长度是2048个字符。post没有长度限制，可发送更多数据</p><p>2.get传递数据是通过URL进行传递，对传递的数据长度是受到URL大小的限制，URL最大长度是2048个字符。post没有长度限制</p><p>3.get后退不会有影响，post后退会重新进行提交</p><p>4.get产生一个TCP数据包（header和data一起发送），post产生两个TCP数据包（先发送header，再发送data）。也就是get请求一次，post俩次（不是都俩次，火狐听说就一次）。get效率高，post传输慢。</p><p>5.get请求可以被缓存，post不可以被缓存</p><p>6.get请求只URL编码，post支持多种编码方式</p><p>7.get只支持ASCII字符，post没有字符类型限制</p><p>8.get请求参数会留在历史记录中，post请求不会留在历史记录</p><p><strong>相同：</strong></p><p>GET和POST是什么？HTTP协议中的两种发送请求的方法。</p><p> HTTP是什么？HTTP是基于TCP/IP的关于数据如何在万维网中如何通信的协议。</p><p>GET和POST本质上就是TCP链接，并无差别。但是由于HTTP的规定和浏览器/服务器的限制，导致他们在应用过程中体现出一些不同。</p>]]></content>
+    
+    <summary type="html">
+    
+      get和post,问出来必须知道的几个点
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>MD5！！</title>
+    <link href="http://yoursite.com/2020/02/02/MD5%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/"/>
+    <id>http://yoursite.com/2020/02/02/MD5%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/</id>
+    <published>2020-02-02T05:23:56.000Z</published>
+    <updated>2020-02-02T05:50:54.259Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>今天写简历的时候回想起自己所写项目的难点，突然想起了MD5加密，当初的难点虽然非常多，但是这个尤为记忆深刻！现在还记得，当初找到了一个MD5加密工具类，然后给自己的密码加了密，数据库中的密码就变成了类似b8c37e33defde51cf91e1e03e51657da这样的东西。当时就觉的很厉害也没注意，没想到更厉害的还在后面，我不小心把密码忘了，再登录已经登不上去，没办法只能去改数据库的密码了，没想到改了还是登不上去，这就叫我很纳闷了，还能这样的，今天就来看看他为什么。</p><h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>首先，MD5 是摘要算法而不是加密算法，属于Hash算法一代，是一种单向加密算法，可以将输入的信息加密转换为128位固定长度的散列值，用于检验数据传输过程中的完整性。一般配合加盐来使用。</p><p><strong>摘要算法</strong>是单向的，即明文可以通过摘要算法生成摘要结果，但反之则不能通过摘要结果还原成明文（<strong>意思就是不可逆，不能解密</strong>）。</p><p>而<strong>加密算法</strong>是双向的，即可以从明文通过加密算法生成密文，反之也可以通过解密算法将密文还原成明文。</p><p>加密算法，可以分可逆加密，不可逆加密，可逆加密又分为对称加密与非对称加密（RSA公钥加密算法，公钥是可发布的供任何人使用，私钥则为自己所有，供解密之用。）</p><p><strong>摘要算法主要用来检查明文是否发生过变动，而加密算法则用来传递不能让第三方知晓的内容。</strong></p>]]></content>
+    
+    <summary type="html">
+    
+      MD5都听说过，如何大致理解它，今天就来说说
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Redis和mysql的数据一致性</title>
@@ -40,9 +78,9 @@
     <link href="http://yoursite.com/2020/02/01/Git%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%89%E4%B8%AA%E5%91%BD%E4%BB%A4%EF%BC%81/"/>
     <id>http://yoursite.com/2020/02/01/Git%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%89%E4%B8%AA%E5%91%BD%E4%BB%A4%EF%BC%81/</id>
     <published>2020-02-01T14:53:27.000Z</published>
-    <updated>2020-02-01T14:58:13.171Z</updated>
+    <updated>2020-02-01T16:02:59.368Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="git-add"><a href="#git-add" class="headerlink" title="git add"></a>git add</h3><p>git add 是把要传的数据添加到一个仓库或者说是暂存区，意思就是先放在里面，告诉它们我们将要对这些数据进行操作了。</p><h3 id="git-commit"><a href="#git-commit" class="headerlink" title="git commit"></a>git commit</h3><p>而git commit就是进行操作的第一步，就是将本地修改过的文件提交到本地库中。</p><p><strong>git push</strong></p><p>第二步就是git push，将本地库中的最新信息发送给远程库，供其他人可见。</p>]]></content>
+    <content type="html"><![CDATA[<p><strong>git add</strong></p><p>git add 是把要传的数据添加到一个仓库或者说是暂存区，意思就是先放在里面，告诉它们我们将要对这些数据进行操作了。</p><p><strong>git commit</strong></p><p>而git commit就是进行操作的第一步，就是将本地修改过的文件提交到本地库中。</p><p><strong>git push</strong></p><p>第二步就是git push，将本地库中的最新信息发送给远程库，供其他人可见。</p>]]></content>
     
     <summary type="html">
     
@@ -351,44 +389,6 @@
     <summary type="html">
     
       很常见的volatile关键字的作用
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>java的反射到底是个啥？</title>
-    <link href="http://yoursite.com/2019/11/30/java%E7%9A%84%E5%8F%8D%E5%B0%84%E5%88%B0%E5%BA%95%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/"/>
-    <id>http://yoursite.com/2019/11/30/java%E7%9A%84%E5%8F%8D%E5%B0%84%E5%88%B0%E5%BA%95%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/</id>
-    <published>2019-11-30T05:49:55.000Z</published>
-    <updated>2019-11-30T06:05:36.560Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="请说明一下JAVA中反射的实现过程和作用分别是什么？"><a href="#请说明一下JAVA中反射的实现过程和作用分别是什么？" class="headerlink" title="请说明一下JAVA中反射的实现过程和作用分别是什么？"></a>请说明一下JAVA中反射的实现过程和作用分别是什么？</h2><p> JAVA语言编译之后会生成一个.class文件，反射就是通过字节码文件找到某一个类、类中的方法以及属性等。反射的实现主要借助以下四个类：<strong>Class：类的对象，Constructor：类的构造方法，Field：类中的属性对象，Method：类中的方法对象。</strong> </p><p> 作用：反射机制指的是程序在运行时能够获取自身的信息。在JAVA中，只要给定类的名字，那么就可以通过反射机制来获取类的所有信息。 </p><h2 id="什么是反射-？"><a href="#什么是反射-？" class="headerlink" title="什么是反射 ？"></a><strong>什么是反射</strong> ？</h2><p> 反射就是把java类中的各种成分映射成一个个的Java对象 </p><p> 例如：一个类有：成员变量、方法、构造方法、包等等信息，利用反射技术可以对一个类进行解剖，把个个组成部分映射成一个个对象。 </p><h2 id="反射相关类常见的方法"><a href="#反射相关类常见的方法" class="headerlink" title="反射相关类常见的方法"></a><strong>反射相关类常见的方法</strong></h2><ul><li><strong>获得类相关的方法</strong></li></ul><table><thead><tr><th>方法</th><th>用途</th></tr></thead><tbody><tr><td>asSubclass(Class<U> clazz)</U></td><td>把传递的类的对象转换成代表其子类的对象</td></tr><tr><td>Cast</td><td>把对象转换成代表类或是接口的对象</td></tr><tr><td>getClassLoader()</td><td>获得类的加载器</td></tr><tr><td>getClasses()</td><td>返回一个数组，数组中包含该类中所有公共类和接口类的对象</td></tr><tr><td>getDeclaredClasses()</td><td>返回一个数组，数组中包含该类中所有类和接口类的对象</td></tr><tr><td>forName(String className)</td><td>根据类名返回类的对象</td></tr><tr><td>getName()</td><td>获得类的完整路径名字</td></tr><tr><td>newInstance()</td><td>创建类的实例</td></tr><tr><td>getPackage()</td><td>获得类的包</td></tr><tr><td>getSimpleName()</td><td>获得类的名字</td></tr><tr><td>getSuperclass()</td><td>获得当前类继承的父类的名字</td></tr><tr><td>getInterfaces()</td><td>获得当前类实现的类或是接口</td></tr></tbody></table><ul><li><strong>获得类中属性相关的方法</strong></li></ul><table><thead><tr><th>方法</th><th>用途</th></tr></thead><tbody><tr><td>getField(String name)</td><td>获得某个公有的属性对象</td></tr><tr><td>getFields()</td><td>获得所有公有的属性对象</td></tr><tr><td>getDeclaredField(String name)</td><td>获得某个属性对象</td></tr><tr><td>getDeclaredFields()</td><td>获得所有属性对象</td></tr></tbody></table><ul><li><strong>获得类中注解相关的方法</strong></li></ul><table><thead><tr><th>方法</th><th>用途</th></tr></thead><tbody><tr><td>getAnnotation(Class<A> annotationClass)</A></td><td>返回该类中与参数类型匹配的公有注解对象</td></tr><tr><td>getAnnotations()</td><td>返回该类所有的公有注解对象</td></tr><tr><td>getDeclaredAnnotation(Class<A> annotationClass)</A></td><td>返回该类中与参数类型匹配的所有注解对象</td></tr><tr><td>getDeclaredAnnotations()</td><td>返回该类所有的注解对象</td></tr></tbody></table><ul><li><strong>获得类中构造器相关的方法</strong></li></ul><table><thead><tr><th>方法</th><th>用途</th></tr></thead><tbody><tr><td>getConstructor(Class…&lt;?&gt; parameterTypes)</td><td>获得该类中与参数类型匹配的公有构造方法</td></tr><tr><td>getConstructors()</td><td>获得该类的所有公有构造方法</td></tr><tr><td>getDeclaredConstructor(Class…&lt;?&gt; parameterTypes)</td><td>获得该类中与参数类型匹配的构造方法</td></tr><tr><td>getDeclaredConstructors()</td><td>获得该类所有构造方法</td></tr></tbody></table><ul><li><strong>获得类中方法相关的方法</strong></li></ul><table><thead><tr><th>方法</th><th>用途</th></tr></thead><tbody><tr><td>getMethod(String name, Class…&lt;?&gt; parameterTypes)</td><td>获得该类某个公有的方法</td></tr><tr><td>getMethods()</td><td>获得该类所有公有的方法</td></tr><tr><td>getDeclaredMethod(String name, Class…&lt;?&gt; parameterTypes)</td><td>获得该类某个方法</td></tr><tr><td>getDeclaredMethods()</td><td>获得该类所有方法</td></tr></tbody></table><ul><li><strong>类中其他重要的方法</strong></li></ul><table><thead><tr><th>方法</th><th>用途</th></tr></thead><tbody><tr><td>isAnnotation()</td><td>如果是注解类型则返回true</td></tr><tr><td>isAnnotationPresent(Class&lt;? extends Annotation&gt; annotationClass)</td><td>如果是指定类型注解类型则返回true</td></tr><tr><td>isAnonymousClass()</td><td>如果是匿名类则返回true</td></tr><tr><td>isArray()</td><td>如果是一个数组类则返回true</td></tr><tr><td>isEnum()</td><td>如果是枚举类则返回true</td></tr><tr><td>isInstance(Object obj)</td><td>如果obj是该类的实例则返回true</td></tr><tr><td>isInterface()</td><td>如果是接口类则返回true</td></tr><tr><td>isLocalClass()</td><td>如果是局部类则返回true</td></tr><tr><td>isMemberClass()</td><td>如果是内部类则返回true</td></tr></tbody></table><h3 id="Field类"><a href="#Field类" class="headerlink" title="Field类"></a>Field类</h3><table><thead><tr><th>方法</th><th>用途</th></tr></thead><tbody><tr><td>equals(Object obj)</td><td>属性与obj相等则返回true</td></tr><tr><td>get(Object obj)</td><td>获得obj中对应的属性值</td></tr><tr><td>set(Object obj, Object value)</td><td>设置obj中对应属性值</td></tr></tbody></table><h3 id="Method类"><a href="#Method类" class="headerlink" title="Method类"></a>Method类</h3><table><thead><tr><th>方法</th><th>用途</th></tr></thead><tbody><tr><td>invoke(Object obj, Object… args)</td><td>传递object对象及参数调用该对象对应的方法</td></tr></tbody></table><h3 id="Constructor类"><a href="#Constructor类" class="headerlink" title="Constructor类"></a>Constructor类</h3><table><thead><tr><th>方法</th><th>用途</th></tr></thead><tbody><tr><td>newInstance(Object… initargs)</td><td>根据传递的参数创建类的对象</td></tr></tbody></table><p>以通过反射获得Method对象为例，一般会提供四种方法，getMethod(parameterTypes)、getMethods()、getDeclaredMethod(parameterTypes)和getDeclaredMethods()。</p><p>getMethod(parameterTypes)用来获取某个公有的方法的对象，</p><p>getMethods()获得该类所有公有的方法，</p><p>getDeclaredMethod(parameterTypes)获得该类某个方法，</p><p>getDeclaredMethods()获得该类所有方法。</p><p><strong>带有Declared修饰的方法可以反射到私有的方法，没有Declared修饰的只能用来反射公有的方法。</strong></p><p>其他的Annotation、Field、Constructor也是如此。</p>]]></content>
-    
-    <summary type="html">
-    
-      通俗易懂的理解java反射！
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>rest?restful?到底是什么？</title>
-    <link href="http://yoursite.com/2019/11/27/rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/"/>
-    <id>http://yoursite.com/2019/11/27/rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/</id>
-    <published>2019-11-27T11:12:07.000Z</published>
-    <updated>2020-01-23T16:11:21.989Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="1-关于Rest"><a href="#1-关于Rest" class="headerlink" title="1.关于Rest"></a>1.关于Rest</h2><p>rest  :representational state transfer    表述性状态转移,是一种架构风格。</p><p>技术实现：输入ajax请求，输出json数据。</p><p>rest具体表现：URL定位资源，用HTTP动词（GET,POST,DELETE,DETC）描述操作。</p><h2 id="2-关于Restful"><a href="#2-关于Restful" class="headerlink" title="2.关于Restful"></a>2.关于Restful</h2><p>restful: 遵守了rest 原则 的web服务</p><p>理解：rest与restful相比，多了一个ful,就英语层面来说是一个形容词，restful翻译为中文为： “rest式的”</p><p>是rest式的什么呢？答案是 rest式的应用。</p><h2 id="3-两者的联系与区别"><a href="#3-两者的联系与区别" class="headerlink" title="3.两者的联系与区别"></a>3.两者的联系与区别</h2><p>restful是由rest派生出来的。</p><p>二.restful用法：</p><p>在Restful之前的操作：<br><a href="http://127.0.0.1/user/query/1" target="_blank" rel="noopener">http://127.0.0.1/user/query/1</a> GET  根据用户id查询用户数据<br><a href="http://127.0.0.1/user/save" target="_blank" rel="noopener">http://127.0.0.1/user/save</a> POST 新增用户<br><a href="http://127.0.0.1/user/update" target="_blank" rel="noopener">http://127.0.0.1/user/update</a> POST 修改用户信息<br><a href="http://127.0.0.1/user/delete" target="_blank" rel="noopener">http://127.0.0.1/user/delete</a> GET/POST 删除用户信息</p><p>RESTful用法：<br><a href="http://127.0.0.1/user/1" target="_blank" rel="noopener">http://127.0.0.1/user/1</a> GET  根据用户id查询用户数据<br><a href="http://127.0.0.1/user" target="_blank" rel="noopener">http://127.0.0.1/user</a>  POST 新增用户<br><a href="http://127.0.0.1/user" target="_blank" rel="noopener">http://127.0.0.1/user</a>  PUT 修改用户信息<br><a href="http://127.0.0.1/user" target="_blank" rel="noopener">http://127.0.0.1/user</a>  DELETE 删除用户信息</p><p>在之前的操作，你每次请求的接口或者地址,都在做描述,例如查询的时候用了query,新增的时候用了save,其实完全没有这个必要,我使用了get请求,就是查询.使用post请求,就是新增的请求，也就是说用HTTP动词（GET,POST,DELETE,DETC）描述操作。</p><p>我个人感觉，Restful之前的风格也是挺好的，毕竟直观，也可以完成需求，看每个人的用法了，是规范不是必须嘛。</p>]]></content>
-    
-    <summary type="html">
-    
-      老听到Restful风格很有名，不知道什么东西，这篇就讲讲Restful到底是什么。
     
     </summary>
     
