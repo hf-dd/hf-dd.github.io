@@ -74,13 +74,13 @@
   </entry>
   
   <entry>
-    <title>Git常用的三个命令！</title>
-    <link href="http://yoursite.com/2020/02/01/Git%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%89%E4%B8%AA%E5%91%BD%E4%BB%A4%EF%BC%81/"/>
-    <id>http://yoursite.com/2020/02/01/Git%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%89%E4%B8%AA%E5%91%BD%E4%BB%A4%EF%BC%81/</id>
+    <title>Git常用的命令！</title>
+    <link href="http://yoursite.com/2020/02/01/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%81/"/>
+    <id>http://yoursite.com/2020/02/01/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%81/</id>
     <published>2020-02-01T14:53:27.000Z</published>
-    <updated>2020-02-01T16:02:59.368Z</updated>
+    <updated>2020-02-03T14:44:05.121Z</updated>
     
-    <content type="html"><![CDATA[<p><strong>git add</strong></p><p>git add 是把要传的数据添加到一个仓库或者说是暂存区，意思就是先放在里面，告诉它们我们将要对这些数据进行操作了。</p><p><strong>git commit</strong></p><p>而git commit就是进行操作的第一步，就是将本地修改过的文件提交到本地库中。</p><p><strong>git push</strong></p><p>第二步就是git push，将本地库中的最新信息发送给远程库，供其他人可见。</p>]]></content>
+    <content type="html"><![CDATA[<p><strong>git add</strong></p><p>git add 是把要传的数据添加到一个仓库或者说是暂存区，意思就是先放在里面，告诉它们我们将要对这些数据进行操作了。</p><p><strong>git commit</strong></p><p>而git commit就是进行操作的第一步，就是将本地修改过的文件提交到<strong>本地库</strong>中。</p><p><strong>git push</strong></p><p>第二步就是git push，将本地库中的最新信息发送给<strong>远程库</strong>，供其他人可见。</p><p><strong>git fetch</strong></p><p>只能更新远程仓库的代码为最新的，本地仓库的代码还未被更新,通常和<strong>git merge</strong> 合并结合来用</p><p><strong>git pull</strong></p><p>将本地仓库和远程仓库都更新到远程的最新版本，相当于git fetch+git merge</p><p>git pull的问题是它把过程的细节都隐藏了起来,出问题很难找到，<strong>可控一点的话推荐使用fetch + merge</strong></p>]]></content>
     
     <summary type="html">
     
