@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-02-02T13:17:06.865Z</updated>
+  <updated>2020-02-06T04:51:21.787Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,44 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>面经常见的小知识</title>
+    <link href="http://yoursite.com/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/"/>
+    <id>http://yoursite.com/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/</id>
+    <published>2020-02-05T13:24:05.000Z</published>
+    <updated>2020-02-06T04:51:21.787Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>LRU：双向链表+hashMap</strong><br>save(key, value)，在 HashMap 找到 Key 对应的节点，如果节点存在，把这个节点移动队头。如果不存在，需要构造新的节点，并且尝试把节点塞到队头，如果LRU空间不足，则通过 tail 淘汰掉队尾的节点，同时在 HashMap 中移除 Key。get(key)，通过 HashMap 找到 LRU 链表节点，把节点放入表头</p><p><strong>逃逸分析（并不成熟</strong>）：当一个对象在方法中被定义后，它可能被外部方法所引用，例如作为调用参数传递到其他地方中，称为方法逃逸。<br>同步省略：同步块所使用的锁对象通过这种分析被证实只能够被一个线程访问，那么对对象的加的锁JIT编译阶段就会被优化掉（锁消除）<br>标量替换：在JIT阶段，如果经过逃逸分析，发现一个对象不会被外界访问的话，那么经过JIT优化，就会把这个对象拆解成若干个其中包含的若干个成员变量来代替<br>栈上分配：经过逃逸分析后发现，一个对象并没有逃逸出方法的话，那么就可能被优化成栈上分配</p><p><strong>分布式锁：</strong><br>基于数据库（唯一索引）：唯一索引天然具有排他性，同一时刻只能允许一个竞争者获取锁<br>基于缓存：利用Redis的setnx key value这个命令，只有当key不存在时才会执行成功，如果key已经存在则命令执行失败。<br>基于Zookeeper：我们在Zookeeper中创建瞬时节点，利用节点不能重复创建的特性来保证排他性。</p><p>操作系统：内核、驱动程序、接口库、外围<br>Linux系统一般有4个主要部分:内核、shell、文件系统和应用程序。</p><p><strong>内存泄露</strong>：不再会被使用的对象的内存不能被回收，就是内存泄露。如果长生命周期的对象持有短生命周期的引用，就很可能会出现内存泄露。典型例子：<br>1 Vector v = new Vector(10);    //最简单的方法就是将 Vector 对象设置为 null。<br>2 for (int i = 1; i &lt; 100; i++) {<br>3     Object o = new Object();<br>4     v.add(o);      //循环申请Object对象，并将所申请的对象放入一个 Vector 中<br>5     o = null;  //仅仅释放引用本身，那么 Vector 仍然引用该对象，gc不可回收<br>6 }</p><p><strong>Redis为什么单线程还那么快</strong>：1.纯内存访问，Redis将所有数据放在内存中<br>2.非阻塞I/O,Redis使用I/O多路复用技术，以让单个线程高效的处理多个连接请求                                          3.单线程避免了线程切换和竞争产生的消耗</p><p><strong>多路I/O复用模型</strong>是利用 select、poll、epoll 可以同时监察多个流的 I/O 事件的能力，在空闲的时候，会把当前线程阻塞掉，当有一个或多个流有 I/O 事件时，就从阻塞态中唤醒，于是程序就会轮询一遍所有的流（epoll 是指轮询那些真正发出了事件的流），并且指依次顺序的处理就绪的流，这种做法就避免了大量的无用操作。</p><p><strong>为什么zset用快表不用红黑树</strong>（查询单个数据时间复杂度一样但是如下）：<br>1.在做范围查找的时候，平衡树比skiplist操作要复杂。<br>2.平衡树的插入和删除操作会引发子树的调整，逻辑复杂，而skiplist的插入和删除只需要修改相邻节点的指针，操作简单又快速。<br>3.跳表的实现相较于红黑树更加简洁。</p><p><strong>MySql为什么用 b+ 不用 b 数</strong>：<br>因为B树不管叶子节点还是非叶子节点，都会保存数据，这样导致在非叶子节点中能保存的指针数量变少<br>指针少的情况下要保存大量数据，只能增加树的高度，导致IO操作变多，查询性能变低；</p><p><strong>一条SQL语句执行的很慢原因</strong>：先分成俩种情况<br>偶尔很慢：1.数据库在刷新脏页，例如 redo log 写满了需要同步到磁盘，此时其他操作需要等待<br>2.执行的时候，遇到锁，如表锁、行锁。<br>一直很慢：1.没有用上索引，例如该字段没有索引或者对索引字段进行运算、函数操作导致无法用索引。<br>2.数据库选错了索引，由于统计的失误，导致系统没有走索引，而是走了全表扫描</p><p><strong>TCP粘包是什么</strong>:    TCP粘包就是指发送方发送的若干包数据到达接收方时粘成了一包，从接收缓冲区来看，后一包数据的头紧接着前一包数据的尾</p><p><strong>造成粘包原因：</strong>发送方，TCP默认使用Nagle算法   1.只有上一个分组得到确认，才会发送下一个分组          2.收集多个小分组，在一个确认到来时一起发送                                                                                                              接受方，TCP接收到数据包时，应用层并不会立即处理。会先放入缓存，再等应用程序去读取。</p><p><strong>TCP如何保证数据的顺序化传输</strong>：1.为了保证数据包的可靠传递，发送方必须把已发送的数据包保留在缓冲区；<br>2.并为每个已发送的数据包启动一个超时定时器；<br>3.如在定时器超时之前收到了对方发来的应答信息（可能是对本包的应答，也可以是对本包后续包的应答），则释放该数据包占用的缓冲区;<br>4.否则，重传该数据包，直到收到应答或重传次数超过规定的最大次数为止。<br>5.接收方收到数据包后，先进行CRC校验，如果正确则把数据交给上层协议，然后给发送方发送一个累计应答包，表明该数据已收到，如果接收方正好也有数据要发给发送方，应答包也可方在数据包中捎带过去。</p><p><strong>索引为什么能加快查询效率</strong>：索引通过事先排好序，从而在查找时可以应用二分查找等高效率的算法。</p><p><strong>AQS</strong>就是基于双向队列，用volatile修饰共享变量state，线程通过CAS去改变状态符，成功则获取锁成功，失败则进入等待队列尾部，等待被唤醒。AQS是自旋锁：在等待唤醒的时候，经常会使用自旋的方式，不停地尝试获取锁，直到被其他线程获取成功</p><p>现在，在处理<strong>高并发计数</strong>时，应该优先使用<strong>LongAdder</strong>，而不是继续使用<strong>AtomicLong</strong>。原因：LongAdder是根据ConcurrentHashMap基本原理——锁分段，来实现的，不同的线程可以在不同的计数单元上进行计数，这样减少了线程竞争，提高了并发效率，本质上是用空间换时间的思想。</p>]]></content>
+    
+    <summary type="html">
+    
+      针对一些常考知识，简答总结到一起，面试前必看
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>基于lucene的elasticsearch</title>
+    <link href="http://yoursite.com/2020/02/03/%E5%9F%BA%E4%BA%8Elucene%E7%9A%84elasticsearch/"/>
+    <id>http://yoursite.com/2020/02/03/%E5%9F%BA%E4%BA%8Elucene%E7%9A%84elasticsearch/</id>
+    <published>2020-02-03T06:16:00.000Z</published>
+    <updated>2020-02-06T04:52:18.899Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="lucene"><a href="#lucene" class="headerlink" title="lucene"></a>lucene</h3><p>首先，elasticsearch（简称ES）是基于lucene的，lucene是什么？lucene 是最先进、功能最强大的搜索库，其实就是一个jar包，包含了封装好的各种建立倒排索引的算法代码，如果直接基于 lucene 开发，非常复杂，所以我们一般直接就调用lucene 的 api 去开发就可以了。</p><p><strong>搜索引擎原理</strong>：爬取内容，进行分词，建立反向索引也叫倒排索引。</p><p><strong>倒排索引</strong>是什么？传统正向索引，在文章中找词，而倒排索引是从关键词出发，找到对应的文章。</p><p>倒排底层实现基于FST,优点空间占用小，对单词前缀和后缀重复利用，查询快。</p><p><strong>Elasticsearch</strong></p><p>而elasticsearch 就是基于 lucene，隐藏了 lucene 的复杂性，提供了简单易用的 restful api 接口，是一个存储海量数据的分布式搜索引擎。</p><p>为什么要有ES，因为模糊查询会放弃索引，会导致全表扫描，大数据量下效率低，而我们可以把经常查询的字段放入ES中，可以提高查询速度。</p><p><strong>基本结构</strong>：</p><p>索引（index）:类似一个数据库，可以是商品索引，每个索引里可以有一个或者多个 type。</p><p>类型（type）：类似数据的一个表。可以是家用商品类型，电器商品类型，一个type包含多条document，用mapping定义type表结构类型例如哪些字段，字段是哪些类型。</p><p>文档（document）：类中表的一条数据，es 中最小的数据单元,可以是一条商品数据、一条订单数据，通常用 json 数据结构来表示。每个 document 有多个 field，每个 field 就代表了这个 document 中的一个字段的值。</p><p><strong>分布式原理</strong>：</p><p>Elasticsearch 会对数据进行切分(shard)，同时每一个分片会保存多个副本(replica ),为了保证分布式环境下的高可用。</p><p>并且同样基于maste-slave架构，在 Elasticsearch 中，节点是对等的，节点间会通过自己的一些规则选取集群的 Master，Master 会负责集群状态信息的改变，并同步给其他节点。</p><p>注意，只有建立索引和类型需要经过 Master，数据的写入有一个简单的 Routing 规则，可以 Route 到集群中的任意节点，所以数据写入压力是分散在整个集群的。</p><p> Elasticsearch 搭建 ELK 系统，也就是日志分析系统。其中 E 就是 Elasticsearch，L 是 Logstash，是一个日志收集系统，K 是 Kibana，是一个数据可视化平台。</p><p>keyword和text字段区别：keyword直接建立反向索引，text先分词再建立反向索引</p><p><strong>面试题</strong></p><p>写请求是写入 primary shard，然后同步给所有的 replica shard；读请求可以从 primary shard 或 replica shard 读取，采用的是<strong>随机轮询算法</strong>。</p><p><strong>搜索过程</strong>：客户端发送请求到一个协调节点，协调节点将搜索请求转发到所有的 shard 对应的 <code>primary shard</code> 或 <code>replica shard</code>，每个 shard 将<strong>文档的ID和排序值</strong>返回给协调节点，然后协调节点根据这些ID去各个节点拉取document 数据返回给客户端。</p><p>如何实现master选举：1.确认候选主节点数达标         2.比较：先判定是否具备master资格，具备候选主节点资格的优先返回；若两节点都为候选主节点，则id小的值会主节点。</p><p>性能优化：1.es 的搜索引擎严重依赖于底层的 <strong>filesystem cache</strong>，你如果给 filesystem cache 更多的内存，尽量让内存可以容纳所有的索引数据文件，那么你搜索的时候就基本都是走内存的，性能会非常高。            2.<strong>数据预热</strong>，每隔一段时间，就访问一下，让数据进入 filesystem cache 里面去。               3.<strong>冷热分离</strong>，将大量的访问很少、频率很低的数据，单独写一个索引，然后将访问很频繁的热数据单独写一个索引</p>]]></content>
+    
+    <summary type="html">
+    
+      elasticsearch到底是怎么样的搜索啊
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Get和Post的区别</title>
@@ -351,44 +389,6 @@
     <summary type="html">
     
       这篇讲解O(1)、O(n)、O(n^2)、O(log n)、O(n log n)到底是个什么意思
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>可爱又易懂的贪心算法</title>
-    <link href="http://yoursite.com/2019/12/04/%E5%8F%AF%E7%88%B1%E5%8F%88%E6%98%93%E6%87%82%E7%9A%84%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/"/>
-    <id>http://yoursite.com/2019/12/04/%E5%8F%AF%E7%88%B1%E5%8F%88%E6%98%93%E6%87%82%E7%9A%84%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/</id>
-    <published>2019-12-04T05:53:22.000Z</published>
-    <updated>2019-12-04T05:56:52.844Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="不看后悔啊！"><a href="#不看后悔啊！" class="headerlink" title="不看后悔啊！"></a>不看后悔啊！</h4><p>源文地址：<a href="http://baijiahao.baidu.com/s?id=1642122740570394361&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener">http://baijiahao.baidu.com/s?id=1642122740570394361&amp;wfr=spider&amp;for=pc</a></p>]]></content>
-    
-    <summary type="html">
-    
-      今天本人在学贪心算法的时候，看到了一篇非常有意思的文章，一定要推荐给大家，既开心了，又学到东西了。
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>volatile关键字</title>
-    <link href="http://yoursite.com/2019/12/03/volatile%E5%85%B3%E9%94%AE%E5%AD%97/"/>
-    <id>http://yoursite.com/2019/12/03/volatile%E5%85%B3%E9%94%AE%E5%AD%97/</id>
-    <published>2019-12-03T10:50:01.000Z</published>
-    <updated>2020-01-31T14:01:57.287Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="1-保证内存可见性"><a href="#1-保证内存可见性" class="headerlink" title="1. 保证内存可见性"></a>1. 保证内存可见性</h2><p>​        所有线程的共享变量都存储在主内存中，每一个线程都有一个独有的工作内存，每个线程不直接操作在主内存中的变量，而是将主内存上变量的副本放进自己的工作内存中，只操作工作内存中的数据。当修改完毕后，再把修改后的结果放回到主内存中。每个线程都只操作自己工作内存中的变量，无法直接访问对方工作内存中的变量，线程间变量值的传递需要通过主内存来完成。</p><p>​        单线程环境下不会出现问题，而多线程会出现问题，会出现脏数据。</p><p>​        而volatile关键字可以使当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看得到修改的值。所以说保证了内存可见性。</p><h2 id="2-禁止指令重排序"><a href="#2-禁止指令重排序" class="headerlink" title="2. 禁止指令重排序"></a>2. 禁止指令重排序</h2><p>​        指令的执行顺序并不一定会像我们编写的顺序那样执行，为了保证执行上的效率，JVM可能会对指令进行重排序。</p><p>​        而volatile关键字可以禁止指令重排序，即程序执行的顺序按照代码的先后顺序执行。</p><h2 id="3-不保证原子性"><a href="#3-不保证原子性" class="headerlink" title="3.不保证原子性"></a>3.不保证原子性</h2><p>​        也就是说，对volatile修饰的变量进行的操作，不保证多线程安全。</p><h2 id="4-单例模式的双重锁为什么要加volatile？"><a href="#4-单例模式的双重锁为什么要加volatile？" class="headerlink" title="4.单例模式的双重锁为什么要加volatile？"></a>4.单例模式的双重锁为什么要加volatile？</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span>  Singleton instance;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line"><span class="keyword">synchronized</span>(Singleton<span class="class">.<span class="keyword">class</span>)</span>&#123;</span><br><span class="line"> <span class="keyword">if</span>(instance==<span class="keyword">null</span>)&#123;</span><br><span class="line"> instance =<span class="keyword">new</span> Singleton();   </span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>需要volatile关键字的原因是，在并发情况下，如果没有volatile关键字，在第5行会出现问题。instance = new TestInstance();可以分解为3行伪代码</p><p>a.为instance分配内存</p><p>b.初始化instance</p><p>c.将instance变量指向分配的内存空间</p><p>上面的代码在编译运行时，可能会出现重排序从a-b-c排序为a-c-b。在多线程的情况下会出现以下问题。当线程A在执行第5行代码时，B线程进来执行到第2行代码。假设此时A执行的过程中发生了指令重排序，即先执行了a和c，没有执行b。那么由于A线程执行了c导致instance指向了一段地址，所以B线程判断instance不为null，会直接跳到第6行并返回一个未初始化的对象。</p><h3 id="CAS（无锁化机制）"><a href="#CAS（无锁化机制）" class="headerlink" title="CAS（无锁化机制）:"></a>CAS（无锁化机制）:</h3><p>实现多线程同步的原子指令！</p><p>CAS有3个操作数，内存值V，旧的预期值A，要修改的新值B。当且仅当预期值A和内存值V相同时，将内存值V修改为B，否则什么都不做。缺点，解决不了ABA问题和多线程下无限自旋问题。</p><p>ABA：线程1对值为A的value正在进行操作，但是，线程2这时进来，将value改为B，并在线程1结束之前，又将value改为了A。此时线程1再进CAS操作的时候，A值虽然不变，但已经不是同一个值了。</p><p>如何解决：Java 8有一个新的类，LongAdder，就是将value值分离成一个数组，当多线程访问时，通过hash算法映射到其中的一个数字进行计数。而最终的结果，就是这些数组的求和累加。这样一来，就减小了锁的粒度</p>]]></content>
-    
-    <summary type="html">
-    
-      很常见的volatile关键字的作用
     
     </summary>
     

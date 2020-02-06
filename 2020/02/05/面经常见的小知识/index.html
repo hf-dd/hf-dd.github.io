@@ -15,14 +15,14 @@
 
 
 
-<meta name="description" content="这篇主要讲述了几个关于计算机网络常见名词的解析">
+<meta name="description" content="针对一些常考知识，简答总结到一起，面试前必看">
 <meta property="og:type" content="article">
-<meta property="og:title" content="网关、路由、DNS、子网掩码、MAC地址的概念">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;10&#x2F;%E7%BD%91%E5%85%B3%E3%80%81DNS%E3%80%81%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81%E3%80%81MAC%E5%9C%B0%E5%9D%80%E7%9A%84%E6%A6%82%E5%BF%B5&#x2F;index.html">
+<meta property="og:title" content="面经常见的小知识">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;05&#x2F;%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86&#x2F;index.html">
 <meta property="og:site_name" content="HF Blog">
-<meta property="og:description" content="这篇主要讲述了几个关于计算机网络常见名词的解析">
+<meta property="og:description" content="针对一些常考知识，简答总结到一起，面试前必看">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-10T04:17:17.271Z">
+<meta property="og:updated_time" content="2020-02-06T04:51:21.787Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -55,7 +55,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>网关、路由、DNS、子网掩码、MAC地址的概念 | HF Blog</title>
+<title>面经常见的小知识 | HF Blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -213,11 +213,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-网关、DNS、子网掩码、MAC地址的概念" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-面经常见的小知识" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/12/10/%E7%BD%91%E5%85%B3%E3%80%81DNS%E3%80%81%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81%E3%80%81MAC%E5%9C%B0%E5%9D%80%E7%9A%84%E6%A6%82%E5%BF%B5/" class="article-date">
-      <time datetime="2019-12-10T03:42:17.000Z" itemprop="datePublished">2019-12-10</time>
+      <a href="/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/" class="article-date">
+      <time datetime="2020-02-05T13:24:05.000Z" itemprop="datePublished">2020-02-05</time>
 </a>
 
 
@@ -232,7 +232,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      网关、路由、DNS、子网掩码、MAC地址的概念
+      面经常见的小知识
     </h1>
   
 
@@ -249,31 +249,22 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="1-什么是网关"><a href="#1-什么是网关" class="headerlink" title="1.什么是网关"></a>1.什么是网关</h3><p>网关(Gateway)又称网间连接器、协议转换器。网关在传输层上以实现网络互连，是最复杂的网络互连设备，仅用于两个高层协议不同的网络互连。</p>
-<p>大家都知道，从一个房间走到另一个房间，必然要经过一扇门。同样，从一个网络向另一个网络发送信息，也必须经过一道“关口”，这道关口就是网关。顾名思义，网关(Gateway)就是一个网络连接到另一个网络的“关口”。</p>
-<p>按照不同的分类标准，网关也有很多种。TCP/IP协议里的网关是最常用的，在这里我们所讲的“网关”均指TCP/IP协议下的网关。</p>
-<p>那么网关到底是什么呢？网关实质上是一个<strong>网络</strong>通向<strong>其他网络</strong>的<strong>IP地址</strong>。</p>
-<h3 id="2-ip地址又是什么"><a href="#2-ip地址又是什么" class="headerlink" title="2.ip地址又是什么"></a>2.ip地址又是什么</h3><p>IP地址是IP协议提供的一种统一的地址格式，它为互联网上的每一个网络和每一台主机分配一个逻辑地址，以此来屏蔽<strong>物理地址</strong>的差异。</p>
-<p>IP地址是一个32位的二进制数，通常被分割为4个“8位二进制数”（也就是4个字节）。IP地址通常用”点分十进制”表示成（a.b.c.d）的形式，其中，a,b,c,d都是0~255之间的十进制整数。例如，192.168.1.1</p>
-<p>常见的IP地址，分为IPv4与IPv6两大类。目前还有些ip代理软件，但大部分都收费。IPV4就是有4段数字，每一段最大不超过255。</p>
-<h3 id="3-什么是物理地址"><a href="#3-什么是物理地址" class="headerlink" title="3.什么是物理地址"></a>3.什么是物理地址</h3><p>物理地址也就是我们常说的<strong>MAC地址</strong>，MAC是网络中用来标识网卡设备的唯一网络地址。由相关硬件制造商统一分配，每台电脑的MAC地址都是<strong>唯一</strong>的。</p>
-<p>mac地址位于OSI七层网络协议的第二层—<strong>数据链路层</strong>。通常表示为12个16进制数，每2个16进制数之间用冒号隔开，例如08:00:20:0A:8C:6D</p>
-<h4 id="ip和mac区别"><a href="#ip和mac区别" class="headerlink" title="ip和mac区别"></a>ip和mac区别</h4><p>1.IP地址是服务商给你的，mac地址是你的网卡物理地址；</p>
-<p>2.IP地址局域网内可以随便更改，但是mac地址一般不能更改；</p>
-<p>3.长度不同。IP地址为32位，MAC地址为48位；</p>
-<p>4.IP地址应用于OSI第三层，即网络层，而MAC地址应用在OSI第二层，即数据链路层。</p>
-<p>5.总的来说，IP地址在网络中体现的是“<strong>我在哪里</strong>”，而mac地址则在二层通信中体现<strong>“我是谁”</strong></p>
-<h3 id="4-路由"><a href="#4-路由" class="headerlink" title="4.路由"></a>4.路由</h3><p>路由器是互联网络中必不可少的网络设备之一，路由器是一种连接多个网络或网段的网络设备，它能将不同网络或网段之间的数据信息进行“翻译”，以使它们能够相互“读”懂对方的数据，从而构成一个更大的网络。</p>
-<p>在<strong>没有路由器</strong>的情况下，不同的两个网络之间是不能进行TCP/IP通信的，即使是两个网络连接在同一台交换机(或集线器)上，TCP/IP协议也会根据子网掩码(255.255.255.0)判定两个网络中的主机处在不同的网络里。而要实现这两个网络之间的通信，则必须通过<strong>网关</strong>。</p>
-<h3 id="5-什么是DHS"><a href="#5-什么是DHS" class="headerlink" title="5.什么是DHS"></a><strong>5.什么是DHS</strong></h3><p>DNS：域名解析服务器（Domain Name System），是把网址变成IP地址的服务器。</p>
-<p>浏览器输入URL，例如<a href="http://www.baidu.com，DNS服务器就自动帮我们解析这个域名并翻译成了IP地址61.135.169.105。" target="_blank" rel="noopener">www.baidu.com，DNS服务器就自动帮我们解析这个域名并翻译成了IP地址61.135.169.105。</a></p>
-<h3 id="6-子网掩码"><a href="#6-子网掩码" class="headerlink" title="6.子网掩码"></a>6.子网掩码</h3><p>子网掩码是为了区分网络位和主机位，上面我们说到过，一个ip地址是由网络部分和主机部分。正如一个人的名字由姓与名组成。</p>
-<p>那么我们可以把IP地址比作一个人的名字，那么子网掩码就像是一份名单，可以快速的知道那些人同姓，那些人不同姓，把同姓的人分在一组，让他们之前可以互相交流。</p>
-<h4 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a><strong>举个例子</strong></h4><p> 有一个网段是192.168.1.0—–192.168.1.254，这个网段就像一个村子一样，就称它为<strong>安防村</strong>，此这网段有个ip地址是192.168.1.1，我们就叫他安防一，另外一个人叫安防二，它的ip地址为192.168.1.2，我们一看他们，就知道他们是同村的。</p>
-<p>另外有一个网段，是192.168.0.0——192.168.255.254，我们叫它<strong>安村</strong>，村里有个同样有两个ip地址192.168.1.1与192.168.1.2，也叫安防一，安防二，那么问题来了？这个时候，如何区分他们是属于那个村的？<br> 这个时候就需要子网掩码了来判断他们是属于那个网段的，需要把安防一、安防二带到村里去认下，就知道他们是属于那个村了，<strong>安防村</strong>的网段是<strong>255.255.255.0</strong>，<strong>安村</strong>的网段是<strong>255.255.0.0</strong>。</p>
-<p>网络中也会出现类似于“同名”“同姓”的ip地址，如何区分他们到底是属于那个网段，就需要依靠子网掩码了。</p>
-<p>强烈推荐一篇用故事讲解什么是网关，路由，dns的关系的文章，写的很好，大家可以看看奥</p>
-<p>原文出处：<a href="https://blog.csdn.net/sgl520lxl/article/details/51974215" target="_blank" rel="noopener">https://blog.csdn.net/sgl520lxl/article/details/51974215</a></p>
+        <p><strong>LRU：双向链表+hashMap</strong><br>save(key, value)，在 HashMap 找到 Key 对应的节点，如果节点存在，把这个节点移动队头。如果不存在，需要构造新的节点，并且尝试把节点塞到队头，如果LRU空间不足，则通过 tail 淘汰掉队尾的节点，同时在 HashMap 中移除 Key。get(key)，通过 HashMap 找到 LRU 链表节点，把节点放入表头</p>
+<p><strong>逃逸分析（并不成熟</strong>）：当一个对象在方法中被定义后，它可能被外部方法所引用，例如作为调用参数传递到其他地方中，称为方法逃逸。<br>同步省略：同步块所使用的锁对象通过这种分析被证实只能够被一个线程访问，那么对对象的加的锁JIT编译阶段就会被优化掉（锁消除）<br>标量替换：在JIT阶段，如果经过逃逸分析，发现一个对象不会被外界访问的话，那么经过JIT优化，就会把这个对象拆解成若干个其中包含的若干个成员变量来代替<br>栈上分配：经过逃逸分析后发现，一个对象并没有逃逸出方法的话，那么就可能被优化成栈上分配</p>
+<p><strong>分布式锁：</strong><br>基于数据库（唯一索引）：唯一索引天然具有排他性，同一时刻只能允许一个竞争者获取锁<br>基于缓存：利用Redis的setnx key value这个命令，只有当key不存在时才会执行成功，如果key已经存在则命令执行失败。<br>基于Zookeeper：我们在Zookeeper中创建瞬时节点，利用节点不能重复创建的特性来保证排他性。</p>
+<p>操作系统：内核、驱动程序、接口库、外围<br>Linux系统一般有4个主要部分:内核、shell、文件系统和应用程序。</p>
+<p><strong>内存泄露</strong>：不再会被使用的对象的内存不能被回收，就是内存泄露。如果长生命周期的对象持有短生命周期的引用，就很可能会出现内存泄露。典型例子：<br>1 Vector v = new Vector(10);    //最简单的方法就是将 Vector 对象设置为 null。<br>2 for (int i = 1; i &lt; 100; i++) {<br>3     Object o = new Object();<br>4     v.add(o);      //循环申请Object对象，并将所申请的对象放入一个 Vector 中<br>5     o = null;  //仅仅释放引用本身，那么 Vector 仍然引用该对象，gc不可回收<br>6 }</p>
+<p><strong>Redis为什么单线程还那么快</strong>：1.纯内存访问，Redis将所有数据放在内存中<br>2.非阻塞I/O,Redis使用I/O多路复用技术，以让单个线程高效的处理多个连接请求                                          3.单线程避免了线程切换和竞争产生的消耗</p>
+<p><strong>多路I/O复用模型</strong>是利用 select、poll、epoll 可以同时监察多个流的 I/O 事件的能力，在空闲的时候，会把当前线程阻塞掉，当有一个或多个流有 I/O 事件时，就从阻塞态中唤醒，于是程序就会轮询一遍所有的流（epoll 是指轮询那些真正发出了事件的流），并且指依次顺序的处理就绪的流，这种做法就避免了大量的无用操作。</p>
+<p><strong>为什么zset用快表不用红黑树</strong>（查询单个数据时间复杂度一样但是如下）：<br>1.在做范围查找的时候，平衡树比skiplist操作要复杂。<br>2.平衡树的插入和删除操作会引发子树的调整，逻辑复杂，而skiplist的插入和删除只需要修改相邻节点的指针，操作简单又快速。<br>3.跳表的实现相较于红黑树更加简洁。</p>
+<p><strong>MySql为什么用 b+ 不用 b 数</strong>：<br>因为B树不管叶子节点还是非叶子节点，都会保存数据，这样导致在非叶子节点中能保存的指针数量变少<br>指针少的情况下要保存大量数据，只能增加树的高度，导致IO操作变多，查询性能变低；</p>
+<p><strong>一条SQL语句执行的很慢原因</strong>：先分成俩种情况<br>偶尔很慢：1.数据库在刷新脏页，例如 redo log 写满了需要同步到磁盘，此时其他操作需要等待<br>2.执行的时候，遇到锁，如表锁、行锁。<br>一直很慢：1.没有用上索引，例如该字段没有索引或者对索引字段进行运算、函数操作导致无法用索引。<br>2.数据库选错了索引，由于统计的失误，导致系统没有走索引，而是走了全表扫描</p>
+<p><strong>TCP粘包是什么</strong>:    TCP粘包就是指发送方发送的若干包数据到达接收方时粘成了一包，从接收缓冲区来看，后一包数据的头紧接着前一包数据的尾</p>
+<p><strong>造成粘包原因：</strong>发送方，TCP默认使用Nagle算法   1.只有上一个分组得到确认，才会发送下一个分组          2.收集多个小分组，在一个确认到来时一起发送                                                                                                              接受方，TCP接收到数据包时，应用层并不会立即处理。会先放入缓存，再等应用程序去读取。</p>
+<p><strong>TCP如何保证数据的顺序化传输</strong>：1.为了保证数据包的可靠传递，发送方必须把已发送的数据包保留在缓冲区；<br>2.并为每个已发送的数据包启动一个超时定时器；<br>3.如在定时器超时之前收到了对方发来的应答信息（可能是对本包的应答，也可以是对本包后续包的应答），则释放该数据包占用的缓冲区;<br>4.否则，重传该数据包，直到收到应答或重传次数超过规定的最大次数为止。<br>5.接收方收到数据包后，先进行CRC校验，如果正确则把数据交给上层协议，然后给发送方发送一个累计应答包，表明该数据已收到，如果接收方正好也有数据要发给发送方，应答包也可方在数据包中捎带过去。</p>
+<p><strong>索引为什么能加快查询效率</strong>：索引通过事先排好序，从而在查找时可以应用二分查找等高效率的算法。</p>
+<p><strong>AQS</strong>就是基于双向队列，用volatile修饰共享变量state，线程通过CAS去改变状态符，成功则获取锁成功，失败则进入等待队列尾部，等待被唤醒。AQS是自旋锁：在等待唤醒的时候，经常会使用自旋的方式，不停地尝试获取锁，直到被其他线程获取成功</p>
+<p>现在，在处理<strong>高并发计数</strong>时，应该优先使用<strong>LongAdder</strong>，而不是继续使用<strong>AtomicLong</strong>。原因：LongAdder是根据ConcurrentHashMap基本原理——锁分段，来实现的，不同的线程可以在不同的计数单元上进行计数，这样减少了线程竞争，提高了并发效率，本质上是用空间换时间的思想。</p>
 
       
     </div>
@@ -282,13 +273,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/12/10/%E7%BD%91%E5%85%B3%E3%80%81DNS%E3%80%81%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81%E3%80%81MAC%E5%9C%B0%E5%9D%80%E7%9A%84%E6%A6%82%E5%BF%B5/">网关、路由、DNS、子网掩码、MAC地址的概念</a></p>
+        <p><span>本文标题:</span><a href="/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/">面经常见的小知识</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
-        <p><span>发布时间:</span>2019-12-10, 11:42:17</p>
-        <p><span>最后更新:</span>2019-12-10, 12:17:17</p>
+        <p><span>发布时间:</span>2020-02-05, 21:24:05</p>
+        <p><span>最后更新:</span>2020-02-06, 12:51:21</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/12/10/%E7%BD%91%E5%85%B3%E3%80%81DNS%E3%80%81%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81%E3%80%81MAC%E5%9C%B0%E5%9D%80%E7%9A%84%E6%A6%82%E5%BF%B5/" title="网关、路由、DNS、子网掩码、MAC地址的概念">http://yoursite.com/2019/12/10/%E7%BD%91%E5%85%B3%E3%80%81DNS%E3%80%81%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81%E3%80%81MAC%E5%9C%B0%E5%9D%80%E7%9A%84%E6%A6%82%E5%BF%B5/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/12/10/%E7%BD%91%E5%85%B3%E3%80%81DNS%E3%80%81%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81%E3%80%81MAC%E5%9C%B0%E5%9D%80%E7%9A%84%E6%A6%82%E5%BF%B5/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/" title="面经常见的小知识">http://yoursite.com/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -300,16 +291,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/">
-                    TCP和UDP的区别？
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/12/08/%E8%BE%93%E5%85%A5%E4%B8%80%E4%B8%AAURL%E5%85%A8%E8%BF%87%E7%A8%8B%EF%BC%81/">
-                    输入一个URL全过程！
+                <a href="/2020/02/03/%E5%9F%BA%E4%BA%8Elucene%E7%9A%84elasticsearch/">
+                    基于lucene的elasticsearch
                 </a>
             </div>
         
@@ -321,7 +306,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-什么是网关"><span class="toc-number">1.</span> <span class="toc-text">1.什么是网关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-ip地址又是什么"><span class="toc-number">2.</span> <span class="toc-text">2.ip地址又是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-什么是物理地址"><span class="toc-number">3.</span> <span class="toc-text">3.什么是物理地址</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ip和mac区别"><span class="toc-number">3.1.</span> <span class="toc-text">ip和mac区别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-路由"><span class="toc-number">4.</span> <span class="toc-text">4.路由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-什么是DHS"><span class="toc-number">5.</span> <span class="toc-text">5.什么是DHS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-子网掩码"><span class="toc-number">6.</span> <span class="toc-text">6.子网掩码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#举个例子"><span class="toc-number">6.1.</span> <span class="toc-text">举个例子</span></a></li></ol></li></ol>
+            
         
     </div>
     <style>
@@ -357,7 +342,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"网关、路由、DNS、子网掩码、MAC地址的概念　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"面经常见的小知识　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -377,15 +362,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/" title="上一篇: TCP和UDP的区别？">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/12/08/%E8%BE%93%E5%85%A5%E4%B8%80%E4%B8%AAURL%E5%85%A8%E8%BF%87%E7%A8%8B%EF%BC%81/" title="下一篇: 输入一个URL全过程！">
+            <a href="/2020/02/03/%E5%9F%BA%E4%BA%8Elucene%E7%9A%84elasticsearch/" title="下一篇: 基于lucene的elasticsearch">
                 <i class="fa fa-angle-right"></i>
             </a>
         
