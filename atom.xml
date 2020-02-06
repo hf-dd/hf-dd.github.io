@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-02-06T05:18:15.141Z</updated>
+  <updated>2020-02-06T05:24:42.059Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,42 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>innodb 与 myisam 区别</title>
+    <link href="http://yoursite.com/2020/02/06/innodb%20%E4%B8%8E%20myisam%20%E5%8C%BA%E5%88%AB/"/>
+    <id>http://yoursite.com/2020/02/06/innodb%20%E4%B8%8E%20myisam%20%E5%8C%BA%E5%88%AB/</id>
+    <published>2020-02-06T05:23:38.000Z</published>
+    <updated>2020-02-06T05:24:42.059Z</updated>
+    
+    <summary type="html">
+    
+      两种数据库引擎的区别
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>innodb 与 myisam 区别</title>
+    <link href="http://yoursite.com/2020/02/06/%E5%8C%BA%E5%88%AB/"/>
+    <id>http://yoursite.com/2020/02/06/%E5%8C%BA%E5%88%AB/</id>
+    <published>2020-02-06T05:23:38.000Z</published>
+    <updated>2020-02-06T05:32:08.792Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="主要区别："><a href="#主要区别：" class="headerlink" title="主要区别："></a>主要区别：</h4><p>1.InnoDB 支持事务，MyISAM 不支持，对于 InnoDB 每一条 SQL 语言都默认封装成事务， 自动提交，这样会影响速度，所以最好把多条 SQL 语言放在 开启事务begin transaction 和 提交commit之间，组成一个事务； </p><p>2.InnoDB 支持外键，而 MyISAM 不支持。对一个包含外键的 InnoDB 表转为MYISAM会失败；</p><p>3.InnoDB 是聚集索引，数据文件是和索引绑在一起的，必须要有主键，通过主键索引 效率很高。但是辅助索引需要两次查询，先查询到主键，然后再通过主键查询到数据。因此， 主键不应该过大，因为主键太大，其他索引也都会很大。而 MyISAM 是非聚集索引，数据文件是分离的，索引保存的是数据文件的指针。主键索引和辅助索引是独立的。 </p><p>4.InnoDB 不保存表的具体行数，执行 select count(*) from table 时需要全表扫描。而 MyISAM 用一个变量保存了整个表的行数，执行上述语句时只需要读出该变量即可，速度很快；</p><p>5.Innodb 不支持全文索引，而 MyISAM 支持全文索引，查询效率上 MyISAM 要高。</p><h4 id="应用场景："><a href="#应用场景：" class="headerlink" title="应用场景："></a>应用场景：</h4><p>1.看是否支持事务，支持就选择 innodb，如果不需要可以考虑 MyISAM</p><p>2.如果表中绝大多数都只是读查询，可以考虑 MyISAM，如果既有读写也挺频繁，请使 用 InnoDB。 </p><p>3.系统崩溃，MyISAM 恢复起来更困难</p><p>4.MySQL5.5 版本开始 Innodb 已经成为 Mysql 的默认引擎(之前是 MyISAM)，说明其优势 是有目共睹的，如果你不知道用什么，那就用 InnoDB，至少不会差。</p>]]></content>
+    
+    <summary type="html">
+    
+      两种数据库引擎的区别
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>面经知识点概述总结！</title>
@@ -351,44 +387,6 @@
     <summary type="html">
     
       这篇主要讲述了几个关于计算机网络常见名词的解析
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>输入一个URL全过程！</title>
-    <link href="http://yoursite.com/2019/12/08/%E8%BE%93%E5%85%A5%E4%B8%80%E4%B8%AAURL%E5%85%A8%E8%BF%87%E7%A8%8B%EF%BC%81/"/>
-    <id>http://yoursite.com/2019/12/08/%E8%BE%93%E5%85%A5%E4%B8%80%E4%B8%AAURL%E5%85%A8%E8%BF%87%E7%A8%8B%EF%BC%81/</id>
-    <published>2019-12-08T06:16:59.000Z</published>
-    <updated>2020-01-31T13:42:48.891Z</updated>
-    
-    <content type="html"><![CDATA[<p><strong>简单理解:</strong>  域名解析 –&gt; 发起TCP的3次握手 –&gt; 建立TCP连接后发起http请求 –&gt;  服务器响应http请求，浏览器得到html代码 –&gt; 浏览器解析html代码，并请求html代码中的资源（如js、css、图片等）  –&gt; 浏览器对页面进行渲染呈现给用户。</p><p><strong>（1）域名解析（利用DNS）</strong></p><p>先校验输入的URL格式是否正确，默认都是http。</p><p>然后根据用户输入的网址去寻找它对应的IP地址，比如输入<a href="http://www.baidu.com它的ip地址为202.108.22.5" target="_blank" rel="noopener">www.baidu.com它的ip地址为202.108.22.5</a></p><p>一般会先去各种缓冲中查找，浏览器缓存，Hosts文件查找，路由器缓存，DNS缓存，都找不到就由DNS服务器查找。</p><p><strong>（2）建立TCP连接</strong> </p><p><strong>客户端发起请求：</strong></p><ol><li><p><strong>应用层</strong></p><p>DNS解析域名为目的IP，通过IP找到服务器路径，客户端向服务器发起HTTP会话，然后通过运输层TCP协议封装数据包，在TCP协议基础上进行传输。</p></li><li><p><strong>传输层</strong>，这里也就使用了<strong>TCP三次握手</strong></p><p>TCP(为HTTP提供可靠的数据传输)，UDP(DNS使用UDP传输)，HTTP会话会被分成报文段，添加源、目的端口（默认80）；TCP协议进行主要工作。</p></li><li><p><strong>网络层</strong>是把TCP分割好的各种数据包传送给接收方。而要保证确实能传到接收方还需要接收方的MAC地址，也就是物理地址，利用ARP地址解析协议。</p></li><li><p>然后才是<strong>链路层</strong>将数据发送到数据链路层传输。至此请求报文已发出，客户端发送请求的阶段结束</p></li></ol><p><strong>服务端接受请求：</strong><br>原路进行处理：链路层—&gt;网络层—&gt;传输层—&gt;应用层然后响应客户端发送报文。</p><p><strong>（3）浏览器进行处理</strong></p><p>服务器通过后台语言程序处理,找到数据返回给浏览器,HTML字符串被浏览器接受后被一句句读取解析,解析到link标签后重新发送请求获取css,解析到sript标签后发送请求获取js,并执行代码</p><p><strong>（4）绘制网页</strong></p><p>然后浏览器会进行渲染，浏览器根据HTML和CSS计算得到渲染树,绘制到屏幕上,js会被执行</p>]]></content>
-    
-    <summary type="html">
-    
-      输入一个URL返回了一个页面的全过程解析！
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>JDK,JRE,JVM的关系</title>
-    <link href="http://yoursite.com/2019/12/07/JDK-JRE-JVM%E7%9A%84%E5%85%B3%E7%B3%BB/"/>
-    <id>http://yoursite.com/2019/12/07/JDK-JRE-JVM%E7%9A%84%E5%85%B3%E7%B3%BB/</id>
-    <published>2019-12-07T05:58:49.000Z</published>
-    <updated>2019-12-07T06:07:04.188Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><p><strong>JDK（Java Development Kit）</strong></p><p>Java开发工具包，Java标准开发包，它提供了编译、运行Java程序所需的各种工具和资源，包括Java编译器、Java运行时环境，以及常用的Java类库等。</p><p><strong>Java Runtime Environment（JRE）</strong></p><p>Java运行环境，并不是一个开发环境，所以没有包含任何开发工具（如编译器和调试器），只是针对于使用Java程序的用户。</p><p><strong>JVM（java virtual machine）</strong></p><p>就是我们常说的java虚拟机，它是整个java实现跨平台的最核心的部分，所有的java程序会首先被编译为.class的类文件，这种类文件可以在虚拟机上执行。</p><p>也就是说class并不直接与机器的操作系统相对应，而是经过虚拟机间接与操作系统交互，由虚拟机将程序解释给本地系统执行。</p><h3 id="2-联系"><a href="#2-联系" class="headerlink" title="2.联系"></a>2.联系</h3><p>JDK是面向开发者的，JRE是面向使用JAVA程序的用户</p><p>JDK包括了Java运行环境JRE、Java工具和Java基础类库</p><p>JRE包含了JVM标准实现及Java核心类库。</p><p>JVM 是 java 编程语言的核心并且具有平台独立性。</p><p>JDK&gt;JRE&gt;JVM</p>]]></content>
-    
-    <summary type="html">
-    
-      JDK,JRE,JVM出现频率不可谓不多，那到底是什么，就让我们来看看
     
     </summary>
     
