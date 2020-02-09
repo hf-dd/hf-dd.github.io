@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="HF" />
+
+
+
+<meta name="description" content="JDK1.8引入了LongAdder类，基本代替了AtomicLong，为什么?">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LongAdder的原理和优势">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;07&#x2F;LongAdder%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BC%98%E5%8A%BF&#x2F;index.html">
+<meta property="og:site_name" content="HF Blog">
+<meta property="og:description" content="JDK1.8引入了LongAdder类，基本代替了AtomicLong，为什么?">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-02-07T08:58:14.415Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="HF Blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/apple-touch-icon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>LongAdder的原理和优势 | HF Blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/0.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">HF</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/Email" title="Email"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa QQ" href="/QQ" title="QQ"></a>
+                            
+                                <a class="fa 微信" href="/WX" title="微信"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/" target="_blank" rel="noopener">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/" target="_blank" rel="noopener">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">HF</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/0.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">HF</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/Email" title="Email"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="/QQ" title="QQ"></a>
+                            
+                                <a class="fa 微信" target="_blank" href="/WX" title="微信"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-LongAdder的原理和优势" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2020/02/07/LongAdder%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BC%98%E5%8A%BF/" class="article-date">
+      <time datetime="2020-02-07T08:46:36.000Z" itemprop="datePublished">2020-02-07</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      LongAdder的原理和优势
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="LongAdder"><a href="#LongAdder" class="headerlink" title="LongAdder"></a>LongAdder</h3><p>在原来处理高并发的计数时，一直采用的AtomicLong方法，利用的是CAS机制，实现原子操作。而在JDK1.8引入了LongAdder之后，我们推荐优先LongAdder，而不是AtomicLong这是为什么呢？</p>
+<p>CAS机制就是，在一个死循环内，不断尝试修改目标值，直到修改成功。如果竞争不激烈，那么修改成功的概率就很高，可如何很激烈，那么失败的概率就会很高。失败的概率越高，自旋的次数就会越多，性能就会下降。</p>
+<p>而LongAdder采用的是ConcurrentHashMap的实现思想，是对传统AtomicInteger等原子类的改进，将AtomicInteger的内部核心数据value分离成一个数组，每个线程访问时，通过哈希算法映射到其中一个数字进行计数，最后将这些和累加起来。其实就是将热点数据分离成多个单元，不同线程在自己的单元上计数，减少了线程竞争，提高了并发效率，本质上是用空间换时间的思想。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2020/02/07/LongAdder%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BC%98%E5%8A%BF/">LongAdder的原理和优势</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
+        <p><span>发布时间:</span>2020-02-07, 16:46:36</p>
+        <p><span>最后更新:</span>2020-02-07, 16:58:14</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2020/02/07/LongAdder%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BC%98%E5%8A%BF/" title="LongAdder的原理和优势">http://yoursite.com/2020/02/07/LongAdder%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BC%98%E5%8A%BF/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/07/LongAdder%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BC%98%E5%8A%BF/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2020/02/08/HTTP/">
+                    HTTP
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2020/02/07/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+                    线程池
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#LongAdder"><span class="toc-number">1.</span> <span class="toc-text">LongAdder</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"LongAdder的原理和优势　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2020/02/08/HTTP/" title="上一篇: HTTP">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2020/02/07/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" title="下一篇: 线程池">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/02/09/%E4%B8%89%E5%A4%A7%E8%8C%83%E5%BC%8F%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3/">三大范式通俗理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/08/HTTP/">HTTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/07/LongAdder%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BC%98%E5%8A%BF/">LongAdder的原理和优势</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/07/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">线程池</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/06/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%8C%BA%E5%88%AB/">innodb 与 myisam 区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/">面经知识点概述总结！</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/05/java%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86/">java对象的组成部分</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/03/%E5%9F%BA%E4%BA%8Elucene%E7%9A%84elasticsearch/">基于lucene的elasticsearch</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/02/Get%E5%92%8CPost%E7%9A%84%E5%8C%BA%E5%88%AB/">Get和Post的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/02/MD5%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/">MD5！！</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/01/Redis%E5%92%8Cmysql%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7/">Redis和mysql的数据一致性</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/01/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%81/">Git常用的命令！</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/31/BIO-NIO-AIO/">BIO,NIO,AIO</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/30/%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%81/">事务以及分布式事务！</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/27/%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/">进程的通信方式?</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/25/JVM%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%81/">JVM的垃圾回收机制！</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/23/TCP%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84%EF%BC%9F/">TCP是如何保证传输可靠性的？</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/22/%E5%88%86%E5%B8%83%E5%BC%8F-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F-%E5%BE%AE%E6%9C%8D%E5%8A%A1/">分布式-集群模式-微服务</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/21/ThreadLocl%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%81/">ThreadLocl</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/19/Sleep%E5%92%8CWait/">Sleep,和Wait!</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">Nosql</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/">TCP和UDP的区别？</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/10/%E7%BD%91%E5%85%B3%E3%80%81DNS%E3%80%81%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81%E3%80%81MAC%E5%9C%B0%E5%9D%80%E7%9A%84%E6%A6%82%E5%BF%B5/">网关、路由、DNS、子网掩码、MAC地址的概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/08/%E8%BE%93%E5%85%A5%E4%B8%80%E4%B8%AAURL%E5%85%A8%E8%BF%87%E7%A8%8B%EF%BC%81/">输入一个URL全过程！</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/07/JDK-JRE-JVM%E7%9A%84%E5%85%B3%E7%B3%BB/">JDK,JRE,JVM的关系</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/">时间复杂度常见讲解</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/04/%E5%8F%AF%E7%88%B1%E5%8F%88%E6%98%93%E6%87%82%E7%9A%84%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/">可爱又易懂的贪心算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/03/volatile%E5%85%B3%E9%94%AE%E5%AD%97/">volatile关键字</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/30/java%E7%9A%84%E5%8F%8D%E5%B0%84%E5%88%B0%E5%BA%95%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/">java的反射到底是个啥？</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/27/rest-restful-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/">rest?restful?到底是什么？</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/27/%E7%90%86%E8%A7%A3%E6%95%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/">理解数数据库事务隔离级别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/26/%E5%85%B3%E4%BA%8E%E9%94%81%E7%9A%84%E9%82%A3%E7%82%B9%E4%BA%8B/">关于锁的那点事!</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/24/Interface%E4%B8%8Eabstract%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB/">Interface与abstract类的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/23/JVM%E5%A0%86%E5%86%85%E5%AD%98%E8%AE%BE%E7%BD%AE%E5%8E%9F%E7%90%86/">JVM堆内存设置原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/final/">final关键字</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/HashMap%E7%9A%84%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">HashMap的底层原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E5%86%85%E9%83%A8%E7%B1%BB/">内部类</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/javac%E5%92%8Cjava%E7%9A%84%E5%8C%BA%E5%88%AB/">javac和java的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/Interger%E6%96%B9%E6%B3%95/">Interger方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/22/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A15%E5%A4%A7%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99/">面向对象5大基本原则</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/21/%E8%BF%9C%E7%A8%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%BC%E5%85%A5%E6%9C%AC%E5%9C%B0/">远程数据库导入本地</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2019-2020 HF
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+             post: ".article-entry a[href], .copyright a[href]", 
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+<script src="/node_modules/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"node_modules/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/node_modules/assets/shizuku.model.json"},"display":{"position":"right","width":250,"height":350},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

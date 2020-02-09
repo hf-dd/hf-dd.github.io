@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-02-06T05:32:08.792Z</updated>
+  <updated>2020-02-09T03:58:57.734Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,9 +17,85 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>三大范式通俗理解</title>
+    <link href="http://yoursite.com/2020/02/09/%E4%B8%89%E5%A4%A7%E8%8C%83%E5%BC%8F%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3/"/>
+    <id>http://yoursite.com/2020/02/09/%E4%B8%89%E5%A4%A7%E8%8C%83%E5%BC%8F%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3/</id>
+    <published>2020-02-09T03:45:34.000Z</published>
+    <updated>2020-02-09T03:58:57.734Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>第一范式（1NF）：要求数据库表的每一列都是不可分割的原子数据项</strong></p><p>例如：数据库有一个列，为家庭信息，里面却存入了人口和地址俩个信息，故不满足第一范式。</p><p>修改：应该将家庭信息分成家庭人口和家庭住址俩列，就可以满足了。</p><p><strong>第二范式（2NF）：在1NF基础上消除非主属性对主码的部分函数依赖</strong></p><p>例如：有一个数据库表存在<strong>联合主键</strong>（订单号和产品号），但存在一个订单价格只与订单号有关，而与产品号无关，此时就不满足第二范式了。</p><p>修改：分成俩个表，将订单价格与订单号单独再放入另一个表中。</p><p><strong>第三范式（3NF）：在2NF基础上消除传递依赖</strong></p><p>第三范式需要确保数据表中的每一列数据都和主键直接相关，而不能间接相关。</p><p>例如：所有属性完全依赖学号，满足第二范式，但学生性别和学生年龄都直接依赖于学生姓名，不满足第三范式</p><p>修改：分成俩个表，将学生姓名，性别和年龄再单独放入另一个表。</p>]]></content>
+    
+    <summary type="html">
+    
+      三大范式通俗理解与举例
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>HTTP</title>
+    <link href="http://yoursite.com/2020/02/08/HTTP/"/>
+    <id>http://yoursite.com/2020/02/08/HTTP/</id>
+    <published>2020-02-08T07:12:00.000Z</published>
+    <updated>2020-02-08T07:23:04.798Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h3><p>http是一个基于TCP/IP协议的无状态，无连接的超文本传输协议。</p><p>无连接：每次连接只处理一个请求，处理完收到客户应答后就断开连接（就是短连接）。</p><p>无状态：对于事务处理没有记忆能力。意味着如果后续处理需要前面的信息，则它必须重传，导致每次连接传送的数据量增大。另一方面，在服务器不需要先前信息时它的应答就较快。</p><p>HTTP请求报文由3部分组成（<strong>请求行+请求头+请求体</strong>）：</p><p>请求行：1.请求方法，常用get,post以及delete，head,put等等    2.URL地址        3.协议和版本号</p><p>请求头：有若干属性，<strong>Accept</strong>:告诉服务端 客户端接受什么类型的响应                <strong>cookie:</strong>里面的jsessionid值用来session区分用    <strong>Referer</strong>：区分URL来源        <strong>Cache-Control</strong>：控制要不要存入缓存</p><p>提高HTTP连接性能的四个方法： <strong>并行连接</strong>，通过多条TCP连接发起并发的HTTP请求     </p><p><strong>持久连接</strong>，重用TCP连接，以消除连接及关闭的时延     </p><p><strong>管道化连接</strong>， 通过共享的TCP连接发起并发的HTTP请求        </p><p><strong>复用连接</strong>，交替传送请求和相应报文（实验阶段）</p>]]></content>
+    
+    <summary type="html">
+    
+      HTTP请求报文和优化
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>LongAdder的原理和优势</title>
+    <link href="http://yoursite.com/2020/02/07/LongAdder%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BC%98%E5%8A%BF/"/>
+    <id>http://yoursite.com/2020/02/07/LongAdder%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BC%98%E5%8A%BF/</id>
+    <published>2020-02-07T08:46:36.000Z</published>
+    <updated>2020-02-07T08:58:14.415Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="LongAdder"><a href="#LongAdder" class="headerlink" title="LongAdder"></a>LongAdder</h3><p>在原来处理高并发的计数时，一直采用的AtomicLong方法，利用的是CAS机制，实现原子操作。而在JDK1.8引入了LongAdder之后，我们推荐优先LongAdder，而不是AtomicLong这是为什么呢？</p><p>CAS机制就是，在一个死循环内，不断尝试修改目标值，直到修改成功。如果竞争不激烈，那么修改成功的概率就很高，可如何很激烈，那么失败的概率就会很高。失败的概率越高，自旋的次数就会越多，性能就会下降。</p><p>而LongAdder采用的是ConcurrentHashMap的实现思想，是对传统AtomicInteger等原子类的改进，将AtomicInteger的内部核心数据value分离成一个数组，每个线程访问时，通过哈希算法映射到其中一个数字进行计数，最后将这些和累加起来。其实就是将热点数据分离成多个单元，不同线程在自己的单元上计数，减少了线程竞争，提高了并发效率，本质上是用空间换时间的思想。</p>]]></content>
+    
+    <summary type="html">
+    
+      JDK1.8引入了LongAdder类，基本代替了AtomicLong，为什么?
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>线程池</title>
+    <link href="http://yoursite.com/2020/02/07/%E7%BA%BF%E7%A8%8B%E6%B1%A0/"/>
+    <id>http://yoursite.com/2020/02/07/%E7%BA%BF%E7%A8%8B%E6%B1%A0/</id>
+    <published>2020-02-07T04:55:25.000Z</published>
+    <updated>2020-02-07T05:15:00.824Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="为什么会有线程池？"><a href="#为什么会有线程池？" class="headerlink" title="为什么会有线程池？"></a>为什么会有线程池？</h4><p>在Java中，我们一般通过集成Thread类和实现Runnnable接口，调用线程的start()方法实现线程的启动。但如果并发的数量很多，而且每个线程都是执行很短的时间便结束了，那样频繁的创建线程和销毁进程会大大的降低系统运行的效率。线程池正是<strong>为了解决多线程效率低的问题</strong>而产生的，他使得<strong>线程可以被复用</strong>，就是线程执行结束后不被销毁，而是可以继续执行其他任务。</p><h4 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h4><p><strong>corePoolSize</strong> ：核心线程数。线程池中会维护一个最小的线程数量，即使这些线程处理空闲状态，他们也不会 被销毁，除非设置了allowCoreThreadTimeOut。这里的最小线程数量即是corePoolSize。</p><p><strong>maximumPoolSize</strong> ：最大线程数，线程中最多能够创建的线程数量</p><p><strong>keepAliveTime</strong> ：空闲的线程保留的时间。</p><p><strong>TimeUnit</strong>：空闲线程的保留时间单位。</p><p><strong>workQueue</strong> 工作队列：新任务被提交后，会先进入到此工作队列中，任务调度时再从队列中取出任务。jdk中提供了四种工作队列    1.ArrayBlockingQueue基于数组的有界阻塞队列，按FIFO排序。    2.LinkedBlockingQuene基于链表的无界阻塞队列（其实最大容量为Interger.MAX），按照FIFO排序    3.SynchronousQuene一个不缓存任务的阻塞队列，生产者放入一个任务必须等到消费者取出这个任务。    4.PriorityBlockingQueue具有优先级的无界阻塞队列</p><p><strong>threadFactory</strong> 线程工厂</p><p><strong>handler</strong> 拒绝策略：当工作队列中的任务已到达最大限制，并且线程池中的线程数量也达到最大限制，这时如果有新任务提交进来，会执行拒绝策略。</p>]]></content>
+    
+    <summary type="html">
+    
+      线程池的作用以及常见参数
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
     <title>innodb 与 myisam 区别</title>
-    <link href="http://yoursite.com/2020/02/06/%E5%8C%BA%E5%88%AB/"/>
-    <id>http://yoursite.com/2020/02/06/%E5%8C%BA%E5%88%AB/</id>
+    <link href="http://yoursite.com/2020/02/06/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%8C%BA%E5%88%AB/"/>
+    <id>http://yoursite.com/2020/02/06/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%8C%BA%E5%88%AB/</id>
     <published>2020-02-06T05:23:38.000Z</published>
     <updated>2020-02-06T05:32:08.792Z</updated>
     
@@ -40,9 +116,9 @@
     <link href="http://yoursite.com/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/"/>
     <id>http://yoursite.com/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/</id>
     <published>2020-02-05T13:24:05.000Z</published>
-    <updated>2020-02-06T05:18:15.141Z</updated>
+    <updated>2020-02-09T10:28:52.716Z</updated>
     
-    <content type="html"><![CDATA[<p><strong>LRU：双向链表+hashMap</strong><br>save(key, value)，在 HashMap 找到 Key 对应的节点，如果节点存在，把这个节点移动队头。如果不存在，需要构造新的节点，并且尝试把节点塞到队头，如果LRU空间不足，则通过 tail 淘汰掉队尾的节点，同时在 HashMap 中移除 Key。get(key)，通过 HashMap 找到 LRU 链表节点，把节点放入表头</p><p><strong>逃逸分析（并不成熟</strong>）：当一个对象在方法中被定义后，它可能被外部方法所引用，例如作为调用参数传递到其他地方中，称为方法逃逸。<br>同步省略：同步块所使用的锁对象通过这种分析被证实只能够被一个线程访问，那么对对象的加的锁JIT编译阶段就会被优化掉（锁消除）<br>标量替换：在JIT阶段，如果经过逃逸分析，发现一个对象不会被外界访问的话，那么经过JIT优化，就会把这个对象拆解成若干个其中包含的若干个成员变量来代替<br>栈上分配：经过逃逸分析后发现，一个对象并没有逃逸出方法的话，那么就可能被优化成栈上分配</p><p><strong>分布式锁：</strong><br>基于数据库（唯一索引）：唯一索引天然具有排他性，同一时刻只能允许一个竞争者获取锁<br>基于缓存：利用Redis的setnx key value这个命令，只有当key不存在时才会执行成功，如果key已经存在则命令执行失败。<br>基于Zookeeper：我们在Zookeeper中创建瞬时节点，利用节点不能重复创建的特性来保证排他性。</p><p>操作系统：内核、驱动程序、接口库、外围<br>Linux系统一般有4个主要部分:内核、shell、文件系统和应用程序。</p><p><strong>内存泄露</strong>：不再会被使用的对象的内存不能被回收，就是内存泄露。如果长生命周期的对象持有短生命周期的引用，就很可能会出现内存泄露。典型例子：<br>1 Vector v = new Vector(10);    //最简单的方法就是将 Vector 对象设置为 null。<br>2 for (int i = 1; i &lt; 100; i++) {<br>3     Object o = new Object();<br>4     v.add(o);      //循环申请Object对象，并将所申请的对象放入一个 Vector 中<br>5     o = null;  //仅仅释放引用本身，那么 Vector 仍然引用该对象，gc不可回收<br>6 }</p><p><strong>Redis为什么单线程还那么快</strong>：1.纯内存访问，Redis将所有数据放在内存中<br>2.非阻塞I/O,Redis使用I/O多路复用技术，以让单个线程高效的处理多个连接请求                                          3.单线程避免了线程切换和竞争产生的消耗</p><p><strong>多路I/O复用模型</strong>是利用 select、poll、epoll 可以同时监察多个流的 I/O 事件的能力，在空闲的时候，会把当前线程阻塞掉，当有一个或多个流有 I/O 事件时，就从阻塞态中唤醒，于是程序就会轮询一遍所有的流（epoll 是指轮询那些真正发出了事件的流），并且指依次顺序的处理就绪的流，这种做法就避免了大量的无用操作。</p><p><strong>为什么zset用快表不用红黑树</strong>（查询单个数据时间复杂度一样但是如下）：<br>1.在做范围查找的时候，平衡树比skiplist操作要复杂。<br>2.平衡树的插入和删除操作会引发子树的调整，逻辑复杂，而skiplist的插入和删除只需要修改相邻节点的指针，操作简单又快速。<br>3.跳表的实现相较于红黑树更加简洁。</p><p><strong>MySql为什么用 b+ 不用 b 数</strong>：<br>因为B树不管叶子节点还是非叶子节点，都会保存数据，这样导致在非叶子节点中能保存的指针数量变少<br>指针少的情况下要保存大量数据，只能增加树的高度，导致IO操作变多，查询性能变低；</p><p><strong>一条SQL语句执行的很慢原因</strong>：先分成俩种情况<br>偶尔很慢：1.数据库在刷新脏页，例如 redo log 写满了需要同步到磁盘，此时其他操作需要等待<br>2.执行的时候，遇到锁，如表锁、行锁。<br>一直很慢：1.没有用上索引，例如该字段没有索引或者对索引字段进行运算、函数操作导致无法用索引。<br>2.数据库选错了索引，由于统计的失误，导致系统没有走索引，而是走了全表扫描</p><p><strong>TCP粘包是什么</strong>:    TCP粘包就是指发送方发送的若干包数据到达接收方时粘成了一包，从接收缓冲区来看，后一包数据的头紧接着前一包数据的尾</p><p><strong>造成粘包原因：</strong>发送方，TCP默认使用Nagle算法   1.只有上一个分组得到确认，才会发送下一个分组          2.收集多个小分组，在一个确认到来时一起发送                                                                                                              接受方，TCP接收到数据包时，应用层并不会立即处理。会先放入缓存，再等应用程序去读取。</p><p><strong>TCP如何保证数据的顺序化传输</strong>：1.为了保证数据包的可靠传递，发送方必须把已发送的数据包保留在缓冲区；<br>2.并为每个已发送的数据包启动一个超时定时器；<br>3.如在定时器超时之前收到了对方发来的应答信息（可能是对本包的应答，也可以是对本包后续包的应答），则释放该数据包占用的缓冲区;<br>4.否则，重传该数据包，直到收到应答或重传次数超过规定的最大次数为止。<br>5.接收方收到数据包后，先进行CRC校验，如果正确则把数据交给上层协议，然后给发送方发送一个累计应答包，表明该数据已收到，如果接收方正好也有数据要发给发送方，应答包也可方在数据包中捎带过去。</p><p><strong>索引为什么能加快查询效率</strong>：索引通过事先排好序，从而在查找时可以应用二分查找等高效率的算法。</p><p><strong>AQS</strong>就是基于双向队列，用volatile修饰共享变量state，线程通过CAS去改变状态符，成功则获取锁成功，失败则进入等待队列尾部，等待被唤醒。AQS是自旋锁：在等待唤醒的时候，经常会使用自旋的方式，不停地尝试获取锁，直到被其他线程获取成功</p><p>现在，在处理<strong>高并发计数</strong>时，应该优先使用<strong>LongAdder</strong>，而不是继续使用<strong>AtomicLong</strong>。原因：LongAdder是根据ConcurrentHashMap基本原理——锁分段，来实现的，不同的线程可以在不同的计数单元上进行计数，这样减少了线程竞争，提高了并发效率，本质上是用空间换时间的思想。</p>]]></content>
+    <content type="html"><![CDATA[<p><strong>LRU：双向链表+hashMap</strong><br>save(key, value)，在 HashMap 找到 Key 对应的节点，如果节点存在，把这个节点移动队头。如果不存在，需要构造新的节点，并且尝试把节点塞到队头，如果LRU空间不足，则通过 tail 淘汰掉队尾的节点，同时在 HashMap 中移除 Key。get(key)，通过 HashMap 找到 LRU 链表节点，把节点放入表头</p><p><strong>逃逸分析（并不成熟</strong>）：当一个对象在方法中被定义后，它可能被外部方法所引用，例如作为调用参数传递到其他地方中，称为方法逃逸。<br>同步省略：同步块所使用的锁对象通过这种分析被证实只能够被一个线程访问，那么对对象的加的锁JIT编译阶段就会被优化掉（锁消除）<br>标量替换：在JIT阶段，如果经过逃逸分析，发现一个对象不会被外界访问的话，那么经过JIT优化，就会把这个对象拆解成若干个其中包含的若干个成员变量来代替<br>栈上分配：经过逃逸分析后发现，一个对象并没有逃逸出方法的话，那么就可能被优化成栈上分配</p><p><strong>分布式锁：</strong><br>基于数据库（唯一索引）：唯一索引天然具有排他性，同一时刻只能允许一个竞争者获取锁<br>基于缓存：利用Redis的setnx key value这个命令，只有当key不存在时才会执行成功，如果key已经存在则命令执行失败。<br>基于Zookeeper：我们在Zookeeper中创建瞬时节点，利用节点不能重复创建的特性来保证排他性。</p><p>操作系统：内核、驱动程序、接口库、外围<br>Linux系统一般有4个主要部分:内核、shell、文件系统和应用程序。</p><p><strong>内存泄露</strong>：不再会被使用的对象的内存不能被回收，就是内存泄露。如果长生命周期的对象持有短生命周期的引用，就很可能会出现内存泄露。典型例子：<br>1 Vector v = new Vector(10);    //最简单的方法就是将 Vector 对象设置为 null。<br>2 for (int i = 1; i &lt; 100; i++) {<br>3     Object o = new Object();<br>4     v.add(o);      //循环申请Object对象，并将所申请的对象放入一个 Vector 中<br>5     o = null;  //仅仅释放引用本身，那么 Vector 仍然引用该对象，gc不可回收<br>6 }</p><p><strong>Redis为什么单线程还那么快</strong>：1.纯内存访问，Redis将所有数据放在内存中<br>2.非阻塞I/O,Redis使用I/O多路复用技术，以让单个线程高效的处理多个连接请求                                          3.单线程避免了线程切换和竞争产生的消耗</p><p><strong>多路I/O复用模型</strong>是利用 select、poll、epoll 可以同时监察多个流的 I/O 事件的能力，在空闲的时候，会把当前线程阻塞掉，当有一个或多个流有 I/O 事件时，就从阻塞态中唤醒，于是程序就会轮询一遍所有的流（<strong>epoll</strong> 是只轮询那些真正发出了事件的流，并且指依次顺序的处理就绪的流，这种做法就避免了大量的无用操作，高效的用一个线程处理了多个请求）。</p><p><strong>为什么zset用快表不用红黑树</strong>（查询单个数据时间复杂度一样但是如下）：<br>1.在做范围查找的时候，平衡树比skiplist操作要复杂。<br>2.平衡树的插入和删除操作会引发子树的调整，逻辑复杂，而skiplist的插入和删除只需要修改相邻节点的指针，操作简单又快速。<br>3.跳表的实现相较于红黑树更加简洁。</p><p><strong>MySql为什么用 b+ 不用 b 数</strong>：<br>因为B树不管叶子节点还是非叶子节点，都会保存数据，这样导致在非叶子节点中能保存的指针数量变少<br>指针少的情况下要保存大量数据，只能增加树的高度，导致IO操作变多，查询性能变低；</p><p><strong>一条SQL语句执行的很慢原因</strong>：先分成俩种情况<br>偶尔很慢：1.数据库在刷新脏页，例如 redo log 写满了需要同步到磁盘，此时其他操作需要等待<br>2.执行的时候，遇到锁，如表锁、行锁。<br>一直很慢：1.没有用上索引，例如该字段没有索引或者对索引字段进行运算、函数操作导致无法用索引。<br>2.数据库选错了索引，由于统计的失误，导致系统没有走索引，而是走了全表扫描</p><p><strong>TCP粘包是什么</strong>:    TCP粘包就是指发送方发送的若干包数据到达接收方时粘成了一包，从接收缓冲区来看，后一包数据的头紧接着前一包数据的尾</p><p><strong>造成粘包原因：</strong>发送方，TCP默认使用Nagle算法   1.只有上一个分组得到确认，才会发送下一个分组          2.收集多个小分组，在一个确认到来时一起发送给接受方，TCP接收到数据包时，应用层并不会立即处理。会先放入缓存，再等应用程序去读取。</p><p><strong>TCP如何保证数据的顺序化传输</strong>：1.为了保证数据包的可靠传递，发送方必须把已发送的数据包保留在缓冲区；<br>2.并为每个已发送的数据包启动一个超时定时器；<br>3.如在定时器超时之前收到了对方发来的应答信息（可能是对本包的应答，也可以是对本包后续包的应答），则释放该数据包占用的缓冲区;<br>4.否则，重传该数据包，直到收到应答或重传次数超过规定的最大次数为止。<br>5.接收方收到数据包后，先进行CRC校验，如果正确则把数据交给上层协议，然后给发送方发送一个累计应答包，表明该数据已收到，如果接收方正好也有数据要发给发送方，应答包也可方在数据包中捎带过去。</p><p><strong>索引为什么能加快查询效率</strong>：索引通过事先排好序，从而在查找时可以应用二分查找等高效率的算法。</p><p><strong>AQS</strong>就是基于双向队列，用volatile修饰共享变量state，线程通过CAS去改变状态符，成功则获取锁成功，失败则进入等待队列尾部，等待被唤醒。AQS是自旋锁：在等待唤醒的时候，经常会使用自旋的方式，不停地尝试获取锁，直到被其他线程获取成功</p><p><strong>Runnable和Callable的区别？</strong>：Runnable接口中的run()方法无返回值，只是纯粹的执行run方法，而Callable接口中的call()方法是有返回值的，是一个泛型，和Future、FutureTask配合可以用来获取异步执行的结果。</p><p><strong>线程和进程的区别</strong>：<strong>进程</strong>是一个程序在处理机顺序执行所发生的活动，是程序运行和资源分配的基本单位，程序运行就会为之创建一个进程，并且为它分配资源，然后把该进程放入进程就绪队列，进程调度器选中的时候就会为它分配 CPU 时间，程序开始真正运行 。（Linux 通过 fork 函数创建进程）      <strong>线程</strong>是程序执行的最小单位，它是 CPU 调度和分派的基本单位，一个进程可以由多个线程组成，线程间共享进程的所有资源，每个进程有自己的堆栈和局部变量。线程由 CPU 独立调度执行，在多CPU 环境下就允许多个线程同时运行。同样多个线程也可以并发操作。    </p><p><strong>程序</strong>： 静态的代码和数据集合；不能并发； 不具有唯一标识；        <strong>进程</strong>： 动态的程序执行过程； 可并发； 在内存中具有唯一标识；</p><p><strong>count(1)和count(*)基本没有差别</strong>！都包含null的记录，count(字段) 则不包含null的记录。</p><p><strong>数据量大如何传输？</strong>分片，如何分片，就是计算偏位移，最低8字节倍数，MTU默认1500字节，分段传输。如何再组合起来？接收方在第一个分片到达，会分配一个存储缓冲区，并启动一个计时器(超时就丢弃那种)，当数据报后续分片到达，在缓冲区中根据偏移量再组合到一起就OK了，和原来一样，哈哈。</p><p><strong>长连接</strong>指建立SOCKET连接后不管是否使用都保持连接，但安全性较差。<strong>短连接</strong>指每发送一次数据才建立一次连接，发送完就关闭。长连接多用于操作频繁，点对点的通讯，而且连接数不能太多情况例如：数据库的连接用长连接。http请求一般是短连接，如果高并发下都是长连接，那么服务器会耗费很多的资源。</p><p><strong>五种进程调度算法：</strong>时间片轮转调度算法，先来先服务调度算法，优先级调度算法，多级反馈队列调度算法，高响应比优先调度算法</p><p><strong>分页和分段的区别：</strong>页是信息的物理单位，分页是为了方便管理内存，对用户来说是透明的，段是信息的逻辑单位，是程序逻辑的要求，对用户来说，是可见的是不透明的。页大小固定，段大小不固定。从用户角度看，分页的地址空间是一维的，分段的地址空间是二维的。</p><p>在地址映射过程中，若在页面中发现所要访问的页面不在内存中，则产生<strong>缺页中断</strong>。当发生缺页中断时，如果操作系统内存中没有空闲页面，则操作系统必须从内存中移出一个页面，以便为即将调入的页面让出空间。而用来选择淘汰哪一页的规则叫做<strong>页面置换算法</strong>。 FIFO ，LRU。</p>]]></content>
     
     <summary type="html">
     
@@ -173,7 +249,7 @@
     <link href="http://yoursite.com/2020/01/31/BIO-NIO-AIO/"/>
     <id>http://yoursite.com/2020/01/31/BIO-NIO-AIO/</id>
     <published>2020-01-31T05:50:18.000Z</published>
-    <updated>2020-01-31T07:15:47.928Z</updated>
+    <updated>2020-02-06T14:25:37.546Z</updated>
     
     <content type="html"><![CDATA[<p>1.同步：使用同步IO时，Java自己处理IO读写。</p><p>2.异步：使用异步IO时，Java将IO读写委托给OS处理，需要将数据缓冲区地址和大小传给OS，完成后OS通知Java处理（回调）。</p><p>3.阻塞：使用阻塞IO时，Java调用会一直阻塞到读写完成才返回。</p><p>4.非阻塞：使用非阻塞IO时，如果不能立马读写，Java调用会马上返回，当IO事件分发器通知可读写时在进行读写，不断循环直到读写完成。</p><p>下面是重点了（敲黑板！）！</p><p>1.BIO：<strong>同步并阻塞</strong>，服务器的实现模式是<strong>一个连接一个线程</strong>，即客户端有连接请求时服务器端就需要启动一个线程进行处理，可能造成不必要的线程开销，当然，这种情况可以通过线程池机制改善，但并不能从本质上消除这个弊端。</p><p>2.NIO：在JDK1.4以前，Java的IO模型一直是BIO，但从JDK1.4开始，JDK引入的新的IO模型NIO，它是<strong>同步非阻塞</strong>的。而服务器的实现模式是<strong>多个请求一个线程</strong>，即请求会注册到多路复用器Selector上，<strong>多路复用器</strong>轮询到连接有IO请求时才启动一个线程处理。    </p><p>3.AIO：JDK1.7发布了NIO2.0，这就是真正意义上的<strong>异步非阻塞</strong>，服务器的实现模式为<strong>多个有效请求一个线程</strong>，客户端的IO请求<strong>都是由OS先完成再通知</strong>服务器应用去启动线程处理（回调）。</p><p>应用场景：并发连接数不多时采用BIO，因为它编程和调试都非常简单，但如果涉及到高并发的情况，应选择NIO（连接数目多且连接比较短）或AIO（连接数目多且连接比较长），更好的建议是采用成熟的网络通信框架Netty。</p>]]></content>
     
@@ -313,82 +389,6 @@
     <summary type="html">
     
       Sleep和Wait的区别，简显易懂
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Nosql</title>
-    <link href="http://yoursite.com/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/"/>
-    <id>http://yoursite.com/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/</id>
-    <published>2020-01-19T02:25:01.000Z</published>
-    <updated>2020-01-19T03:06:51.693Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="MongoDB"><a href="#MongoDB" class="headerlink" title="MongoDB:"></a>MongoDB:</h2><p>概念：文档型数据库,类似json格式,它在许多场景下可用于<strong>替代</strong>统的关系型数据库或键/值存储方式。</p><p>特点：有权限验证类似RBAC，本身就是持久化数据库。</p><p>使用场景：主要解决海量数据的访问效率问题。比如网站的评论海量数据。</p><p>优点：</p><p>1.可处理大规模单表，容易分隔表。</p><p>2.非常高的插入速度。</p><p>3.高查询，支持二维空间索引，例如管道，快速定位。</p><p>缺点：</p><p>1.不支持事务（主要）</p><p>2.占用空间大</p><p>3.没有成熟维护工具</p><h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis:"></a>Redis:</h2><p>概念：开源的可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。</p><p>特点：有权限验证，不过是全局的。Redis 所有数据都是放在内存中的，持久化是使用 RDB 方式或者 aof 方式。</p><p>使用场景：适用于对读写效率要求都很高，数据变化快等。例如：网站的点赞，计算，实时数据</p><p>支持五种数据类型：string（字符串），hash（哈希），list（列表），set（集合）及zset(sorted set：有序集合)。</p><p>优点：</p><p>1.支持事务</p><p>2.数据存在内存，读写非常快</p><p>缺点：</p><p>由于 Redis 是内存数据库,所以,单台机器,存储的数据量,跟机器本身的内存大小。虽然 Redis 本身有 Key 过期策略,但是还是需要提前预估和节约内存</p><h2 id="HBase"><a href="#HBase" class="headerlink" title="HBase:"></a>HBase:</h2><p>概念：是 Apache Hadoop 中的一个子项目，实现语言java,HBase 依托于 Hadoop 的 HDFS（分布式文件系统）作为最基本存储基础单元。</p><p>特点：支持数十亿行X上百万列，不会出现单点故障，堪比MySQL的随机访问性能。</p><p>使用场景：</p><p>1.bigtable类型的数据存储</p><p>2.bigtable类型的数据存储</p><p>3.bigtable类型的数据存储</p><p>优点：</p><p>1.存储容量大，一个表可以容纳上亿行，上百万列</p><p>2.通过版本检索</p><p>3.可有效避免单点故障</p><p>缺点:</p><p>1.其API更适用于Java项目</p><p>2.占用空间大,依赖多，配置麻烦</p>]]></content>
-    
-    <summary type="html">
-    
-      NoSql型Redis和MongoDB和HBase的区别，优劣，使用场景
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>TCP和UDP的区别？</title>
-    <link href="http://yoursite.com/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/"/>
-    <id>http://yoursite.com/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/</id>
-    <published>2019-12-21T07:06:44.000Z</published>
-    <updated>2020-01-22T05:56:07.597Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="传输控制协议TCP"><a href="#传输控制协议TCP" class="headerlink" title="传输控制协议TCP"></a>传输控制协议TCP</h3><p>1.TCP是<strong>面向连接</strong>的运输层协议。传送数据前需用三次握手方式进行连接，传送完毕后，必须释放已经建立的TCP连接。</p><p>2.TCP连接只能有俩个<strong>端点</strong>，即只能一对一，点对点。</p><p>3.TCP提供<strong>可靠支付</strong>的服务，无差错，不丢失，不重复，按序到达。</p><p>4.TCP提供<strong>全双工通信</strong>（通信双方都可作为传送者，接收者，且可以同时传输接收）</p><p>5.TCP面向<strong>字节流</strong>，流是指的是流入到进程或从进程流出的字节序列。</p><p>6.TCP不关心应用程序一次把多长的报文发送到TCP的缓存，而是根据对方给出的<strong>窗口值</strong>和当前<strong>网络拥塞</strong>的程度来决定一个报文段应包含多少个字节</p><p>7.首部20个字节（源端口和目的端口，序号，确认号，数据偏移 <em>，</em>保留 ）。</p><h3 id="用户数据报协议UDP"><a href="#用户数据报协议UDP" class="headerlink" title="用户数据报协议UDP"></a>用户数据报协议UDP</h3><p>1.UDP是<strong>无连接</strong>的协议，传输数据前不需要建立连接，减小了开销和时延。</p><p>2.UDP连接支持一对一，一对多，多对一，多对多的交互通信。</p><p>3.UDP使用尽最大努力支付，即<strong>不可靠支付</strong>。</p><p>4.UDP<strong>没有拥塞控制</strong>，因此网络出现的拥塞不会使源主机的发送速率降低。</p><p>5.UDP<strong>面向报文</strong>，应用层交给UDP多长的报文，UDP就照样发送，既不合并，也不拆分，即一次发送一个报文</p><p>6.UDP发送的报文长度是应用进程给出的。</p><p>7.首部8个字节。</p>]]></content>
-    
-    <summary type="html">
-    
-      TCP和UDP哪里不同，具体表现在哪里？
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>网关、路由、DNS、子网掩码、MAC地址的概念</title>
-    <link href="http://yoursite.com/2019/12/10/%E7%BD%91%E5%85%B3%E3%80%81DNS%E3%80%81%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81%E3%80%81MAC%E5%9C%B0%E5%9D%80%E7%9A%84%E6%A6%82%E5%BF%B5/"/>
-    <id>http://yoursite.com/2019/12/10/%E7%BD%91%E5%85%B3%E3%80%81DNS%E3%80%81%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81%E3%80%81MAC%E5%9C%B0%E5%9D%80%E7%9A%84%E6%A6%82%E5%BF%B5/</id>
-    <published>2019-12-10T03:42:17.000Z</published>
-    <updated>2019-12-10T04:17:17.271Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="1-什么是网关"><a href="#1-什么是网关" class="headerlink" title="1.什么是网关"></a>1.什么是网关</h3><p>网关(Gateway)又称网间连接器、协议转换器。网关在传输层上以实现网络互连，是最复杂的网络互连设备，仅用于两个高层协议不同的网络互连。</p><p>大家都知道，从一个房间走到另一个房间，必然要经过一扇门。同样，从一个网络向另一个网络发送信息，也必须经过一道“关口”，这道关口就是网关。顾名思义，网关(Gateway)就是一个网络连接到另一个网络的“关口”。</p><p>按照不同的分类标准，网关也有很多种。TCP/IP协议里的网关是最常用的，在这里我们所讲的“网关”均指TCP/IP协议下的网关。</p><p>那么网关到底是什么呢？网关实质上是一个<strong>网络</strong>通向<strong>其他网络</strong>的<strong>IP地址</strong>。</p><h3 id="2-ip地址又是什么"><a href="#2-ip地址又是什么" class="headerlink" title="2.ip地址又是什么"></a>2.ip地址又是什么</h3><p>IP地址是IP协议提供的一种统一的地址格式，它为互联网上的每一个网络和每一台主机分配一个逻辑地址，以此来屏蔽<strong>物理地址</strong>的差异。</p><p>IP地址是一个32位的二进制数，通常被分割为4个“8位二进制数”（也就是4个字节）。IP地址通常用”点分十进制”表示成（a.b.c.d）的形式，其中，a,b,c,d都是0~255之间的十进制整数。例如，192.168.1.1</p><p>常见的IP地址，分为IPv4与IPv6两大类。目前还有些ip代理软件，但大部分都收费。IPV4就是有4段数字，每一段最大不超过255。</p><h3 id="3-什么是物理地址"><a href="#3-什么是物理地址" class="headerlink" title="3.什么是物理地址"></a>3.什么是物理地址</h3><p>物理地址也就是我们常说的<strong>MAC地址</strong>，MAC是网络中用来标识网卡设备的唯一网络地址。由相关硬件制造商统一分配，每台电脑的MAC地址都是<strong>唯一</strong>的。</p><p>mac地址位于OSI七层网络协议的第二层—<strong>数据链路层</strong>。通常表示为12个16进制数，每2个16进制数之间用冒号隔开，例如08:00:20:0A:8C:6D</p><h4 id="ip和mac区别"><a href="#ip和mac区别" class="headerlink" title="ip和mac区别"></a>ip和mac区别</h4><p>1.IP地址是服务商给你的，mac地址是你的网卡物理地址；</p><p>2.IP地址局域网内可以随便更改，但是mac地址一般不能更改；</p><p>3.长度不同。IP地址为32位，MAC地址为48位；</p><p>4.IP地址应用于OSI第三层，即网络层，而MAC地址应用在OSI第二层，即数据链路层。</p><p>5.总的来说，IP地址在网络中体现的是“<strong>我在哪里</strong>”，而mac地址则在二层通信中体现<strong>“我是谁”</strong></p><h3 id="4-路由"><a href="#4-路由" class="headerlink" title="4.路由"></a>4.路由</h3><p>路由器是互联网络中必不可少的网络设备之一，路由器是一种连接多个网络或网段的网络设备，它能将不同网络或网段之间的数据信息进行“翻译”，以使它们能够相互“读”懂对方的数据，从而构成一个更大的网络。</p><p>在<strong>没有路由器</strong>的情况下，不同的两个网络之间是不能进行TCP/IP通信的，即使是两个网络连接在同一台交换机(或集线器)上，TCP/IP协议也会根据子网掩码(255.255.255.0)判定两个网络中的主机处在不同的网络里。而要实现这两个网络之间的通信，则必须通过<strong>网关</strong>。</p><h3 id="5-什么是DHS"><a href="#5-什么是DHS" class="headerlink" title="5.什么是DHS"></a><strong>5.什么是DHS</strong></h3><p>DNS：域名解析服务器（Domain Name System），是把网址变成IP地址的服务器。</p><p>浏览器输入URL，例如<a href="http://www.baidu.com，DNS服务器就自动帮我们解析这个域名并翻译成了IP地址61.135.169.105。" target="_blank" rel="noopener">www.baidu.com，DNS服务器就自动帮我们解析这个域名并翻译成了IP地址61.135.169.105。</a></p><h3 id="6-子网掩码"><a href="#6-子网掩码" class="headerlink" title="6.子网掩码"></a>6.子网掩码</h3><p>子网掩码是为了区分网络位和主机位，上面我们说到过，一个ip地址是由网络部分和主机部分。正如一个人的名字由姓与名组成。</p><p>那么我们可以把IP地址比作一个人的名字，那么子网掩码就像是一份名单，可以快速的知道那些人同姓，那些人不同姓，把同姓的人分在一组，让他们之前可以互相交流。</p><h4 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a><strong>举个例子</strong></h4><p> 有一个网段是192.168.1.0—–192.168.1.254，这个网段就像一个村子一样，就称它为<strong>安防村</strong>，此这网段有个ip地址是192.168.1.1，我们就叫他安防一，另外一个人叫安防二，它的ip地址为192.168.1.2，我们一看他们，就知道他们是同村的。</p><p>另外有一个网段，是192.168.0.0——192.168.255.254，我们叫它<strong>安村</strong>，村里有个同样有两个ip地址192.168.1.1与192.168.1.2，也叫安防一，安防二，那么问题来了？这个时候，如何区分他们是属于那个村的？<br> 这个时候就需要子网掩码了来判断他们是属于那个网段的，需要把安防一、安防二带到村里去认下，就知道他们是属于那个村了，<strong>安防村</strong>的网段是<strong>255.255.255.0</strong>，<strong>安村</strong>的网段是<strong>255.255.0.0</strong>。</p><p>网络中也会出现类似于“同名”“同姓”的ip地址，如何区分他们到底是属于那个网段，就需要依靠子网掩码了。</p><p>强烈推荐一篇用故事讲解什么是网关，路由，dns的关系的文章，写的很好，大家可以看看奥</p><p>原文出处：<a href="https://blog.csdn.net/sgl520lxl/article/details/51974215" target="_blank" rel="noopener">https://blog.csdn.net/sgl520lxl/article/details/51974215</a></p>]]></content>
-    
-    <summary type="html">
-    
-      这篇主要讲述了几个关于计算机网络常见名词的解析
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>输入一个URL全过程！</title>
-    <link href="http://yoursite.com/2019/12/08/%E8%BE%93%E5%85%A5%E4%B8%80%E4%B8%AAURL%E5%85%A8%E8%BF%87%E7%A8%8B%EF%BC%81/"/>
-    <id>http://yoursite.com/2019/12/08/%E8%BE%93%E5%85%A5%E4%B8%80%E4%B8%AAURL%E5%85%A8%E8%BF%87%E7%A8%8B%EF%BC%81/</id>
-    <published>2019-12-08T06:16:59.000Z</published>
-    <updated>2020-02-06T05:24:01.089Z</updated>
-    
-    <content type="html"><![CDATA[<p><strong>简单理解:</strong>  域名解析 –&gt; 发起TCP的3次握手 –&gt; 建立TCP连接后发起http请求 –&gt;  服务器响应http请求，浏览器得到html代码 –&gt; 浏览器解析html代码，并请求html代码中的资源（如js、css、图片等）  –&gt; 浏览器对页面进行渲染呈现给用户。</p><p><strong>（1）域名解析（利用DNS）</strong></p><p>先校验输入的URL格式是否正确，默认都是http。</p><p>然后根据用户输入的网址去寻找它对应的IP地址，比如输入<a href="http://www.baidu.com它的ip地址为202.108.22.5" target="_blank" rel="noopener">www.baidu.com它的ip地址为202.108.22.5</a></p><p>一般会先去各种缓冲中查找，浏览器缓存，Hosts文件查找，路由器缓存，DNS缓存，都找不到就由DNS服务器查找。</p><p><strong>（2）建立TCP连接</strong> </p><p><strong>客户端发起请求：</strong></p><ol><li><p><strong>应用层</strong></p><p>DNS解析域名为目的IP，通过IP找到服务器路径，客户端向服务器发起HTTP会话，然后通过运输层TCP协议封装数据包，在TCP协议基础上进行传输。</p></li><li><p><strong>传输层</strong>，这里也就使用了<strong>TCP三次握手</strong></p><p>TCP(为HTTP提供可靠的数据传输)，UDP(DNS使用UDP传输)，HTTP会话会被分成报文段，添加源、目的端口（默认80）；TCP协议进行主要工作。</p></li><li><p><strong>网络层</strong>是把TCP分割好的各种数据包传送给接收方。而要保证确实能传到接收方还需要接收方的MAC地址，也就是物理地址，利用ARP地址解析协议。</p></li><li><p>然后才是<strong>链路层</strong>将数据发送到数据链路层传输。至此请求报文已发出，客户端发送请求的阶段结束</p></li></ol><p><strong>服务端接受请求：</strong><br>原路进行处理：链路层—&gt;网络层—&gt;传输层—&gt;应用层然后响应客户端发送报文。</p><p><strong>（3）浏览器进行处理</strong></p><p>服务器通过后台语言程序处理,找到数据返回给浏览器,HTML字符串被浏览器接受后被一句句读取解析,解析到link标签后重新发送请求获取css,解析到sript标签后发送请求获取js,并执行代码</p><p><strong>（4）绘制网页</strong></p><p>然后浏览器会进行渲染，浏览器根据HTML和CSS计算得到渲染树,绘制到屏幕上,js会被执行</p>]]></content>
-    
-    <summary type="html">
-    
-      输入一个URL返回了一个页面的全过程解析！
     
     </summary>
     
