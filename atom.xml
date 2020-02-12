@@ -56,31 +56,16 @@
   
   <entry>
     <title>select、poll、epoll的区别</title>
-    <link href="http://yoursite.com/2020/02/12/select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-    <id>http://yoursite.com/2020/02/12/select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB/</id>
-    <published>2020-02-12T05:41:47.000Z</published>
-    <updated>2020-02-12T06:12:36.828Z</updated>
+    <link href="http://yoursite.com/2020/02/11/select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
+    <id>http://yoursite.com/2020/02/11/select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB/</id>
+    <published>2020-02-11T05:41:47.000Z</published>
+    <updated>2020-02-12T14:20:34.860Z</updated>
     
-    <content type="html"><![CDATA[<h4 id="概述："><a href="#概述：" class="headerlink" title="概述："></a>概述：</h4><p><strong>多路I/O复用模型</strong>是利用 select、poll、epoll 可以同时监察多个流的 I/O 事件的能力，在空闲的时候，会把当前线程阻塞掉，当有一个或多个流有 I/O 事件发生时，就从阻塞态中唤醒，于是程序就会轮询一遍所有的流。</p><p><strong>epoll</strong> 是只轮询那些真正发出了事件的流，并且会按顺序的处理就绪的流，避免了大量的无用操作，高效的用一个线程处理了多个请求。</p><p><strong>select，poll，epoll本质上都是同步I/O，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的</strong>，而异步I/O则无需自己负责进行读写。</p><h3 id="select："><a href="#select：" class="headerlink" title="select："></a>select：</h3><p>select本质上是通过设置或者<strong>检查</strong>存放fd标志位的数据结构来进行下一步处理，就是说用户传入的数组拷贝到内核空间，然后查询每个fd对应的设备状态.</p><p>什么是fd:文件描述符,进程中具体某个文件信息在文件表中的索引位置.</p><p>缺点：1.单个进程可监视的fd数量有限制，在Linux上一般为1024</p><p>2.采用轮询的方法进行扫描，效率较低</p><p>3.需要维护一个用来存放大量fd的数据结构</p><h3 id="poll"><a href="#poll" class="headerlink" title="poll:"></a>poll:</h3><p>poll本质上和select没有区别，只不过它没有最大连接数的限制，原因是它基于链表的。</p><p>poll和select共有的缺点就是，1.包含大量文件描述符的数组被整体复制于用户态和内核的地址空间之间，而不论这些文件描述符是否就绪，它的开销随着文件描述符数量的增加而线性增大。</p><p>2.select()和poll()将就绪的文件描述符告诉进程后，如果进程没有对其进行IO操作，那么下次调用select()和poll()的时候将再次报告这些文件描述符，所以它们一般不会丢失就绪的消息，这种方式称为<strong>水平触发</strong>。</p><p><strong>epoll：</strong></p><p><strong>对比pool和select来讲就是当有数据就绪的时候，不用去遍历所有的文件描述符。直接取就绪的文件描述符。</strong></p><p><strong>epoll可以同时支持水平触发和边缘触发</strong>，边缘触发：只告诉进程哪些文件描述符刚刚变为就绪状态，它只说一遍，如果我们没有采取行动，那么它将不会再次告知，这种方式称为边缘触发，性能更高，代码复杂。</p><p>epoll是基于事件驱动的，事先先注册一个文件标识符，一旦基于某个文件描述符就绪时，内核会采用类似callback的回调机制，迅速激活这个文件描述符，当进程调用epoll_wait()时便得到通知。</p><p>调用epoll_wait()得到的不是真正的就绪文件描述符，而是一个代表就绪描述符数量的值，使用了内存映射（mmap）技术，省掉了这些文件描述符在系统调用时复制的开销。</p>]]></content>
+    <content type="html"><![CDATA[<h4 id="概述："><a href="#概述：" class="headerlink" title="概述："></a>概述：</h4><p><strong>多路I/O复用模型</strong>是利用 select、poll、epoll 可以同时监察多个流的 I/O 事件的能力，在空闲的时候，会把当前线程阻塞掉，当有一个或多个流有 I/O 事件发生时，就从阻塞态中唤醒，于是程序就会轮询一遍所有的流。</p><p><strong>epoll</strong> 是只轮询那些真正发出了事件的流，并且会按顺序的处理就绪的流，避免了大量的无用操作，高效的用一个线程处理了多个请求。</p><p><strong>select，poll，epoll本质上都是同步I/O，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的</strong>，而异步I/O则无需自己负责进行读写。</p><h4 id="select："><a href="#select：" class="headerlink" title="select："></a>select：</h4><p>select本质上是通过设置或者<strong>检查</strong>存放fd标志位的数据结构来进行下一步处理，就是说用户传入的数组拷贝到内核空间，然后查询每个fd对应的设备状态.</p><p>什么是fd:文件描述符,进程中具体某个文件信息在文件表中的索引位置.</p><p>缺点：1.单个进程可监视的fd数量有限制，在Linux上一般为1024</p><p>2.采用轮询的方法进行扫描，效率较低</p><p>3.需要维护一个用来存放大量fd的数据结构</p><h4 id="poll"><a href="#poll" class="headerlink" title="poll:"></a>poll:</h4><p>poll本质上和select没有区别，只不过它没有最大连接数的限制，原因是它基于链表的。</p><p>poll和select共有的缺点就是，1.包含大量文件描述符的数组被整体复制于用户态和内核的地址空间之间，而不论这些文件描述符是否就绪，它的开销随着文件描述符数量的增加而线性增大。</p><p>2.select()和poll()将就绪的文件描述符告诉进程后，如果进程没有对其进行IO操作，那么下次调用select()和poll()的时候将再次报告这些文件描述符，所以它们一般不会丢失就绪的消息，这种方式称为<strong>水平触发</strong>。</p><h4 id="epoll："><a href="#epoll：" class="headerlink" title="epoll："></a><strong>epoll：</strong></h4><p><strong>对比pool和select来讲就是当有数据就绪的时候，不用去遍历所有的文件描述符。直接取就绪的文件描述符。</strong></p><p><strong>epoll可以同时支持水平触发和边缘触发</strong>，边缘触发：只告诉进程哪些文件描述符刚刚变为就绪状态，它只说一遍，如果我们没有采取行动，那么它将不会再次告知，这种方式称为边缘触发，性能更高，代码复杂。</p><p>epoll是基于事件驱动的，事先先注册一个文件标识符，一旦基于某个文件描述符就绪时，内核会采用类似callback的回调机制，迅速激活这个文件描述符，当进程调用epoll_wait()时便得到通知。</p><p>调用epoll_wait()得到的不是真正的就绪文件描述符，而是一个代表就绪描述符数量的值，使用了内存映射（mmap）技术，省掉了这些文件描述符在系统调用时复制的开销。</p>]]></content>
     
     <summary type="html">
     
       多路I/O复用模型select、poll、epoll概念理解加区别
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>post</title>
-    <link href="http://yoursite.com/2020/02/12/post/"/>
-    <id>http://yoursite.com/2020/02/12/post/</id>
-    <published>2020-02-12T05:41:24.000Z</published>
-    <updated>2020-02-12T05:41:24.603Z</updated>
-    
-    <summary type="html">
     
     </summary>
     
@@ -385,6 +370,25 @@
     <summary type="html">
     
       进程间通信IPC的几种方式？
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>JVM的垃圾回收机制！</title>
+    <link href="http://yoursite.com/2020/01/25/JVM%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%81/"/>
+    <id>http://yoursite.com/2020/01/25/JVM%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%81/</id>
+    <published>2020-01-25T13:48:11.000Z</published>
+    <updated>2020-01-29T03:44:23.105Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="1-类加载器子系统"><a href="#1-类加载器子系统" class="headerlink" title="1.类加载器子系统"></a>1.类加载器子系统</h3><p>Java的动态类加载功能是由类加载器子系统处理。采用的是双亲委派机制（加载类先交给上层父类加载）</p><p>启动类加载器 (BootStrap class Loader)：启动时初始加载一些包，<strong>rt.jar</strong>，根加载器，拥有最高权限。</p><p>扩展类加载器(Extension class Loader)：加载扩展功能的一些jar包。</p><p>应用程序类加载器(System ClassLoader)：加载class path下的所有类。</p><h3 id="2-运行时数据区"><a href="#2-运行时数据区" class="headerlink" title="2.运行时数据区"></a>2.运行时数据区</h3><p>方法区（Method Area）：所有类，静态变量，静态方法，成员方法，常量，共享（线程不安全）。</p><p>堆区（Heap Area）：所有对象和他的实例new出来的，数组，共享（不安全）。</p><p>栈区（Stack Area）：局部变量，对象的引用，每个线程创建（安全）。</p><p>程序计数器：（唯一一个不抛出OOM）保存当前线程执行的内存地址。安全</p><p>本地方法栈：为JVM使用到的native方法服务。</p><h3 id="3-GC（垃圾回收）"><a href="#3-GC（垃圾回收）" class="headerlink" title="3.GC（垃圾回收）"></a>3.GC（垃圾回收）</h3><p>GC的作用：  排查内存溢出，排查内存泄漏，性能调优，排查并发瓶颈</p><p>GC做了什么：哪些内存需要回收？什么时候回收？如何回收？</p><h4 id="哪些内存需要回收？"><a href="#哪些内存需要回收？" class="headerlink" title="哪些内存需要回收？"></a>哪些内存需要回收？</h4><p>回收已经”死“的内存，哪些已”死“？</p><p>对象没有引用，作用域发生未捕获异常，程序在作用域正常执行完毕，程序执行了System.exit()，程序发生意外终止（被杀进程等）</p><p><strong>判断已死方法</strong>：最早的引用计数法，引用一个对象时，计数器加一，引用失效，减一。为0时判断已死，有弊端，无法解决循环引用问题，所有java不使用该方法。而采用的方法为<strong>可达性分析算法</strong>，从根节点GC ROOT开始，向下寻找它的引用节点，没有找到的节点就是无用可回收节点。</p><p>可作为GC Roots的对象包含以下几种：</p><ol><li>虚拟机栈中引用的对象。</li><li>方法区中静态属性引用的对象</li><li>方法区中常量引用的对象</li><li>本地方法栈中(Native方法)引用的对象</li></ol><h4 id="什么时候回收？"><a href="#什么时候回收？" class="headerlink" title="什么时候回收？"></a>什么时候回收？</h4><p>引用的分类：强引用（只要强引用在，永远不回收），软引用（内存够，就不回收，不够就回收了），弱引用（不管内存够不够都回收），虚引用（每次都回收）。</p><p><strong>可达性分析算法</strong>后标记的无用节点，并不是直接回收，会再进行一次筛选判断有必要执行finalize()，没有则死，有则得到一次最后逃脱死亡的机会。</p><p><strong>类被回收的条件</strong>：该类的所有实例都已经被回收(即在Java堆中不存在任何该类的实例)，加载该类的ClassLoader已被回收，该类对应的Class对象没有任何其他地方被引用，无法在任何地方通过反射访问该类的方法。</p><h4 id="如何回收？"><a href="#如何回收？" class="headerlink" title="如何回收？"></a>如何回收？</h4><p><strong>标记-清除算法</strong>：先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象。</p><p>缺点：效率低，会产生内存碎片。</p><p><strong>复制算法</strong>：将内存分成大小相同俩块，每次只用一块。第一块回收完，将活着的对象放到另外一块，第一块彻底清理，下次一样。效率高，不会产生内存碎片。</p><p><strong>标记-整理算法</strong>：在标记-清除算法的基础上，回收后将存活对象都推到左端空闲区域，解决内存碎片问题。</p><p><strong>JVM的优化：</strong>采用分代回收方式。</p><p>新生代内存的回收（minor GC）主要采用复制算法，新生代分成三部分，Eden,  Survivor  From，Survivor To=8:1:1。 将Eden和From区存活对象，放入To区，清空前面俩区，下次就是Eden和To到From，Survivor内存不够时，存入老年代。</p><p>老年代内存回收（Full GC，Major GC）主要采用标记-整理算法。</p><p>区别：新生代，每次有大量对象产生，大量对象被回收，次数频繁，因此采用效率高，速度快的复制算法。</p><p>老年代，对象存活率高，没有额外空间对它进行分配，采用标记-整理算法，次数少，Major GC的速度一般会比Minor GC慢10倍以上。</p><p><strong>JVM垃圾回收器</strong>：串行（Serial），并行（Parallel,ParNew），并发（CMS）</p><p>Serial收集器：JVM需要进行垃圾回收的时候，需要中断所有的用户线程，知道它回收结束为止.</p><p>串行回收方式适合低端机器，是Client模式下的默认收集器，对CPU和内存的消耗不高，适合用户交互比较少，后台任务较多的系统。</p><p>Serial收集器默认新旧生代的回收器搭配为Serial+ SerialOld.</p><p> ParNew收集器：多CPU模式下的首选回收器，也是Server模式下的默认收集器。</p><p>ParallelScavenge收集器：又被称为是吞吐量优先的收集器。    </p><p>ParallelOld收集器：是老生代并行收集器的一种，使用标记整理算法、是老生代吞吐量优先的一个收集器。</p><p><strong>CMS</strong>：又称响应时间优先(最短回收停顿)的回收器，使用并发模式回收垃圾，使用标记-清除算法。</p><p>过程为：初始标记，并发标记，重新标记，并发清除。</p><p>优点：并发收集、低停顿。</p><p>缺点：CMS收集器对CPU资源非常敏感，占CPU资源，且总吞吐量下降，基于标志-清除算法，会产生碎片。</p>]]></content>
+    
+    <summary type="html">
+    
+      深入理解JVM的垃圾回收机制GC！
     
     </summary>
     
