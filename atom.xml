@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-02-09T03:58:57.734Z</updated>
+  <updated>2020-02-12T13:51:26.557Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,97 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Redis的9种数据结构</title>
+    <link href="http://yoursite.com/2020/02/12/Redis%E7%9A%849%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    <id>http://yoursite.com/2020/02/12/Redis%E7%9A%849%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</id>
+    <published>2020-02-12T12:56:07.000Z</published>
+    <updated>2020-02-12T13:51:26.557Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们都知道Redis常用的数据结构有五种分别为String，hash，set，list，zset。</p><p>特殊的数据结构有四种：bitmap，hyperLogLog，bloomFilter，GeoHash 。</p><p>虽然大家都也听说过，今天就来总结一下吧，毕竟Redis非常重要！</p><p>先大致写一下常用的：</p><p><strong>String</strong></p><p>String类型是 Redis中最常使用的类型，内部的实现是通过 SDS来存储的。SDS 类似于 <strong>Java</strong> 中的 <strong>ArrayList</strong>，可以通过预分配冗余空间的方式来减少内存的频繁分配。                        <strong>用处</strong>：普通的get,set方法KV操作，常规。</p><p><strong>Hash</strong></p><p>类似Map的一种结构。    <strong>用处</strong>：可以存入结构化数据，例如往缓存存一个对象，可以方便的操作其中的某个字段。</p><p><strong>List</strong></p><p><strong>用处</strong>：使用List(有序链表)的数据结构，可以做简单的消息队列的功能。另外还有一个就是，可以利用lrange命令（返回列表指定区间的元素），做基于redis的分页功能，性能极佳。</p><p><strong>Set</strong></p><p>Set 是无序集合，很明显的一个作用就是去重，不用多说。</p><h4 id="Sorted-Set（zset）"><a href="#Sorted-Set（zset）" class="headerlink" title="Sorted Set（zset）"></a>Sorted Set（zset）</h4><p>排好序的Set，底层实现<strong>快表</strong>，多了一个权重参数score分数，写进去自动根据分数排序。</p><p>用处：排行榜应用之类的，用Sorted Sets来做带权重的队列。</p><p>接下来就是不常用的奥。</p><p><strong>Bitmap</strong></p><p>位图，字符串一个字符是8个比特， bitmap 底层就是 string， <strong>用处</strong>：例如计算一个用户在指定时间内签到的次数，8位，1位表示一天，0表示未签到，1表示签到。</p><p><strong>HyperLogLog</strong></p><p>提供不精确的去重计数，小规模使用set去重，那要是访问量巨大呢？HyperLogLog就出现了，优势就是只占用 12KB 的内存。</p><p><strong>GeoHash</strong></p><p>可以用来保存地理位置，并作位置距离计算或者根据半径计算位置等。常用来计算 附近的人，附近的商店。</p><p><strong>BloomFilter</strong></p><p>他叫布隆，没错就是那个布隆，布隆过滤器。我第一次听说他的作用就是<strong>防止缓存穿透</strong>，利用高效算法来判断某个值是否存在。                        <strong>用处</strong>：网站去重，垃圾邮件过滤，缓存穿透</p><p><strong>原理：</strong>当我们向 BloomFilter  添加数据的时候，它首先会将我们的数据(key)做几次hash运算，每个hash运算都会得到一个不用的位数组索引下标，此时我们就将算出的几个下标的位置的值改成1就行。如果判断元素是否存在，只要  判断所在的所有索引下标的值都是1 就行了。</p><p>很明显有一个问题，下标重复了咋办，没办法，这就是误差，所以说，<strong>没有的肯定没有，有的也不一定有</strong>。</p>]]></content>
+    
+    <summary type="html">
+    
+      Redis可不是只有五种数据结构奥！
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Redis持久化机制rdb和aof</title>
+    <link href="http://yoursite.com/2020/02/12/Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6rdb%E5%92%8Caof/"/>
+    <id>http://yoursite.com/2020/02/12/Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6rdb%E5%92%8Caof/</id>
+    <published>2020-02-12T06:13:57.000Z</published>
+    <updated>2020-02-12T14:13:37.990Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>Redis</strong> 提供了 RDB 和 AOF 两种持久化方式</p><p><strong>RDB：</strong>对 <strong>Redis</strong> 中的数据执行<strong>周期性</strong>的持久化，即按照一定的时间周期策略把内存的数据以快照的形式保存到硬盘的二进制文件，对应产生的数据文件为dump.rdb。</p><p><strong>AOF:AOF</strong> 机制对每条写入命令作为日志，以 <strong>append-only</strong> 的模式写入一个日志文件中，因为这个模式是只追加的方式，所以没有任何磁盘寻址的开销，所以很快。当Redis重启是会通过重新执行文件中保存的<strong>写命令</strong>来在内存中重建整个数据库的内容。</p><p><strong>Redis在重启的时候会默认使用AOF去重新构建数据，因为AOF的数据是比RDB更完整的。</strong></p><p>RDB：</p><p>优点：<strong>RDB</strong>对<strong>Redis</strong>的性能影响非常小，是因为在同步数据的时候他只是<strong>fork</strong>了一个子进程去做持久化的，而且他在数据恢复的时候速度比<strong>AOF</strong>来的快。</p><p>缺点：<strong>RDB</strong>都是快照文件，都是默认五分钟才会生成一次，这意味着你这次同步到下次同步这中间五分钟的数据都很可能全部丢失掉。</p><p>AOF：</p><p>优点：<strong>AOF</strong>是一秒一次同步，最多丢一秒数据。因为是只追加的方式写数据，所以不用寻址，性能惊人，<strong>AOF</strong>的日志是通过一个叫<strong>非常可读</strong>的方式记录的，适合做数据紧急恢复。</p><p>缺点：一样的数据，<strong>AOF</strong>文件比<strong>RDB</strong>还要大。<strong>AOF</strong>开启后Redis性能低，因为要异步刷新日志。</p><p><strong>如何选择：</strong></p><p>俩者结合使用，如果真一下丢失了许多数据，<strong>第一时间用RDB恢复，再用AOF恢复</strong>，因为RDB恢复数据快，但是不全，所以再让AOF来补全，完美！</p>]]></content>
+    
+    <summary type="html">
+    
+      Redis持久化机制rdb和aof俩种机制的区别讲解
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>select、poll、epoll的区别</title>
+    <link href="http://yoursite.com/2020/02/12/select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
+    <id>http://yoursite.com/2020/02/12/select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB/</id>
+    <published>2020-02-12T05:41:47.000Z</published>
+    <updated>2020-02-12T06:12:36.828Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="概述："><a href="#概述：" class="headerlink" title="概述："></a>概述：</h4><p><strong>多路I/O复用模型</strong>是利用 select、poll、epoll 可以同时监察多个流的 I/O 事件的能力，在空闲的时候，会把当前线程阻塞掉，当有一个或多个流有 I/O 事件发生时，就从阻塞态中唤醒，于是程序就会轮询一遍所有的流。</p><p><strong>epoll</strong> 是只轮询那些真正发出了事件的流，并且会按顺序的处理就绪的流，避免了大量的无用操作，高效的用一个线程处理了多个请求。</p><p><strong>select，poll，epoll本质上都是同步I/O，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的</strong>，而异步I/O则无需自己负责进行读写。</p><h3 id="select："><a href="#select：" class="headerlink" title="select："></a>select：</h3><p>select本质上是通过设置或者<strong>检查</strong>存放fd标志位的数据结构来进行下一步处理，就是说用户传入的数组拷贝到内核空间，然后查询每个fd对应的设备状态.</p><p>什么是fd:文件描述符,进程中具体某个文件信息在文件表中的索引位置.</p><p>缺点：1.单个进程可监视的fd数量有限制，在Linux上一般为1024</p><p>2.采用轮询的方法进行扫描，效率较低</p><p>3.需要维护一个用来存放大量fd的数据结构</p><h3 id="poll"><a href="#poll" class="headerlink" title="poll:"></a>poll:</h3><p>poll本质上和select没有区别，只不过它没有最大连接数的限制，原因是它基于链表的。</p><p>poll和select共有的缺点就是，1.包含大量文件描述符的数组被整体复制于用户态和内核的地址空间之间，而不论这些文件描述符是否就绪，它的开销随着文件描述符数量的增加而线性增大。</p><p>2.select()和poll()将就绪的文件描述符告诉进程后，如果进程没有对其进行IO操作，那么下次调用select()和poll()的时候将再次报告这些文件描述符，所以它们一般不会丢失就绪的消息，这种方式称为<strong>水平触发</strong>。</p><p><strong>epoll：</strong></p><p><strong>对比pool和select来讲就是当有数据就绪的时候，不用去遍历所有的文件描述符。直接取就绪的文件描述符。</strong></p><p><strong>epoll可以同时支持水平触发和边缘触发</strong>，边缘触发：只告诉进程哪些文件描述符刚刚变为就绪状态，它只说一遍，如果我们没有采取行动，那么它将不会再次告知，这种方式称为边缘触发，性能更高，代码复杂。</p><p>epoll是基于事件驱动的，事先先注册一个文件标识符，一旦基于某个文件描述符就绪时，内核会采用类似callback的回调机制，迅速激活这个文件描述符，当进程调用epoll_wait()时便得到通知。</p><p>调用epoll_wait()得到的不是真正的就绪文件描述符，而是一个代表就绪描述符数量的值，使用了内存映射（mmap）技术，省掉了这些文件描述符在系统调用时复制的开销。</p>]]></content>
+    
+    <summary type="html">
+    
+      多路I/O复用模型select、poll、epoll概念理解加区别
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>post</title>
+    <link href="http://yoursite.com/2020/02/12/post/"/>
+    <id>http://yoursite.com/2020/02/12/post/</id>
+    <published>2020-02-12T05:41:24.000Z</published>
+    <updated>2020-02-12T05:41:24.603Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>String,StringBuffer,StringBuilder</title>
+    <link href="http://yoursite.com/2020/02/10/String-StringBuffer-StringBuilder/"/>
+    <id>http://yoursite.com/2020/02/10/String-StringBuffer-StringBuilder/</id>
+    <published>2020-02-10T15:12:20.000Z</published>
+    <updated>2020-02-11T12:03:05.498Z</updated>
+    
+    <content type="html"><![CDATA[<p>首先我们知道String 是被声明为 final class，是不可变字符串。因为它的不可变性，所以拼接字符串时候会产生很多无用的中间对象，如果频繁的进行这样的操作对性能有所影响。</p><p>所以StringBuffer  StringBuilder就出现了。</p><p>StringBuffer、StringBuilder、String 中都实现了 CharSequence 接口。CharSequence 是一个定义字符串操作的接口，它只包括 length()、charAt(int index)、subSequence(int start, int end) 这几个 API。</p><p>String是直接实现<strong>CharSequence</strong> 接口的，而StringBuffer、StringBuilder不一样，他们是先都继承了同一个类<strong>AbstractStringBuilder</strong>再实现了<strong>Serializable</strong>序列化接口，<strong>CharSequence</strong>接口以及<strong>Appendabe</strong>接口。</p><p>StringBuilder通过length()和capacity()来获取对应的总容量和已经使用的容量，初始容量为16个字符，如果使用append()方法在字符串后面追加东西的时候，会调用<strong>ensureCapacityInternal</strong> 这个方法判断是否需要扩容，需要就调用<strong>newCapacity</strong>方法进行扩容：<strong>构建新的存储空间更大的字符串，将旧的复制过去</strong>，<strong>扩容大小2倍+2</strong> 。</p><p>StringBuffer也是继承AbstractStringBuilder的，只是其在重写父类的方法的时候加上了synchronized关键字，使得StringBuffer的方法变成了线程安全的方法。通俗讲就是加了锁的StringBuilder，速度当然会降下来。</p>]]></content>
+    
+    <summary type="html">
+    
+      String,StringBuffer,StringBuilder的区别和原理实现
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>三大范式通俗理解</title>
@@ -59,9 +150,9 @@
     <link href="http://yoursite.com/2020/02/07/LongAdder%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BC%98%E5%8A%BF/"/>
     <id>http://yoursite.com/2020/02/07/LongAdder%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BC%98%E5%8A%BF/</id>
     <published>2020-02-07T08:46:36.000Z</published>
-    <updated>2020-02-07T08:58:14.415Z</updated>
+    <updated>2020-02-11T05:30:04.534Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="LongAdder"><a href="#LongAdder" class="headerlink" title="LongAdder"></a>LongAdder</h3><p>在原来处理高并发的计数时，一直采用的AtomicLong方法，利用的是CAS机制，实现原子操作。而在JDK1.8引入了LongAdder之后，我们推荐优先LongAdder，而不是AtomicLong这是为什么呢？</p><p>CAS机制就是，在一个死循环内，不断尝试修改目标值，直到修改成功。如果竞争不激烈，那么修改成功的概率就很高，可如何很激烈，那么失败的概率就会很高。失败的概率越高，自旋的次数就会越多，性能就会下降。</p><p>而LongAdder采用的是ConcurrentHashMap的实现思想，是对传统AtomicInteger等原子类的改进，将AtomicInteger的内部核心数据value分离成一个数组，每个线程访问时，通过哈希算法映射到其中一个数字进行计数，最后将这些和累加起来。其实就是将热点数据分离成多个单元，不同线程在自己的单元上计数，减少了线程竞争，提高了并发效率，本质上是用空间换时间的思想。</p>]]></content>
+    <content type="html"><![CDATA[<h3 id="LongAdder"><a href="#LongAdder" class="headerlink" title="LongAdder"></a>LongAdder</h3><p>在原来处理高并发的计数时，一直采用的AtomicLong方法，利用的是CAS机制，实现原子操作。而在JDK1.8引入了LongAdder之后，我们推荐优先LongAdder，而不是AtomicLong这是为什么呢？</p><h4 id="CAS（无锁化机制）"><a href="#CAS（无锁化机制）" class="headerlink" title="CAS（无锁化机制）:"></a>CAS（无锁化机制）:</h4><p>实现多线程同步的原子指令！</p><p>CAS有3个操作数，内存值V，旧的预期值A，要修改的新值B。当且仅当预期值A和内存值V相同时，将内存值V修改为B，否则什么都不做。缺点，解决不了ABA问题和多线程下无限自旋问题。</p><p>ABA：线程1对值为A的value正在进行操作，但是，线程2这时进来，将value改为B，并在线程1结束之前，又将value改为了A。此时线程1再进CAS操作的时候，A值虽然不变，但已经不是同一个值了。<strong>解决方法加一个版本控制</strong>，每次有线程修改了引用的值，就会进行版本的更新，每次比较连版本都比较上，Java 中提供了 AtomicStampedReference 这个类。</p><p>无限自旋：CAS机制就是，在一个死循环内，不断尝试修改目标值，直到修改成功。如果竞争不激烈，那么修改成功的概率就很高，可如果很激烈，那么失败的概率就会很高。失败的概率越高，自旋的次数就会越多，性能就会下降。</p><p>而LongAdder采用的是ConcurrentHashMap的实现思想，是对传统AtomicInteger等原子类的改进，将AtomicInteger的内部核心数据value分离成一个数组，每个线程访问时，通过哈希算法映射到其中一个数字进行计数，最后将这些和累加起来。其实就是<strong>将热点数据分离成多个单元</strong>，不同线程在自己的单元上计数，减少了线程竞争，提高了并发效率，本质上是用空间换时间的思想。</p>]]></content>
     
     <summary type="html">
     
@@ -97,9 +188,9 @@
     <link href="http://yoursite.com/2020/02/06/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%8C%BA%E5%88%AB/"/>
     <id>http://yoursite.com/2020/02/06/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%8C%BA%E5%88%AB/</id>
     <published>2020-02-06T05:23:38.000Z</published>
-    <updated>2020-02-06T05:32:08.792Z</updated>
+    <updated>2020-02-10T03:48:08.603Z</updated>
     
-    <content type="html"><![CDATA[<h4 id="主要区别："><a href="#主要区别：" class="headerlink" title="主要区别："></a>主要区别：</h4><p>1.InnoDB 支持事务，MyISAM 不支持，对于 InnoDB 每一条 SQL 语言都默认封装成事务， 自动提交，这样会影响速度，所以最好把多条 SQL 语言放在 开启事务begin transaction 和 提交commit之间，组成一个事务； </p><p>2.InnoDB 支持外键，而 MyISAM 不支持。对一个包含外键的 InnoDB 表转为MYISAM会失败；</p><p>3.InnoDB 是聚集索引，数据文件是和索引绑在一起的，必须要有主键，通过主键索引 效率很高。但是辅助索引需要两次查询，先查询到主键，然后再通过主键查询到数据。因此， 主键不应该过大，因为主键太大，其他索引也都会很大。而 MyISAM 是非聚集索引，数据文件是分离的，索引保存的是数据文件的指针。主键索引和辅助索引是独立的。 </p><p>4.InnoDB 不保存表的具体行数，执行 select count(*) from table 时需要全表扫描。而 MyISAM 用一个变量保存了整个表的行数，执行上述语句时只需要读出该变量即可，速度很快；</p><p>5.Innodb 不支持全文索引，而 MyISAM 支持全文索引，查询效率上 MyISAM 要高。</p><h4 id="应用场景："><a href="#应用场景：" class="headerlink" title="应用场景："></a>应用场景：</h4><p>1.看是否支持事务，支持就选择 innodb，如果不需要可以考虑 MyISAM</p><p>2.如果表中绝大多数都只是读查询，可以考虑 MyISAM，如果既有读写也挺频繁，请使 用 InnoDB。 </p><p>3.系统崩溃，MyISAM 恢复起来更困难</p><p>4.MySQL5.5 版本开始 Innodb 已经成为 Mysql 的默认引擎(之前是 MyISAM)，说明其优势 是有目共睹的，如果你不知道用什么，那就用 InnoDB，至少不会差。</p>]]></content>
+    <content type="html"><![CDATA[<h4 id="主要区别："><a href="#主要区别：" class="headerlink" title="主要区别："></a>主要区别：</h4><p>1.InnoDB 支持事务，MyISAM 不支持，对于 InnoDB 每一条 SQL 语言都默认封装成事务， 自动提交，这样会影响速度，所以最好把多条 SQL 语言放在 开启事务begin transaction 和 提交commit之间，组成一个事务； </p><p>2.InnoDB 支持外键，而 MyISAM 不支持。对一个包含外键的 InnoDB 表转为MYISAM会失败；</p><p>3.InnoDB 是聚集索引，数据文件是和索引绑在一起的，必须要有主键，通过主键索引 效率很高。但是辅助索引需要两次查询，先查询到主键，然后再通过主键查询到数据。因此， 主键不应该过大，因为主键太大，其他索引也都会很大。而 MyISAM 是非聚集索引，数据文件是分离的，索引保存的是数据文件的指针。主键索引和辅助索引是独立的。 </p><p>4.InnoDB 不保存表的具体行数，执行 select count(*) from table 时需要全表扫描。而 MyISAM 用一个变量保存了整个表的行数，执行上述语句时只需要读出该变量即可，速度很快；</p><p>5.5.6之前Innodb 不支持全文索引，而 MyISAM 支持全文索引，查询效率上 MyISAM 要高。MySql5.6版本后都支持全文索引了</p><h4 id="应用场景："><a href="#应用场景：" class="headerlink" title="应用场景："></a>应用场景：</h4><p>1.看是否支持事务，支持就选择 innodb，如果不需要可以考虑 MyISAM</p><p>2.如果表中绝大多数都只是读查询，可以考虑 MyISAM，如果既有读写也挺频繁，请使 用 InnoDB。 </p><p>3.系统崩溃，MyISAM 恢复起来更困难</p><p>4.MySQL5.5 版本开始 Innodb 已经成为 Mysql 的默认引擎(之前是 MyISAM)，说明其优势 是有目共睹的，如果你不知道用什么，那就用 InnoDB，至少不会差。</p>]]></content>
     
     <summary type="html">
     
@@ -116,9 +207,9 @@
     <link href="http://yoursite.com/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/"/>
     <id>http://yoursite.com/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/</id>
     <published>2020-02-05T13:24:05.000Z</published>
-    <updated>2020-02-09T10:28:52.716Z</updated>
+    <updated>2020-02-12T05:43:27.466Z</updated>
     
-    <content type="html"><![CDATA[<p><strong>LRU：双向链表+hashMap</strong><br>save(key, value)，在 HashMap 找到 Key 对应的节点，如果节点存在，把这个节点移动队头。如果不存在，需要构造新的节点，并且尝试把节点塞到队头，如果LRU空间不足，则通过 tail 淘汰掉队尾的节点，同时在 HashMap 中移除 Key。get(key)，通过 HashMap 找到 LRU 链表节点，把节点放入表头</p><p><strong>逃逸分析（并不成熟</strong>）：当一个对象在方法中被定义后，它可能被外部方法所引用，例如作为调用参数传递到其他地方中，称为方法逃逸。<br>同步省略：同步块所使用的锁对象通过这种分析被证实只能够被一个线程访问，那么对对象的加的锁JIT编译阶段就会被优化掉（锁消除）<br>标量替换：在JIT阶段，如果经过逃逸分析，发现一个对象不会被外界访问的话，那么经过JIT优化，就会把这个对象拆解成若干个其中包含的若干个成员变量来代替<br>栈上分配：经过逃逸分析后发现，一个对象并没有逃逸出方法的话，那么就可能被优化成栈上分配</p><p><strong>分布式锁：</strong><br>基于数据库（唯一索引）：唯一索引天然具有排他性，同一时刻只能允许一个竞争者获取锁<br>基于缓存：利用Redis的setnx key value这个命令，只有当key不存在时才会执行成功，如果key已经存在则命令执行失败。<br>基于Zookeeper：我们在Zookeeper中创建瞬时节点，利用节点不能重复创建的特性来保证排他性。</p><p>操作系统：内核、驱动程序、接口库、外围<br>Linux系统一般有4个主要部分:内核、shell、文件系统和应用程序。</p><p><strong>内存泄露</strong>：不再会被使用的对象的内存不能被回收，就是内存泄露。如果长生命周期的对象持有短生命周期的引用，就很可能会出现内存泄露。典型例子：<br>1 Vector v = new Vector(10);    //最简单的方法就是将 Vector 对象设置为 null。<br>2 for (int i = 1; i &lt; 100; i++) {<br>3     Object o = new Object();<br>4     v.add(o);      //循环申请Object对象，并将所申请的对象放入一个 Vector 中<br>5     o = null;  //仅仅释放引用本身，那么 Vector 仍然引用该对象，gc不可回收<br>6 }</p><p><strong>Redis为什么单线程还那么快</strong>：1.纯内存访问，Redis将所有数据放在内存中<br>2.非阻塞I/O,Redis使用I/O多路复用技术，以让单个线程高效的处理多个连接请求                                          3.单线程避免了线程切换和竞争产生的消耗</p><p><strong>多路I/O复用模型</strong>是利用 select、poll、epoll 可以同时监察多个流的 I/O 事件的能力，在空闲的时候，会把当前线程阻塞掉，当有一个或多个流有 I/O 事件时，就从阻塞态中唤醒，于是程序就会轮询一遍所有的流（<strong>epoll</strong> 是只轮询那些真正发出了事件的流，并且指依次顺序的处理就绪的流，这种做法就避免了大量的无用操作，高效的用一个线程处理了多个请求）。</p><p><strong>为什么zset用快表不用红黑树</strong>（查询单个数据时间复杂度一样但是如下）：<br>1.在做范围查找的时候，平衡树比skiplist操作要复杂。<br>2.平衡树的插入和删除操作会引发子树的调整，逻辑复杂，而skiplist的插入和删除只需要修改相邻节点的指针，操作简单又快速。<br>3.跳表的实现相较于红黑树更加简洁。</p><p><strong>MySql为什么用 b+ 不用 b 数</strong>：<br>因为B树不管叶子节点还是非叶子节点，都会保存数据，这样导致在非叶子节点中能保存的指针数量变少<br>指针少的情况下要保存大量数据，只能增加树的高度，导致IO操作变多，查询性能变低；</p><p><strong>一条SQL语句执行的很慢原因</strong>：先分成俩种情况<br>偶尔很慢：1.数据库在刷新脏页，例如 redo log 写满了需要同步到磁盘，此时其他操作需要等待<br>2.执行的时候，遇到锁，如表锁、行锁。<br>一直很慢：1.没有用上索引，例如该字段没有索引或者对索引字段进行运算、函数操作导致无法用索引。<br>2.数据库选错了索引，由于统计的失误，导致系统没有走索引，而是走了全表扫描</p><p><strong>TCP粘包是什么</strong>:    TCP粘包就是指发送方发送的若干包数据到达接收方时粘成了一包，从接收缓冲区来看，后一包数据的头紧接着前一包数据的尾</p><p><strong>造成粘包原因：</strong>发送方，TCP默认使用Nagle算法   1.只有上一个分组得到确认，才会发送下一个分组          2.收集多个小分组，在一个确认到来时一起发送给接受方，TCP接收到数据包时，应用层并不会立即处理。会先放入缓存，再等应用程序去读取。</p><p><strong>TCP如何保证数据的顺序化传输</strong>：1.为了保证数据包的可靠传递，发送方必须把已发送的数据包保留在缓冲区；<br>2.并为每个已发送的数据包启动一个超时定时器；<br>3.如在定时器超时之前收到了对方发来的应答信息（可能是对本包的应答，也可以是对本包后续包的应答），则释放该数据包占用的缓冲区;<br>4.否则，重传该数据包，直到收到应答或重传次数超过规定的最大次数为止。<br>5.接收方收到数据包后，先进行CRC校验，如果正确则把数据交给上层协议，然后给发送方发送一个累计应答包，表明该数据已收到，如果接收方正好也有数据要发给发送方，应答包也可方在数据包中捎带过去。</p><p><strong>索引为什么能加快查询效率</strong>：索引通过事先排好序，从而在查找时可以应用二分查找等高效率的算法。</p><p><strong>AQS</strong>就是基于双向队列，用volatile修饰共享变量state，线程通过CAS去改变状态符，成功则获取锁成功，失败则进入等待队列尾部，等待被唤醒。AQS是自旋锁：在等待唤醒的时候，经常会使用自旋的方式，不停地尝试获取锁，直到被其他线程获取成功</p><p><strong>Runnable和Callable的区别？</strong>：Runnable接口中的run()方法无返回值，只是纯粹的执行run方法，而Callable接口中的call()方法是有返回值的，是一个泛型，和Future、FutureTask配合可以用来获取异步执行的结果。</p><p><strong>线程和进程的区别</strong>：<strong>进程</strong>是一个程序在处理机顺序执行所发生的活动，是程序运行和资源分配的基本单位，程序运行就会为之创建一个进程，并且为它分配资源，然后把该进程放入进程就绪队列，进程调度器选中的时候就会为它分配 CPU 时间，程序开始真正运行 。（Linux 通过 fork 函数创建进程）      <strong>线程</strong>是程序执行的最小单位，它是 CPU 调度和分派的基本单位，一个进程可以由多个线程组成，线程间共享进程的所有资源，每个进程有自己的堆栈和局部变量。线程由 CPU 独立调度执行，在多CPU 环境下就允许多个线程同时运行。同样多个线程也可以并发操作。    </p><p><strong>程序</strong>： 静态的代码和数据集合；不能并发； 不具有唯一标识；        <strong>进程</strong>： 动态的程序执行过程； 可并发； 在内存中具有唯一标识；</p><p><strong>count(1)和count(*)基本没有差别</strong>！都包含null的记录，count(字段) 则不包含null的记录。</p><p><strong>数据量大如何传输？</strong>分片，如何分片，就是计算偏位移，最低8字节倍数，MTU默认1500字节，分段传输。如何再组合起来？接收方在第一个分片到达，会分配一个存储缓冲区，并启动一个计时器(超时就丢弃那种)，当数据报后续分片到达，在缓冲区中根据偏移量再组合到一起就OK了，和原来一样，哈哈。</p><p><strong>长连接</strong>指建立SOCKET连接后不管是否使用都保持连接，但安全性较差。<strong>短连接</strong>指每发送一次数据才建立一次连接，发送完就关闭。长连接多用于操作频繁，点对点的通讯，而且连接数不能太多情况例如：数据库的连接用长连接。http请求一般是短连接，如果高并发下都是长连接，那么服务器会耗费很多的资源。</p><p><strong>五种进程调度算法：</strong>时间片轮转调度算法，先来先服务调度算法，优先级调度算法，多级反馈队列调度算法，高响应比优先调度算法</p><p><strong>分页和分段的区别：</strong>页是信息的物理单位，分页是为了方便管理内存，对用户来说是透明的，段是信息的逻辑单位，是程序逻辑的要求，对用户来说，是可见的是不透明的。页大小固定，段大小不固定。从用户角度看，分页的地址空间是一维的，分段的地址空间是二维的。</p><p>在地址映射过程中，若在页面中发现所要访问的页面不在内存中，则产生<strong>缺页中断</strong>。当发生缺页中断时，如果操作系统内存中没有空闲页面，则操作系统必须从内存中移出一个页面，以便为即将调入的页面让出空间。而用来选择淘汰哪一页的规则叫做<strong>页面置换算法</strong>。 FIFO ，LRU。</p>]]></content>
+    <content type="html"><![CDATA[<p><strong>LRU：双向链表+hashMap</strong><br>save(key, value)，在 HashMap 找到 Key 对应的节点，如果节点存在，把这个节点移动队头。如果不存在，需要构造新的节点，并且尝试把节点塞到队头，如果LRU空间不足，则通过 tail 淘汰掉队尾的节点，同时在 HashMap 中移除 Key。get(key)，通过 HashMap 找到 LRU 链表节点，把节点放入表头</p><p><strong>逃逸分析（并不成熟</strong>）：当一个对象在方法中被定义后，它可能被外部方法所引用，例如作为调用参数传递到其他地方中，称为方法逃逸。<br>同步省略：同步块所使用的锁对象通过这种分析被证实只能够被一个线程访问，那么对对象的加的锁JIT编译阶段就会被优化掉（锁消除）<br>标量替换：在JIT阶段，如果经过逃逸分析，发现一个对象不会被外界访问的话，那么经过JIT优化，就会把这个对象拆解成若干个其中包含的若干个成员变量来代替<br>栈上分配：经过逃逸分析后发现，一个对象并没有逃逸出方法的话，那么就可能被优化成栈上分配</p><p><strong>分布式锁：</strong><br>基于数据库（唯一索引）：唯一索引天然具有排他性，同一时刻只能允许一个竞争者获取锁<br>基于缓存：利用Redis的setnx key value这个命令，只有当key不存在时才会执行成功，如果key已经存在则命令执行失败。<br>基于Zookeeper：我们在Zookeeper中创建瞬时节点，利用节点不能重复创建的特性来保证排他性。</p><p>操作系统：内核、驱动程序、接口库、外围<br>Linux系统一般有4个主要部分:内核、shell、文件系统和应用程序。</p><p><strong>内存泄露</strong>：不再会被使用的对象的内存不能被回收，就是内存泄露。如果长生命周期的对象持有短生命周期的引用，就很可能会出现内存泄露。典型例子：<br>1 Vector v = new Vector(10);    //最简单的方法就是将 Vector 对象设置为 null。<br>2 for (int i = 1; i &lt; 100; i++) {<br>3     Object o = new Object();<br>4     v.add(o);      //循环申请Object对象，并将所申请的对象放入一个 Vector 中<br>5     o = null;  //仅仅释放引用本身，那么 Vector 仍然引用该对象，gc不可回收<br>6 }</p><p><strong>Redis为什么单线程还那么快</strong>：1.纯内存访问，Redis将所有数据放在内存中<br>2.非阻塞I/O,Redis使用I/O多路复用技术，以让单个线程高效的处理多个连接请求                                          3.单线程避免了线程切换和竞争产生的消耗</p><p><strong>为什么zset用快表不用红黑树</strong>（查询单个数据时间复杂度一样但是如下）：<br>1.在做范围查找的时候，平衡树比skiplist操作要复杂。<br>2.平衡树的插入和删除操作会引发子树的调整，逻辑复杂，而skiplist的插入和删除只需要修改相邻节点的指针，操作简单又快速。<br>3.跳表的实现相较于红黑树更加简洁。</p><p><strong>MySql为什么用 b+ 不用 b 数</strong>：<br>因为B树不管叶子节点还是非叶子节点，都会保存数据，这样导致在非叶子节点中能保存的指针数量变少<br>指针少的情况下要保存大量数据，只能增加树的高度，导致IO操作变多，查询性能变低；</p><p><strong>一条SQL语句执行的很慢原因</strong>：先分成俩种情况<br>偶尔很慢：1.数据库在刷新脏页，例如 redo log 写满了需要同步到磁盘，此时其他操作需要等待<br>2.执行的时候，遇到锁，如表锁、行锁。<br>一直很慢：1.没有用上索引，例如该字段没有索引或者对索引字段进行运算、函数操作导致无法用索引。<br>2.数据库选错了索引，由于统计的失误，导致系统没有走索引，而是走了全表扫描</p><p><strong>TCP粘包是什么</strong>:    TCP粘包就是指发送方发送的若干包数据到达接收方时粘成了一包，从接收缓冲区来看，后一包数据的头紧接着前一包数据的尾</p><p><strong>造成粘包原因：</strong>发送方，TCP默认使用Nagle算法   1.只有上一个分组得到确认，才会发送下一个分组          2.收集多个小分组，在一个确认到来时一起发送给接受方，TCP接收到数据包时，应用层并不会立即处理。会先放入缓存，再等应用程序去读取。</p><p><strong>TCP如何保证数据的顺序化传输</strong>：1.为了保证数据包的可靠传递，发送方必须把已发送的数据包保留在缓冲区；<br>2.并为每个已发送的数据包启动一个超时定时器；<br>3.如在定时器超时之前收到了对方发来的应答信息（可能是对本包的应答，也可以是对本包后续包的应答），则释放该数据包占用的缓冲区;<br>4.否则，重传该数据包，直到收到应答或重传次数超过规定的最大次数为止。<br>5.接收方收到数据包后，先进行CRC校验，如果正确则把数据交给上层协议，然后给发送方发送一个累计应答包，表明该数据已收到，如果接收方正好也有数据要发给发送方，应答包也可方在数据包中捎带过去。</p><p><strong>索引为什么能加快查询效率</strong>：索引通过事先排好序，从而在查找时可以应用二分查找等高效率的算法。</p><p><strong>AQS</strong>就是基于双向队列，用volatile修饰共享变量state，线程通过CAS去改变状态符，成功则获取锁成功，失败则进入等待队列尾部，等待被唤醒。AQS是自旋锁：在等待唤醒的时候，经常会使用自旋的方式，不停地尝试获取锁，直到被其他线程获取成功</p><p><strong>Runnable和Callable的区别？</strong>：Runnable接口中的run()方法无返回值，只是纯粹的执行run方法，而Callable接口中的call()方法是有返回值的，是一个泛型，和Future、FutureTask配合可以用来获取异步执行的结果。</p><p><strong>线程和进程的区别</strong>：<strong>进程</strong>是一个程序在处理机顺序执行所发生的活动，是程序运行和资源分配的基本单位，程序运行就会为之创建一个进程，并且为它分配资源，然后把该进程放入进程就绪队列，进程调度器选中的时候就会为它分配 CPU 时间，程序开始真正运行 。（Linux 通过 fork 函数创建进程）      <strong>线程</strong>是程序执行的最小单位，它是 CPU 调度和分派的基本单位，一个进程可以由多个线程组成，线程间共享进程的所有资源，每个进程有自己的堆栈和局部变量。线程由 CPU 独立调度执行，在多CPU 环境下就允许多个线程同时运行。同样多个线程也可以并发操作。    </p><p><strong>程序</strong>： 静态的代码和数据集合；不能并发； 不具有唯一标识；        <strong>进程</strong>： 动态的程序执行过程； 可并发； 在内存中具有唯一标识；</p><p><strong>count(1)和count(*)基本没有差别</strong>！都包含null的记录，count(字段) 则不包含null的记录。</p><p><strong>数据量大如何传输？</strong>分片，如何分片，就是计算偏位移，最低8字节倍数，MTU默认1500字节，分段传输。如何再组合起来？接收方在第一个分片到达，会分配一个存储缓冲区，并启动一个计时器(超时就丢弃那种)，当数据报后续分片到达，在缓冲区中根据偏移量再组合到一起就OK了，和原来一样，哈哈。</p><p><strong>长连接</strong>指建立SOCKET连接后不管是否使用都保持连接，但安全性较差。<strong>短连接</strong>指每发送一次数据才建立一次连接，发送完就关闭。长连接多用于操作频繁，点对点的通讯，而且连接数不能太多情况例如：数据库的连接用长连接。http请求一般是短连接，如果高并发下都是长连接，那么服务器会耗费很多的资源。</p><p><strong>五种进程调度算法：</strong>时间片轮转调度算法，先来先服务调度算法，优先级调度算法，多级反馈队列调度算法，高响应比优先调度算法</p><p><strong>分页和分段的区别：</strong>页是信息的物理单位，分页是为了方便管理内存，对用户来说是透明的，段是信息的逻辑单位，是程序逻辑的要求，对用户来说，是可见的是不透明的。页大小固定，段大小不固定。从用户角度看，分页的地址空间是一维的，分段的地址空间是二维的。</p><p>在地址映射过程中，若在页面中发现所要访问的页面不在内存中，则产生<strong>缺页中断</strong>。当发生缺页中断时，如果操作系统内存中没有空闲页面，则操作系统必须从内存中移出一个页面，以便为即将调入的页面让出空间。而用来选择淘汰哪一页的规则叫做<strong>页面置换算法</strong>。 FIFO ，LRU。</p><p>1、kafka利用zookeeper去选举出controller；2、kafka通过controller选指定出leader和follower，而无需通过zookeeper了。</p><p><strong>为什么要有用户态和内核态</strong>？由于需要限制不同的程序之间的访问能力, 防止他们获取别的程序的内存数据, 或者获取外围设备的数据, 并发送到网络。</p>]]></content>
     
     <summary type="html">
     
@@ -135,9 +226,9 @@
     <link href="http://yoursite.com/2020/02/05/java%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86/"/>
     <id>http://yoursite.com/2020/02/05/java%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86/</id>
     <published>2020-02-05T05:28:38.000Z</published>
-    <updated>2020-02-06T05:07:07.675Z</updated>
+    <updated>2020-02-09T13:41:01.563Z</updated>
     
-    <content type="html"><![CDATA[<p>对象谁都知道，但对象里面到底有什么，却很少有人去了解，今天我们就来看看对象到底由哪些部分组成</p><p>简单来说：Java对象保存在内存中时，由以下三部分组成：<strong>对象头</strong>，<strong>实例数据</strong>，<strong>对齐填充字节</strong></p><h4 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h4><p>对象头由三部分组成：<strong>Mark Word</strong>，<strong>指向类的指针</strong>，<strong>数组长度</strong>（只有数组对象才有）</p><p><strong>Mark Word</strong>记录了对象和锁有关的信息。</p><p>1.对象没有被当成锁时，Mark Word记录对象的HashCode，锁标志位是01，是否偏向锁那一位是0。</p><p>2.当对象被当做同步锁并有一个<strong>线程A</strong>抢到了锁时，锁标志位还是01，但是否偏向锁那一位改成1，表示进入偏向锁状态</p><p>3.<strong>线程A</strong>再来试图来获得锁时，锁标志位还是01，并发现自己已经得到了偏向锁，所以可以执行同步锁的代码。</p><p>4.当<strong>线程B</strong>试图获得这个锁时，JVM发现同步锁处于偏向状态，但是Mark Word中的线程id记录的不是B，那么线程B会先用CAS操作试图获得锁，这里的获得锁操作是有可能成功的，因为线程A一般不会自动释放偏向锁。如果抢锁成功，就把Mark Word里的线程id改为线程B的id，代表线程B获得了这个偏向锁，可以执行同步锁代码。如果抢锁失败，则继续执行步骤5。</p><p>5.偏向锁状态抢锁失败，代表当前锁有一定的竞争，偏向锁将升级为<strong>轻量级锁</strong>。JVM会在当前线程的线程栈中开辟一块单独的空间，里面保存指向对象锁Mark Word的指针，上述两个保存操作都是CAS操作，如果保存成功，代表线程抢到了同步锁，就把Mark Word中的锁标志位改成00，可以执行同步锁代码。如果保存失败，表示抢锁失败，竞争太激烈，继续执行步骤6</p><p>6.轻量级锁抢锁失败，JVM会使用自旋锁，自旋锁不是一个锁状态，只是代表不断的重试，尝试抢锁。如果抢锁成功则执行同步锁代码，如果失败则继续执行步骤7。</p><p>7.自旋锁重试之后如果抢锁依然失败，同步锁会升级至重量级锁，锁标志位改为10。在这个状态下，未抢到锁的线程都会被阻塞。</p><p><strong>指向类的指针</strong></p><p>该指针在32位JVM中的长度是32bit，在64位JVM中长度是64bit。</p><p>Java对象的类数据保存在方法区。<strong>通过该指针确定该对象是哪个类的实例</strong></p><p><strong>数组长度</strong></p><p>只有数组对象保存了这部分数据。</p><p>该数据在32位和64位JVM中长度都是32bit。</p><h4 id="实例数据"><a href="#实例数据" class="headerlink" title="实例数据"></a>实例数据</h4><p>对象的实例数据就是在java代码中能看到的属性和他们的值。</p><h4 id="对齐填充字节"><a href="#对齐填充字节" class="headerlink" title="对齐填充字节"></a>对齐填充字节</h4><p>因为JVM要求java的对象占的内存大小应该是8bit的倍数，所以后面有几个字节用于把对象的大小补齐至8bit的倍数，没有特别的功能。</p><p>原文链接：<a href="https://blog.csdn.net/lkforce/article/details/81128115" target="_blank" rel="noopener">https://blog.csdn.net/lkforce/article/details/81128115</a></p>]]></content>
+    <content type="html"><![CDATA[<p>对象谁都知道，但对象里面到底有什么，却很少有人去了解，今天我们就来看看对象到底由哪些部分组成</p><p>简单来说：Java对象保存在内存中时，由以下三部分组成：<strong>对象头</strong>，<strong>实例数据</strong>，<strong>对齐填充字节</strong></p><h4 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h4><p>对象头由三部分组成：<strong>Mark Word</strong>，<strong>指向类的指针</strong>，<strong>数组长度</strong>（只有数组对象才有）</p><p><strong>Mark Word</strong>记录了对象和锁有关的信息。</p><p>1.对象没有被当成锁时，Mark Word记录对象的HashCode，锁标志位是01，是否偏向锁那一位是0。</p><p>2.当对象被当做同步锁并有一个<strong>线程A</strong>抢到了锁时，锁标志位还是01，但是否偏向锁那一位改成1，表示进入偏向锁状态</p><p>3.<strong>线程A</strong>再来试图来获得锁时，锁标志位还是01，并发现自己已经得到了偏向锁，所以可以执行同步锁的代码。</p><p>4.当<strong>线程B</strong>试图获得这个锁时，JVM发现同步锁处于偏向状态，但是Mark Word中的线程id记录的不是B，那么线程B会先用CAS操作试图获得锁，这里的获得锁操作是有可能成功的，因为线程A一般不会自动释放偏向锁。如果抢锁成功，就把Mark Word里的线程id改为线程B的id，代表线程B获得了这个偏向锁，可以执行同步锁代码。如果抢锁失败，则继续执行步骤5。</p><p>5.偏向锁状态抢锁失败，代表当前锁有一定的竞争，偏向锁将升级为<strong>轻量级锁</strong>。JVM会在当前线程的线程栈中开辟一块单独的空间，里面保存指向对象锁Mark Word的指针，上述两个保存操作都是CAS操作，如果保存成功，代表线程抢到了同步锁，就把Mark Word中的锁标志位改成00，可以执行同步锁代码。如果保存失败，表示抢锁失败，竞争太激烈，继续执行步骤6</p><p>6.轻量级锁抢锁失败，JVM会使用自旋锁，自旋锁不是一个锁状态，只是代表不断的重试，尝试抢锁。如果抢锁成功则执行同步锁代码，如果失败则继续执行步骤7。</p><p>7.自旋锁重试之后如果抢锁依然失败，同步锁会升级至重量级锁，锁标志位改为10。在这个状态下，未抢到锁的线程都会被阻塞。</p><p><strong>指向类的指针</strong></p><p>该指针在32位JVM中的长度是32bit，在64位JVM中长度是64bit。</p><p>Java对象的类数据保存在方法区。<strong>通过该指针确定该对象是哪个类的实例</strong></p><p><strong>数组长度</strong></p><p>只有数组对象保存了这部分数据。</p><p>该数据在32位和64位JVM中长度都是32bit。</p><h4 id="实例数据"><a href="#实例数据" class="headerlink" title="实例数据"></a>实例数据</h4><p>对象的实例数据就是在java代码中能看到的属性和他们的值。</p><h4 id="对齐填充字节"><a href="#对齐填充字节" class="headerlink" title="对齐填充字节"></a>对齐填充字节</h4><p>JVM要求java的对象占的内存大小应该是8bit的倍数，所以后面有几个字节用于把对象的大小补齐至8bit的倍数，没有特别的功能。</p><p>原文链接：<a href="https://blog.csdn.net/lkforce/article/details/81128115" target="_blank" rel="noopener">https://blog.csdn.net/lkforce/article/details/81128115</a></p>]]></content>
     
     <summary type="html">
     
@@ -173,9 +264,9 @@
     <link href="http://yoursite.com/2020/02/02/Get%E5%92%8CPost%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
     <id>http://yoursite.com/2020/02/02/Get%E5%92%8CPost%E7%9A%84%E5%8C%BA%E5%88%AB/</id>
     <published>2020-02-02T12:54:35.000Z</published>
-    <updated>2020-02-06T04:59:04.151Z</updated>
+    <updated>2020-02-09T13:02:55.827Z</updated>
     
-    <content type="html"><![CDATA[<p><strong>不同：</strong></p><p>1.get参数通过URL传递，post放在Request body中，所以相对来说get更加安全。</p><p>2.get传递数据是通过URL进行传递，对传递的数据长度是受到URL大小的限制，URL最大长度是2048个字符。post没有长度限制，可发送更多数据</p><p>2.get传递数据是通过URL进行传递，对传递的数据长度是受到URL大小的限制，URL最大长度是2048个字符。post没有长度限制</p><p>3.get后退不会有影响，post后退会重新进行提交</p><p>4.get产生一个TCP数据包（header和data一起发送），post产生两个TCP数据包（先发送header，再发送data）。也就是get请求一次，post俩次（不是都俩次，火狐听说就一次）。get效率高，post传输慢。</p><p>5.get请求可以被缓存，post不可以被缓存</p><p>6.get请求只URL编码，post支持多种编码方式</p><p>7.get只支持ASCII字符，post没有字符类型限制</p><p>8.get请求参数会留在历史记录中，post请求不会留在历史记录</p><p><strong>相同：</strong></p><p>GET和POST是什么？HTTP协议中的两种发送请求的方法。</p><p> HTTP是什么？HTTP是基于TCP/IP的关于数据如何在万维网中如何通信的协议。</p><p>GET和POST本质上就是TCP链接，并无差别。但是由于HTTP的规定和浏览器/服务器的限制，导致他们在应用过程中体现出一些不同。</p>]]></content>
+    <content type="html"><![CDATA[<p><strong>不同：</strong></p><p>1.get参数通过URL传递，post放在Request body中，所以相对来说post更加安全。</p><p>2.get传递数据是通过URL进行传递，对传递的数据长度是受到URL大小的限制，URL最大长度是2048个字符。post没有长度限制，可发送更多数据</p><p>3.get后退不会有影响，post后退会重新进行提交</p><p>4.get产生一个TCP数据包（header和data一起发送），post产生两个TCP数据包（先发送header，再发送data）。也就是get请求一次，post俩次（不是都俩次，火狐听说就一次）。get效率高，post传输慢。</p><p>5.get请求可以被缓存，post不可以被缓存</p><p>6.get请求只支持URL编码，post支持多种编码方式</p><p>7.get只支持ASCII字符，post没有字符类型限制</p><p>8.get请求参数会留在历史记录中，post请求不会留在历史记录</p><p><strong>相同：</strong></p><p>GET和POST是什么？HTTP协议中的两种发送请求的方法。</p><p> HTTP是什么？HTTP是基于TCP/IP的关于数据如何在万维网中如何通信的协议。</p><p>GET和POST本质上就是TCP链接，并无差别。但是由于HTTP的规定和浏览器/服务器的限制，导致他们在应用过程中体现出一些不同。</p>]]></content>
     
     <summary type="html">
     
@@ -192,7 +283,7 @@
     <link href="http://yoursite.com/2020/02/02/MD5%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/"/>
     <id>http://yoursite.com/2020/02/02/MD5%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F/</id>
     <published>2020-02-02T05:23:56.000Z</published>
-    <updated>2020-02-02T05:50:54.259Z</updated>
+    <updated>2020-02-09T14:25:25.472Z</updated>
     
     <content type="html"><![CDATA[<h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>今天写简历的时候回想起自己所写项目的难点，突然想起了MD5加密，当初的难点虽然非常多，但是这个尤为记忆深刻！现在还记得，当初找到了一个MD5加密工具类，然后给自己的密码加了密，数据库中的密码就变成了类似b8c37e33defde51cf91e1e03e51657da这样的东西。当时就觉的很厉害也没注意，没想到更厉害的还在后面，我不小心把密码忘了，再登录已经登不上去，没办法只能去改数据库的密码了，没想到改了还是登不上去，这就叫我很纳闷了，还能这样的，今天就来看看他为什么。</p><h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>首先，MD5 是摘要算法而不是加密算法，属于Hash算法一代，是一种单向加密算法，可以将输入的信息加密转换为128位固定长度的散列值，用于检验数据传输过程中的完整性。一般配合加盐来使用。</p><p><strong>摘要算法</strong>是单向的，即明文可以通过摘要算法生成摘要结果，但反之则不能通过摘要结果还原成明文（<strong>意思就是不可逆，不能解密</strong>）。</p><p>而<strong>加密算法</strong>是双向的，即可以从明文通过加密算法生成密文，反之也可以通过解密算法将密文还原成明文。</p><p>加密算法，可以分可逆加密，不可逆加密，可逆加密又分为对称加密与非对称加密（RSA公钥加密算法，公钥是可发布的供任何人使用，私钥则为自己所有，供解密之用。）</p><p><strong>摘要算法主要用来检查明文是否发生过变动，而加密算法则用来传递不能让第三方知晓的内容。</strong></p>]]></content>
     
@@ -249,7 +340,7 @@
     <link href="http://yoursite.com/2020/01/31/BIO-NIO-AIO/"/>
     <id>http://yoursite.com/2020/01/31/BIO-NIO-AIO/</id>
     <published>2020-01-31T05:50:18.000Z</published>
-    <updated>2020-02-06T14:25:37.546Z</updated>
+    <updated>2020-02-09T12:57:53.346Z</updated>
     
     <content type="html"><![CDATA[<p>1.同步：使用同步IO时，Java自己处理IO读写。</p><p>2.异步：使用异步IO时，Java将IO读写委托给OS处理，需要将数据缓冲区地址和大小传给OS，完成后OS通知Java处理（回调）。</p><p>3.阻塞：使用阻塞IO时，Java调用会一直阻塞到读写完成才返回。</p><p>4.非阻塞：使用非阻塞IO时，如果不能立马读写，Java调用会马上返回，当IO事件分发器通知可读写时在进行读写，不断循环直到读写完成。</p><p>下面是重点了（敲黑板！）！</p><p>1.BIO：<strong>同步并阻塞</strong>，服务器的实现模式是<strong>一个连接一个线程</strong>，即客户端有连接请求时服务器端就需要启动一个线程进行处理，可能造成不必要的线程开销，当然，这种情况可以通过线程池机制改善，但并不能从本质上消除这个弊端。</p><p>2.NIO：在JDK1.4以前，Java的IO模型一直是BIO，但从JDK1.4开始，JDK引入的新的IO模型NIO，它是<strong>同步非阻塞</strong>的。而服务器的实现模式是<strong>多个请求一个线程</strong>，即请求会注册到多路复用器Selector上，<strong>多路复用器</strong>轮询到连接有IO请求时才启动一个线程处理。    </p><p>3.AIO：JDK1.7发布了NIO2.0，这就是真正意义上的<strong>异步非阻塞</strong>，服务器的实现模式为<strong>多个有效请求一个线程</strong>，客户端的IO请求<strong>都是由OS先完成再通知</strong>服务器应用去启动线程处理（回调）。</p><p>应用场景：并发连接数不多时采用BIO，因为它编程和调试都非常简单，但如果涉及到高并发的情况，应选择NIO（连接数目多且连接比较短）或AIO（连接数目多且连接比较长），更好的建议是采用成熟的网络通信框架Netty。</p>]]></content>
     
@@ -268,9 +359,9 @@
     <link href="http://yoursite.com/2020/01/30/%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%81/"/>
     <id>http://yoursite.com/2020/01/30/%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%81/</id>
     <published>2020-01-30T03:27:02.000Z</published>
-    <updated>2020-01-30T04:55:16.777Z</updated>
+    <updated>2020-02-10T04:58:09.025Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><p>事务提供一种“要么什么都不做，要么都做”的机制，她有ACID四大特性：</p><p>原子性（A）：一个事务是一个不可分割的工作单位，要么都做，要么都不做。</p><p>一致性（C）：事务必须是使数据库从一个一致性状态变到另一个一致性状态。一致状态是指数据库中的数据应满足完整性约束。</p><p>隔离性（I）：多个事务并发执行时，一个事务的执行不应影响其他事务的执行。</p><p>持久性（D）：已被提交的事务对数据库的修改应该永久性的。</p><p><strong>单机事务</strong>：事务的隔离性是通过数据库锁的机制实现的，持久性通过redo log（重做日志）来实现，原子性和一致性通过Undo log来实现。</p><h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><p><strong>XA协议</strong>包含<strong>两阶段提交（2PC）</strong>和<strong>三阶段提交（3PC）</strong>两种实现。</p><p><strong>两阶段提交（2PC）</strong>：包含俩个角色<strong>事务协调者</strong>TM和<strong>事务参与者</strong>AP。</p><p><strong>第一阶段</strong>：事务协调者首先向所有的事务参与者发送Prepare请求。每个参与者执行相关事务操作Undo Log和Redo Log，如果参与者执行成功，暂时不提交事务，而是向事务协调节点返回“完成”消息。得到了所有参与者成功消息后，进入第二阶段。</p><p><strong>第二阶段</strong>：因为前面都是成功消息，事务协调者会向所有事务参与者发送Commit请求，接到请求后事务参与者各自会进行事务提交，释放锁，然后返回协调者“完成”消息。整个流程完成。</p><p><strong>出错流程</strong>：第一阶段如果都发送Prepare请求后，有一个或多个参与者返回了错误消息，必须进行回滚，所以第二阶段事务协调者会向所有参与者发送Abort请求，之后所有参与者进行回滚，回滚操作依照Undo Log来进行。</p><p>缺点：<strong>1.性能问题</strong>，只有所有节点都准备好，事务才能提交，很明显性能很差。<strong>2.协调者单点故障问题</strong>，事务协调者一宕机，基本就全完了。<strong>3.丢失消息导致的不一致问题</strong>，不同事务参与者因为消息的丢失，导致节点数据不一样了。</p><p><strong>解决方法：</strong></p><p><strong>XA三阶段提交</strong>：在两阶段提交的基础上增加了CanCommit阶段，并且引入了超时机制。有效解决了协调者单点故障的问题，协调者挂掉，其他参与者超时得不到消息会自行本地commit。</p><p><strong>MQ事务</strong>：引入了消息中间件（助理），负责消息的传递和事务执行状态的询问。这样就降低了系统间的耦合度，解决了性能问题。</p><p><strong>TCC事务</strong>：TCC指的是Try(尝试)、Confirm（确认）、Cancle（取消）,其核心思想是：针对每个操作，都要注册一个与其对应的确认和补偿（撤销）操作。跟两阶段提交（2PC）比起来，实现以及流程相对简单了一些，但数据的一致性比2PC也要差一些。</p><p><strong>拓展：</strong></p><p>CAP定理</p><p>CAP原则又称CAP定理，指的是在一个分布式系统中，WEB服务无法同时满足以下3个特性：</p><pre><code>一致性(Consistency) ： 在分布式系统中数据一旦更新，所有数据变动都是同步的可用性(Availability) ： 好的响应性能，每个操作都必须有预期的响应结束分区容错性(Partition tolerance) ： 在网络分区的情况下，即使出现单个节点无法可用，系统依然正常对外提供服务</code></pre><p>首先在分布式系统中，横向扩展策略依赖于数据分区，所以一般会在一致性和可用性上做出牺牲。</p>]]></content>
+    <content type="html"><![CDATA[<h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><p>事务提供一种“要么什么都不做，要么都做”的机制，她有ACID四大特性：</p><p>原子性（A）：一个事务是一个不可分割的工作单位，要么都做，要么都不做。</p><p>一致性（C）：事务必须是使数据库从一个一致性状态变到另一个一致性状态。但数据的完整性应保持稳定。</p><p>隔离性（I）：多个事务并发执行时，一个事务的执行不应影响其他事务的执行。</p><p>持久性（D）：已被提交的事务对数据库的修改应该永久性的，接下来即使数据库发生故障也不应该对其有任何影响，</p><p><strong>单机事务</strong>：事务的隔离性是通过数据库锁的机制实现的，持久性通过redo log（重做日志）来实现，原子性和一致性通过Undo log来实现。</p><h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><p><strong>XA协议</strong>包含<strong>两阶段提交（2PC）</strong>和<strong>三阶段提交（3PC）</strong>两种实现。</p><p><strong>两阶段提交（2PC）</strong>：包含俩个角色<strong>事务协调者</strong>TM和<strong>事务参与者</strong>AP。</p><p><strong>第一阶段</strong>：事务协调者首先向所有的事务参与者发送Prepare请求。每个参与者执行相关事务操作Undo Log和Redo Log，如果参与者执行成功，暂时不提交事务，而是向事务协调节点返回“完成”消息。得到了所有参与者成功消息后，进入第二阶段。</p><p><strong>第二阶段</strong>：因为前面都是成功消息，事务协调者会向所有事务参与者发送Commit请求，接到请求后事务参与者各自会进行事务提交，释放锁，然后返回协调者“完成”消息。整个流程完成。</p><p><strong>出错流程</strong>：第一阶段如果都发送Prepare请求后，有一个或多个参与者返回了错误消息，必须进行回滚，所以第二阶段事务协调者会向所有参与者发送Abort请求，之后所有参与者进行回滚，回滚操作依照Undo Log来进行。</p><p>缺点：<strong>1.性能问题</strong>，只有所有节点都准备好，事务才能提交，很明显性能很差。<strong>2.协调者单点故障问题</strong>，事务协调者一宕机，基本就全完了。<strong>3.丢失消息导致的不一致问题</strong>，不同事务参与者因为消息的丢失，导致节点数据不一样了。</p><p><strong>解决方法：</strong></p><p><strong>XA三阶段提交</strong>：在两阶段提交的基础上增加了CanCommit阶段，并且引入了超时机制。有效解决了协调者单点故障的问题，协调者挂掉，其他参与者超时得不到消息会自行本地commit。</p><p><strong>MQ事务</strong>：引入了消息中间件（助理），负责消息的传递和事务执行状态的询问。这样就降低了系统间的耦合度，解决了性能问题。</p><p><strong>TCC事务</strong>：TCC指的是Try(尝试)、Confirm（确认）、Cancle（取消）,其核心思想是：针对每个操作，都要注册一个与其对应的确认和补偿（撤销）操作。跟两阶段提交（2PC）比起来，实现以及流程相对简单了一些，但数据的一致性比2PC也要差一些。</p><p><strong>拓展：</strong></p><p>CAP定理</p><p>CAP原则又称CAP定理，指的是在一个分布式系统中，WEB服务无法同时满足以下3个特性：</p><pre><code>一致性(Consistency) ： 在分布式系统中数据一旦更新，所有数据变动都是同步的可用性(Availability) ： 好的响应性能，每个操作都必须有预期的响应结束分区容错性(Partition tolerance) ： 在网络分区的情况下，即使出现单个节点无法可用，系统依然正常对外提供服务</code></pre><p>首先在分布式系统中，横向扩展策略依赖于数据分区，所以一般会在一致性和可用性上做出牺牲。</p>]]></content>
     
     <summary type="html">
     
@@ -294,101 +385,6 @@
     <summary type="html">
     
       进程间通信IPC的几种方式？
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>JVM的垃圾回收机制！</title>
-    <link href="http://yoursite.com/2020/01/25/JVM%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%81/"/>
-    <id>http://yoursite.com/2020/01/25/JVM%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%EF%BC%81/</id>
-    <published>2020-01-25T13:48:11.000Z</published>
-    <updated>2020-01-29T03:44:23.105Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="1-类加载器子系统"><a href="#1-类加载器子系统" class="headerlink" title="1.类加载器子系统"></a>1.类加载器子系统</h3><p>Java的动态类加载功能是由类加载器子系统处理。采用的是双亲委派机制（加载类先交给上层父类加载）</p><p>启动类加载器 (BootStrap class Loader)：启动时初始加载一些包，<strong>rt.jar</strong>，根加载器，拥有最高权限。</p><p>扩展类加载器(Extension class Loader)：加载扩展功能的一些jar包。</p><p>应用程序类加载器(System ClassLoader)：加载class path下的所有类。</p><h3 id="2-运行时数据区"><a href="#2-运行时数据区" class="headerlink" title="2.运行时数据区"></a>2.运行时数据区</h3><p>方法区（Method Area）：所有类，静态变量，静态方法，成员方法，常量，共享（线程不安全）。</p><p>堆区（Heap Area）：所有对象和他的实例new出来的，数组，共享（不安全）。</p><p>栈区（Stack Area）：局部变量，对象的引用，每个线程创建（安全）。</p><p>程序计数器：（唯一一个不抛出OOM）保存当前线程执行的内存地址。安全</p><p>本地方法栈：为JVM使用到的native方法服务。</p><h3 id="3-GC（垃圾回收）"><a href="#3-GC（垃圾回收）" class="headerlink" title="3.GC（垃圾回收）"></a>3.GC（垃圾回收）</h3><p>GC的作用：  排查内存溢出，排查内存泄漏，性能调优，排查并发瓶颈</p><p>GC做了什么：哪些内存需要回收？什么时候回收？如何回收？</p><h4 id="哪些内存需要回收？"><a href="#哪些内存需要回收？" class="headerlink" title="哪些内存需要回收？"></a>哪些内存需要回收？</h4><p>回收已经”死“的内存，哪些已”死“？</p><p>对象没有引用，作用域发生未捕获异常，程序在作用域正常执行完毕，程序执行了System.exit()，程序发生意外终止（被杀进程等）</p><p><strong>判断已死方法</strong>：最早的引用计数法，引用一个对象时，计数器加一，引用失效，减一。为0时判断已死，有弊端，无法解决循环引用问题，所有java不使用该方法。而采用的方法为<strong>可达性分析算法</strong>，从根节点GC ROOT开始，向下寻找它的引用节点，没有找到的节点就是无用可回收节点。</p><p>可作为GC Roots的对象包含以下几种：</p><ol><li>虚拟机栈中引用的对象。</li><li>方法区中静态属性引用的对象</li><li>方法区中常量引用的对象</li><li>本地方法栈中(Native方法)引用的对象</li></ol><h4 id="什么时候回收？"><a href="#什么时候回收？" class="headerlink" title="什么时候回收？"></a>什么时候回收？</h4><p>引用的分类：强引用（只要强引用在，永远不回收），软引用（内存够，就不回收，不够就回收了），弱引用（不管内存够不够都回收），虚引用（每次都回收）。</p><p><strong>可达性分析算法</strong>后标记的无用节点，并不是直接回收，会再进行一次筛选判断有必要执行finalize()，没有则死，有则得到一次最后逃脱死亡的机会。</p><p><strong>类被回收的条件</strong>：该类的所有实例都已经被回收(即在Java堆中不存在任何该类的实例)，加载该类的ClassLoader已被回收，该类对应的Class对象没有任何其他地方被引用，无法在任何地方通过反射访问该类的方法。</p><h4 id="如何回收？"><a href="#如何回收？" class="headerlink" title="如何回收？"></a>如何回收？</h4><p><strong>标记-清除算法</strong>：先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象。</p><p>缺点：效率低，会产生内存碎片。</p><p><strong>复制算法</strong>：将内存分成大小相同俩块，每次只用一块。第一块回收完，将活着的对象放到另外一块，第一块彻底清理，下次一样。效率高，不会产生内存碎片。</p><p><strong>标记-整理算法</strong>：在标记-清除算法的基础上，回收后将存活对象都推到左端空闲区域，解决内存碎片问题。</p><p><strong>JVM的优化：</strong>采用分代回收方式。</p><p>新生代内存的回收（minor GC）主要采用复制算法，新生代分成三部分，Eden,  Survivor  From，Survivor To=8:1:1。 将Eden和From区存活对象，放入To区，清空前面俩区，下次就是Eden和To到From，Survivor内存不够时，存入老年代。</p><p>老年代内存回收（Full GC，Major GC）主要采用标记-整理算法。</p><p>区别：新生代，每次有大量对象产生，大量对象被回收，次数频繁，因此采用效率高，速度快的复制算法。</p><p>老年代，对象存活率高，没有额外空间对它进行分配，采用标记-整理算法，次数少，Major GC的速度一般会比Minor GC慢10倍以上。</p><p><strong>JVM垃圾回收器</strong>：串行（Serial），并行（Parallel,ParNew），并发（CMS）</p><p>Serial收集器：JVM需要进行垃圾回收的时候，需要中断所有的用户线程，知道它回收结束为止.</p><p>串行回收方式适合低端机器，是Client模式下的默认收集器，对CPU和内存的消耗不高，适合用户交互比较少，后台任务较多的系统。</p><p>Serial收集器默认新旧生代的回收器搭配为Serial+ SerialOld.</p><p> ParNew收集器：多CPU模式下的首选回收器，也是Server模式下的默认收集器。</p><p>ParallelScavenge收集器：又被称为是吞吐量优先的收集器。    </p><p>ParallelOld收集器：是老生代并行收集器的一种，使用标记整理算法、是老生代吞吐量优先的一个收集器。</p><p><strong>CMS</strong>：又称响应时间优先(最短回收停顿)的回收器，使用并发模式回收垃圾，使用标记-清除算法。</p><p>过程为：初始标记，并发标记，重新标记，并发清除。</p><p>优点：并发收集、低停顿。</p><p>缺点：CMS收集器对CPU资源非常敏感，占CPU资源，且总吞吐量下降，基于标志-清除算法，会产生碎片。</p>]]></content>
-    
-    <summary type="html">
-    
-      深入理解JVM的垃圾回收机制GC！
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>TCP是如何保证传输可靠性的？</title>
-    <link href="http://yoursite.com/2020/01/23/TCP%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84%EF%BC%9F/"/>
-    <id>http://yoursite.com/2020/01/23/TCP%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84%EF%BC%9F/</id>
-    <published>2020-01-23T13:20:27.000Z</published>
-    <updated>2020-01-23T15:36:09.383Z</updated>
-    
-    <content type="html"><![CDATA[<p>首先，要弄懂TCP是如何保证传输可靠的，就必须知道TCP的特点是什么，大家可以根据我的另一篇博客（TCP和UDP的区别）一起结合来看，更加容易明白。</p><h3 id="TCP报文段的首部格式"><a href="#TCP报文段的首部格式" class="headerlink" title="TCP报文段的首部格式"></a>TCP报文段的首部格式</h3><p>20个字节包括源端口和目的端口，序号，确认号，数据偏移 <em>，</em>保留 ，窗口，检验和等等。</p><h4 id="保证方式："><a href="#保证方式：" class="headerlink" title="保证方式："></a>保证方式：</h4><p><strong>检验和</strong>：将发送数据都当做16位整数，相加，进位补在后面，最后取反。</p><p>发送与接收方都要进行检验和操作，不一致则代表数据传输有误，一致就表示数据不一定传输成功。</p><p><strong>确认号和序号</strong>：TCP三次握手建立连接，我们知道TCP传输每个字节都加了序号，每次接收方接收数据也都会返回发送方一个ACK报文，即确认报文，序号也可以排序，这些都可以保证传输可靠性。</p><p><strong>超时重传机制</strong>：发送数据后，迟迟等不到ACK确认报文，就开始重传机制也就是重新发送一遍。等不到ACK有俩种可能。一种是发送数据的时候就丢失了，接收方根本就没看见，另外一种是接收方收到数据了，发送了ACK报文但是丢失了或者超时，发送方接不到。</p><p><strong>流量控制：</strong>（针对点对点）我们知道TCP会根据接收窗口的窗口值来决定发送数据的大小，会进行拆分。所谓流量控制就是让发送方发送数据慢一些，不要让接收方压力太大，一口气接收不过来导致数据丢失。使用的方式就是滑动窗口！</p><p><strong>拥塞控制：</strong>（针对全局）防止过多的数据注入到网络中，这样可以使网络中的路由器或链路过载。解决方式：慢开始，拥塞避免，快重传，快恢复。</p>]]></content>
-    
-    <summary type="html">
-    
-      讲解TCP可靠传输是如何得到保障的
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>分布式-集群模式-微服务</title>
-    <link href="http://yoursite.com/2020/01/22/%E5%88%86%E5%B8%83%E5%BC%8F-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F-%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
-    <id>http://yoursite.com/2020/01/22/%E5%88%86%E5%B8%83%E5%BC%8F-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F-%E5%BE%AE%E6%9C%8D%E5%8A%A1/</id>
-    <published>2020-01-22T07:53:23.000Z</published>
-    <updated>2020-01-30T05:04:50.699Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="分布式"><a href="#分布式" class="headerlink" title="分布式"></a>分布式</h3><p>将一个大的系统划分为多个业务模块，业务模块分别部署到不同的机器上，各个业务模块之间通过接口进行数据交互，区别分布式的方式是根据不同机器不同业务。</p><h3 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h3><p>集群模式是不同服务器部署同一套服务对外访问，实现服务的负载均衡。一般配置Nginx的负载容器实现。</p><h3 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h3><p> 微服务是一种面向服务的<strong>架构(SOA)风格</strong>，是很小的服务（松耦合），小到一个服务只对应一个单一的功能，只做一件事。这个服务可以单独部署运行，服务之间可以通过远程调用RPC（SpringCloud、Dubbo、Dubbox、Hessian、HttpClient、thrift等）来相互交互。说通俗点，就是将一个很小的方法写好，封装起来，专门让不同的人去调用。</p><p>微服务与分布式的细微差别是，微服务的应用不一定是分散在多个服务器上，他也可以是同一个服务器。</p>]]></content>
-    
-    <summary type="html">
-    
-      分布式-集群模式-微服务的概念以及区分
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>ThreadLocl</title>
-    <link href="http://yoursite.com/2020/01/21/ThreadLocl%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%81/"/>
-    <id>http://yoursite.com/2020/01/21/ThreadLocl%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%81/</id>
-    <published>2020-01-21T12:42:15.000Z</published>
-    <updated>2020-01-21T13:09:10.261Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h3><p>用与之密切相关的俩个类来讲述ThreadLocal的工作原理：</p><p>分别是ThreadLocalMap，Thread。</p><p>其中ThreadLocalMap类的定义是在ThreadLocal类中，真正的引用却是在Thread类中。</p><p>ThreadLocalMap中用于存储数据的entry定义：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">static class Entry extends WeakReference&lt;ThreadLocal&lt;?&gt;&gt; &#123;</span><br><span class="line">           /** The value associated with this ThreadLocal. */</span><br><span class="line">           Object value;</span><br><span class="line">           </span><br><span class="line">           Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">               super(k);</span><br><span class="line">               value = v;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure><p>我们可以发现Map的key是ThreadLocal类的实例对象，value为用户的值。</p><p>所以根据上面可知，线程共享变量缓存如下：</p><p>线程共享变量缓存如下：</p><p><strong>Thread.ThreadLocalMap&lt;ThreadLocal, Object&gt;</strong></p><p>1、<strong>Thread: 当前线程，可以通过Thread.currentThread()获取。</strong></p><p>2、<strong>ThreadLocal：ThreadLocal实例对象。</strong></p><p>3、<strong>Object: 当前线程共享变量。</strong></p><p>ThreadLocal.get，ThreadLocal.set，ThreadLocal.remove方法都是从当前线程中获取ThreadLocalMap&lt;<strong>ThreadLocal, Object</strong>&gt;，然后获取或设置共享变量Object。</p><h3 id="作用："><a href="#作用：" class="headerlink" title="作用："></a>作用：</h3><p>每个线程独自拥有一个变量，并非是共享的（<strong>提供线程内的局部变量，这种变量在线程的生命周期内起作用</strong>）</p><p>final修饰的int型的threadLocalHashCode用来区分一个线程多个ThreadLocal对象</p><h3 id="内存泄漏问题（弱引用）："><a href="#内存泄漏问题（弱引用）：" class="headerlink" title="内存泄漏问题（弱引用）："></a>内存泄漏问题（弱引用）：</h3><p>当线程没有结束，但是ThreadLocal已经被回收，则可能导致线程中存在ThreadLocalMap&lt;<strong>null</strong>, <strong>Object</strong>&gt;的键值对，造成内存泄露。</p><h4 id="解决方法："><a href="#解决方法：" class="headerlink" title="解决方法："></a>解决方法：</h4><p>1、使用完线程共享变量后，显示调用ThreadLocalMap.remove方法清除线程共享变量。</p><p>2、JDK建议ThreadLocal定义为private static，这样ThreadLocal的弱引用问题则不存在了。</p>]]></content>
-    
-    <summary type="html">
-    
-      理解ThreadLocl的工作原理
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Sleep,和Wait!</title>
-    <link href="http://yoursite.com/2020/01/19/Sleep%E5%92%8CWait/"/>
-    <id>http://yoursite.com/2020/01/19/Sleep%E5%92%8CWait/</id>
-    <published>2020-01-19T12:32:31.000Z</published>
-    <updated>2020-01-30T12:47:15.761Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="sleep"><a href="#sleep" class="headerlink" title="sleep"></a>sleep</h3><p>继承自Thread类，无释放锁，会给低优先级线程运行的机会，必须捕获异常，让当前线程休眠指定时间，也可由interrupt()方法来唤醒，静态方法，任何地方可以使用，执行sleep()方法后转入阻塞状态。</p><h3 id="yield"><a href="#yield" class="headerlink" title="yield"></a><strong>yield</strong></h3><p>yield()方法只会给相同优先级或更高优先级的线程以运行的机会，无需捕获异常，执行yield()方法后转入就绪状态。</p><h3 id="wait"><a href="#wait" class="headerlink" title="wait"></a>wait</h3><p>继承自Object类，释放了锁（使得其他线程可以使用同步控制块或者方法），无需捕获异常，由notify,notifyAll方法唤醒，实例方法，只能在同步控制方法或者同步控制块里面使用。</p><h3 id="为什么wait只能在同步控制方法或者同步控制块里面使用？"><a href="#为什么wait只能在同步控制方法或者同步控制块里面使用？" class="headerlink" title="为什么wait只能在同步控制方法或者同步控制块里面使用？"></a>为什么wait只能在同步控制方法或者同步控制块里面使用？</h3><p>wait()暂停的是持有锁的对象，所以想调用wait()必须为:对象.wait();</p><p>因为要对持有锁的线程操作，所以要使用在同步中，因为只有同步才具有锁。</p><p><strong>锁可以是任意对象，所以任意对象调用的方法一定是定义在Object类中</strong></p>]]></content>
-    
-    <summary type="html">
-    
-      Sleep和Wait的区别，简显易懂
     
     </summary>
     
