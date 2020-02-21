@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="HF Blog">
 <meta property="og:description" content="这篇讲解O(1)、O(n)、O(n^2)、O(log n)、O(n log n)到底是个什么意思">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-02-16T14:37:57.485Z">
+<meta property="og:updated_time" content="2020-02-21T06:51:50.488Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -249,7 +249,10 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="O-1"><a href="#O-1" class="headerlink" title="O(1)"></a>O(1)</h2><p>O(1)就是最低的时空复杂度了，也就是耗时/耗空间与输入数据大小无关，无论输入数据增大多少倍，耗时/耗空间都不变。 哈希算法就是典型的O(1)时间复杂度，无论数据规模多大，都可以在一次计算后找到目标（不考虑冲突的话），<strong>冲突的话很麻烦的，指向的value会做二次hash到另外一快存储区域。</strong></p>
+        <p>什么是时间复杂度？通俗讲就是算法运行的时间，官方定义为：</p>
+<p>若存在函数 f（n），使得当n趋近于无穷大时，T（n）/ f（n）的极限值为不等于零的常数，则称 f（n）是T（n）的同数量级函数。<strong>语句总的执行次数T(n)，f(n)是问题规模为n的某个函数。</strong></p>
+<p>记作 T（n）= O（f（n）），称O（f（n）） 为算法的渐进时间复杂度，简称时间复杂度。</p>
+<h2 id="O-1"><a href="#O-1" class="headerlink" title="O(1)"></a>O(1)</h2><p>O(1)就是最低的时空复杂度了，也就是耗时/耗空间与输入数据大小无关，无论输入数据增大多少倍，耗时/耗空间都不变。 哈希算法就是典型的O(1)时间复杂度，无论数据规模多大，都可以在一次计算后找到目标（不考虑冲突的话），<strong>冲突的话很麻烦的，指向的value会做二次hash到另外一快存储区域。</strong></p>
 <p>例子：比如你面前有十个盒子，分别标着1-10号数字，你要找哪个数字直接就可以看到找出，不用一个一个都看一遍。那如果是N个盒子呢？同理，直接找你要的数字就可以了，所以耗时永远不变，为1.</p>
 <h2 id="O-n"><a href="#O-n" class="headerlink" title="O(n)"></a>O(n)</h2><p>时间复杂度为O(n)，就代表数据量增大几倍，耗时也增大几倍。</p>
 <p>例子：遍历算法，要找到一个数组里面最大的一个数，你需要把n个变量都扫描一遍，操作次数为n，那么算法复杂度就是O(n).</p>
@@ -259,7 +262,6 @@
 <p>例子：二分查找就是O(log n)的算法，每找一次排除一半的可能，256个数据中查找只要找8次就可以找到目标。 </p>
 <h2 id="O-n-log-n"><a href="#O-n-log-n" class="headerlink" title="O(n log n)"></a>O(n log n)</h2><p>O(n log n)同理，就是n乘以log n，当数据增大256倍时，耗时增大256*8=2048倍。这个复杂度高于O(n)低于O(n^2)。</p>
 <p>例子：归并排序，两个顺序序列合并成一个顺序序列，就是O(n log n)的时间复杂度。</p>
-<p>原文地址：<a href="https://blog.csdn.net/lkp1603645756/article/details/85013126" target="_blank" rel="noopener">https://blog.csdn.net/lkp1603645756/article/details/85013126</a></p>
 
       
     </div>
@@ -271,7 +273,7 @@
         <p><span>本文标题:</span><a href="/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/">时间复杂度常见讲解</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
         <p><span>发布时间:</span>2019-12-04, 13:59:02</p>
-        <p><span>最后更新:</span>2020-02-16, 22:37:57</p>
+        <p><span>最后更新:</span>2020-02-21, 14:51:50</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/" title="时间复杂度常见讲解">http://yoursite.com/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
