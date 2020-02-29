@@ -15,14 +15,14 @@
 
 
 
-<meta name="description" content="俩种索引的区分和概念">
+<meta name="description" content="SpringMVC的运行流程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="聚集索引和非聚集索引">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;04&#x2F;%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95%E5%92%8C%E9%9D%9E%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95&#x2F;index.html">
+<meta property="og:title" content="SpringMVC的执行过程？">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;28&#x2F;SpringMVC%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%EF%BC%9F&#x2F;index.html">
 <meta property="og:site_name" content="HF Blog">
-<meta property="og:description" content="俩种索引的区分和概念">
+<meta property="og:description" content="SpringMVC的运行流程">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-02-14T14:14:03.333Z">
+<meta property="og:updated_time" content="2020-02-28T05:48:05.980Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -55,7 +55,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>聚集索引和非聚集索引 | HF Blog</title>
+<title>SpringMVC的执行过程？ | HF Blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -213,11 +213,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-聚集索引和非聚集索引" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-SpringMVC的执行过程？" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2020/02/04/%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95%E5%92%8C%E9%9D%9E%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95/" class="article-date">
-      <time datetime="2020-02-04T05:16:43.000Z" itemprop="datePublished">2020-02-04</time>
+      <a href="/2019/12/28/SpringMVC%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%EF%BC%9F/" class="article-date">
+      <time datetime="2019-12-28T05:45:08.000Z" itemprop="datePublished">2019-12-28</time>
 </a>
 
 
@@ -232,7 +232,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      聚集索引和非聚集索引
+      SpringMVC的执行过程？
     </h1>
   
 
@@ -249,28 +249,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h4 id="聚集索引"><a href="#聚集索引" class="headerlink" title="聚集索引"></a><strong>聚集索引</strong></h4><p>聚集索引存储记录是物理上连续存在，且它的<strong>物理顺序</strong>与列值（一般是主键的那一列）的<strong>逻辑顺序</strong>相同，一个表中只能拥有一个聚集索引。例如第一行地址为01，id值1，第二行地址为02，id为2.</p>
-<p>我们可以看出，聚集索引和id的关联很大，如果我们查询id比较靠后的数据，那么这行数据的地址在磁盘中的物理地址也会比较靠后。</p>
-<p>在MySQL中<strong>主键就是聚集索引</strong>，SQL Sever默认主键为聚集索引，也可以指定为非聚集索引</p>
-<p><strong>那么主键和聚集索引区别是什么？</strong></p>
-<blockquote>
-<p>如果在创建表时没有显式地定义主键,则InnoDB存储引擎会按如下方式选择或创建主键:</p>
-<p>1 首先判断表中是否有非空的唯一索引,如果有,则该列即为主键.</p>
-<p>2 如果不符合上述条件,InnoDB存储引擎自动创建一个6字节大小的指针.</p>
-</blockquote>
-<p>其实聚集索引可以创建在<strong>任何一列</strong>，但我们一般不会这么做，因为性能非常差。主键不可以有重复数据，那么聚集索引呢？</p>
-<p>其实聚集索引是有<strong>唯一性约束</strong>的，那为什么可以在任何列创建呢？因为必要时，数据库引擎 将向行自动添加一个 uniqueifier 值，使每个键唯一。此列和列值供内部使用，用户不能查看或访问。</p>
-<p><strong>说了半天，聚集索引到底是个啥？</strong></p>
-<p>索引底层大家都知道是B+树，而<strong>聚集索引的叶子节点就是对应的数据节点</strong>，可以直接获取对应列的数据，查询非常高效。</p>
-<h4 id="非聚集索引"><a href="#非聚集索引" class="headerlink" title="非聚集索引"></a><strong>非聚集索引</strong></h4><p><strong>磁盘上行的物理存储顺序与索引列的逻辑顺序不同</strong>，一个表中可以拥有多个非聚集索引。</p>
-<p>除了聚集索引以外的索引都是非聚集索引，只是人们想细分一下非聚集索引，分成普通索引，唯一索引，全文索引。</p>
-<p><strong>非聚集索引和聚集索引的区别？</strong></p>
-<p>最根本区别就是<strong>非聚集索引的叶子节点仍然是索引节点</strong>，但它有一个指向最终数据的指针，所以它需要进行第二次的查询，查询对应行数据。</p>
-<p>聚集索引：可以帮助把很大的范围，迅速减小范围，从小范围一个一个找。<strong>查询1次所以速度快</strong></p>
-<p>非聚集索引：把一个很大的范围，转换成一个小的地图，从地图上找到位置，再直接过去找。<strong>查询2次速度慢，但是修改相较于聚集索引快</strong></p>
-<p><strong>在主键创建聚集索引查询快，还是创建非聚集索引查询快呢？</strong></p>
-<p>答：<strong>非聚集索引快</strong>。因为要在主键上创建聚集索引，那么就要<strong>保证主键的唯一性</strong>，我们就需要遍历所有数据的节点判断主键是否唯一。而非聚集索引本身叶子节点放的都是主键，我们只需要遍历索引页就行了，不用去查找数据（索引的存储空间比实际数据要少）。这样减少了很多的IO消耗，所有快。</p>
-<p><strong>选择</strong>：如果是返回范围的数据，那么选择聚集索引。如果是频繁的修改索引列，那么应该选择非聚集索引。</p>
+        <p>1.向服务器发送 HTTP 请求，请求被前端控制器 <strong>DispatcherServlet</strong> 捕获。<br>2.DispatcherServlet 根据 -servlet.xml 中的配置对请求的 URL 进行解析，得到请求资源标识符（URI）。然后根据该 URI，去调用 <strong>HandlerMapping</strong> 获得该 <strong>Handler</strong> 配置的所有相关的对象，最后以<strong>HandlerExecutionChain</strong> 对象的形式返回。<br>3.<strong>DispatcherServlet</strong> 根据获得的Handler，选择一个合适的 <strong>HandlerAdapter。</strong><br>4.然后提取Request中的模型数据，填充Handler入参，开始执行Handler（Controller)。 在填充Handler的入参过程中，Spring 将帮你做一些额外的工作：<br>            HttpMessageConveter： 将请求消息（如 Json、xml 等数据）转换成一个对象，将对象转换            为指定的响应信息。<br>            数据转换：对请求消息进行数据转换。如String转换成Integer、Double等。<br>            数据根式化：对请求消息进行数据格式化。 如将字符串转换成格式化数字或格式化日期等。<br>            数据验证： 验证数据的有效性（长度、格式等），验证结果存储到BindingResult或Error中。<br>5.<strong>Handler(Controller)</strong>执行完成后，向 <strong>DispatcherServlet</strong> 返回一个 <strong>ModelAndView</strong> 对象；<br>6.根据返回的<strong>ModelAndView</strong>，选择一个适合的 <strong>ViewResolver</strong>，返回给<strong>DispatcherServlet</strong>。<br>7.ViewResolver 结合<strong>Model</strong>和<strong>View</strong>，来渲染视图。<br>8.视图负责将渲染结果返回给客户端。</p>
 
       
     </div>
@@ -279,13 +258,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2020/02/04/%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95%E5%92%8C%E9%9D%9E%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95/">聚集索引和非聚集索引</a></p>
+        <p><span>本文标题:</span><a href="/2019/12/28/SpringMVC%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%EF%BC%9F/">SpringMVC的执行过程？</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
-        <p><span>发布时间:</span>2020-02-04, 13:16:43</p>
-        <p><span>最后更新:</span>2020-02-14, 22:14:03</p>
+        <p><span>发布时间:</span>2019-12-28, 13:45:08</p>
+        <p><span>最后更新:</span>2020-02-28, 13:48:05</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2020/02/04/%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95%E5%92%8C%E9%9D%9E%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95/" title="聚集索引和非聚集索引">http://yoursite.com/2020/02/04/%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95%E5%92%8C%E9%9D%9E%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/04/%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95%E5%92%8C%E9%9D%9E%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/12/28/SpringMVC%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%EF%BC%9F/" title="SpringMVC的执行过程？">http://yoursite.com/2019/12/28/SpringMVC%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%EF%BC%9F/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/12/28/SpringMVC%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%EF%BC%9F/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -298,15 +277,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2020/02/05/java%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86/">
-                    java对象的组成部分
+                <a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">
+                    Nosql
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2020/02/03/%E5%9F%BA%E4%BA%8Elucene%E7%9A%84elasticsearch/">
-                    基于lucene的elasticsearch
+                <a href="/2019/12/28/bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%9F/">
+                    bean的生命周期？
                 </a>
             </div>
         
@@ -318,7 +297,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#聚集索引"><span class="toc-number">1.</span> <span class="toc-text">聚集索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#非聚集索引"><span class="toc-number">2.</span> <span class="toc-text">非聚集索引</span></a></li></ol>
+            
         
     </div>
     <style>
@@ -354,7 +333,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"聚集索引和非聚集索引　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"SpringMVC的执行过程？　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -374,7 +353,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2020/02/05/java%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86/" title="上一篇: java对象的组成部分">
+            <a href="/2020/01/19/redis%E5%92%8CMongoDB%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" title="上一篇: Nosql">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -382,7 +361,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2020/02/03/%E5%9F%BA%E4%BA%8Elucene%E7%9A%84elasticsearch/" title="下一篇: 基于lucene的elasticsearch">
+            <a href="/2019/12/28/bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%9F/" title="下一篇: bean的生命周期？">
                 <i class="fa fa-angle-right"></i>
             </a>
         
