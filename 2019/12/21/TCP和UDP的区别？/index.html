@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="HF Blog">
 <meta property="og:description" content="TCP和UDP哪里不同，具体表现在哪里？">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-02-11T12:06:28.072Z">
+<meta property="og:updated_time" content="2020-03-09T05:42:16.666Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -253,7 +253,7 @@
 <p>2.TCP连接只能有俩个<strong>端点</strong>，即只能一对一，点对点。</p>
 <p>3.TCP提供<strong>可靠支付</strong>的服务，无差错，不丢失，不重复，按序到达。</p>
 <p>4.TCP提供<strong>全双工通信</strong>（通信双方都可作为传送者，接收者，且可以同时传输接收）。</p>
-<p>5.TCP面向<strong>字节流</strong>，流是指的是流入到进程或从进程流出的字节序列。</p>
+<p>5.TCP面向<strong>字节流</strong>，流是指的是流入到进程或从进程流出的字节序列。会把大数据进行拆分，一部分一部分发送，并且编号，使接收方完整的接收到信息。</p>
 <p>6.TCP不关心应用程序一次把多长的报文发送到TCP的缓存，而是根据对方给出的<strong>窗口值</strong>和当前<strong>网络拥塞</strong>的程度来决定一个报文段应包含多少个字节</p>
 <p>7.首部20个字节（源端口和目的端口，序号，确认号，数据偏移 <em>，</em>保留 ）。</p>
 <h3 id="用户数据报协议UDP"><a href="#用户数据报协议UDP" class="headerlink" title="用户数据报协议UDP"></a>用户数据报协议UDP</h3><p>1.UDP是<strong>无连接</strong>的协议，传输数据前不需要建立连接，减小了开销和时延。</p>
@@ -274,7 +274,7 @@
         <p><span>本文标题:</span><a href="/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/">TCP和UDP的区别？</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
         <p><span>发布时间:</span>2019-12-21, 15:06:44</p>
-        <p><span>最后更新:</span>2020-02-11, 20:06:28</p>
+        <p><span>最后更新:</span>2020-03-09, 13:42:16</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/" title="TCP和UDP的区别？">http://yoursite.com/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/12/21/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

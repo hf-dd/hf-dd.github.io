@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="HF Blog">
 <meta property="og:description" content="elasticsearch到底是怎么样的搜索啊">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-02-18T02:46:13.127Z">
+<meta property="og:updated_time" content="2020-04-23T15:21:36.807Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -252,7 +252,7 @@
         <h3 id="lucene"><a href="#lucene" class="headerlink" title="lucene"></a>lucene</h3><p>首先，elasticsearch（简称ES）是基于lucene的，lucene是什么？lucene 是最先进、功能最强大的搜索库，其实就是一个jar包，包含了封装好的各种建立倒排索引的算法代码，如果直接基于 lucene 开发，非常复杂，所以我们一般直接就调用lucene 的 api 去开发就可以了。</p>
 <p><strong>搜索引擎原理</strong>：爬取内容，进行分词，建立反向索引也叫倒排索引。</p>
 <p><strong>倒排索引</strong>是什么？传统正向索引，在文章中找词，而倒排索引是从关键词出发，找到对应的文章。</p>
-<p>倒排底层实现基于FST,优点空间占用小，对单词前缀和后缀重复利用，查询快。</p>
+<p>倒排底层实现基于<strong>FST</strong>,优点空间占用小，对单词前缀和后缀重复利用，查询快。</p>
 <p><strong>Elasticsearch</strong></p>
 <p>而elasticsearch 就是基于 lucene，隐藏了 lucene 的复杂性，提供了简单易用的 restful api 接口，是一个存储海量数据的分布式搜索引擎。</p>
 <p>为什么要有ES，因为模糊查询会放弃索引，会导致全表扫描，大数据量下效率低，而我们可以把经常查询的字段放入ES中，可以提高查询速度。</p>
@@ -285,7 +285,7 @@
         <p><span>本文标题:</span><a href="/2020/02/03/%E5%9F%BA%E4%BA%8Elucene%E7%9A%84elasticsearch/">基于lucene的elasticsearch</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
         <p><span>发布时间:</span>2020-02-03, 14:16:00</p>
-        <p><span>最后更新:</span>2020-02-18, 10:46:13</p>
+        <p><span>最后更新:</span>2020-04-23, 23:21:36</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2020/02/03/%E5%9F%BA%E4%BA%8Elucene%E7%9A%84elasticsearch/" title="基于lucene的elasticsearch">http://yoursite.com/2020/02/03/%E5%9F%BA%E4%BA%8Elucene%E7%9A%84elasticsearch/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/03/%E5%9F%BA%E4%BA%8Elucene%E7%9A%84elasticsearch/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

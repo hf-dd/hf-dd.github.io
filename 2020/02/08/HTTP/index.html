@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="HF Blog">
 <meta property="og:description" content="HTTP请求报文和优化">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-02-08T07:23:04.798Z">
+<meta property="og:updated_time" content="2020-03-27T13:54:18.960Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -259,6 +259,9 @@
 <p><strong>持久连接</strong>，重用TCP连接，以消除连接及关闭的时延     </p>
 <p><strong>管道化连接</strong>， 通过共享的TCP连接发起并发的HTTP请求        </p>
 <p><strong>复用连接</strong>，交替传送请求和相应报文（实验阶段）</p>
+<h3 id="如何正确的关闭HTTP连接？"><a href="#如何正确的关闭HTTP连接？" class="headerlink" title="如何正确的关闭HTTP连接？"></a><strong>如何正确的关闭HTTP连接？</strong></h3><p>Client先关闭自己的输出信道（Client不能把自己的输入信道关闭了）。</p>
+<p>然后Client周期性地轮询自己的输入信道的状态（比如，读取数据时，是不是 已经读到的流的结尾了），如果读到了流的结束标识符，那意味着Server发过来的数据都已经收到了。</p>
+<p>总之，对于HTTP连接的双方而言，当不再需要传输数据时，<strong>双方都先把自己的输出信道关闭了</strong>，<strong>然后读取输入信道中的流</strong>，如果读到了末尾(比如流结束符返回-1)，那么就可以<strong>正常关闭</strong>HTTP连接了。</p>
 
       
     </div>
@@ -270,7 +273,7 @@
         <p><span>本文标题:</span><a href="/2020/02/08/HTTP/">HTTP</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
         <p><span>发布时间:</span>2020-02-08, 15:12:00</p>
-        <p><span>最后更新:</span>2020-02-08, 15:23:04</p>
+        <p><span>最后更新:</span>2020-03-27, 21:54:18</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2020/02/08/HTTP/" title="HTTP">http://yoursite.com/2020/02/08/HTTP/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/08/HTTP/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -306,7 +309,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP"><span class="toc-number">1.</span> <span class="toc-text">HTTP</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP"><span class="toc-number">1.</span> <span class="toc-text">HTTP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何正确的关闭HTTP连接？"><span class="toc-number">2.</span> <span class="toc-text">如何正确的关闭HTTP连接？</span></a></li></ol>
         
     </div>
     <style>

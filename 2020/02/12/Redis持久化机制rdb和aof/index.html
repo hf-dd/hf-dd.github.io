@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="HF Blog">
 <meta property="og:description" content="Redis持久化机制rdb和aof俩种机制的区别讲解">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-02-12T14:13:37.990Z">
+<meta property="og:updated_time" content="2020-03-31T14:04:21.716Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -257,7 +257,7 @@
 <p>优点：<strong>RDB</strong>对<strong>Redis</strong>的性能影响非常小，是因为在同步数据的时候他只是<strong>fork</strong>了一个子进程去做持久化的，而且他在数据恢复的时候速度比<strong>AOF</strong>来的快。</p>
 <p>缺点：<strong>RDB</strong>都是快照文件，都是默认五分钟才会生成一次，这意味着你这次同步到下次同步这中间五分钟的数据都很可能全部丢失掉。</p>
 <p>AOF：</p>
-<p>优点：<strong>AOF</strong>是一秒一次同步，最多丢一秒数据。因为是只追加的方式写数据，所以不用寻址，性能惊人，<strong>AOF</strong>的日志是通过一个叫<strong>非常可读</strong>的方式记录的，适合做数据紧急恢复。</p>
+<p>优点：<strong>AOF</strong>是一秒一次同步，最多丢一秒数据。因为是只追加的方式写数据，所以不用寻址，性能惊人。<strong>AOF</strong>的日志是通过一个叫<strong>非常可读</strong>的方式记录的，适合做数据紧急恢复。采用“<strong>重放</strong>”机制以恢复到 Redis关闭前的最后时刻。</p>
 <p>缺点：一样的数据，<strong>AOF</strong>文件比<strong>RDB</strong>还要大。<strong>AOF</strong>开启后Redis性能低，因为要异步刷新日志。</p>
 <p><strong>如何选择：</strong></p>
 <p>俩者结合使用，如果真一下丢失了许多数据，<strong>第一时间用RDB恢复，再用AOF恢复</strong>，因为RDB恢复数据快，但是不全，所以再让AOF来补全，完美！</p>
@@ -272,7 +272,7 @@
         <p><span>本文标题:</span><a href="/2020/02/12/Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6rdb%E5%92%8Caof/">Redis持久化机制rdb和aof</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
         <p><span>发布时间:</span>2020-02-12, 14:13:57</p>
-        <p><span>最后更新:</span>2020-02-12, 22:13:37</p>
+        <p><span>最后更新:</span>2020-03-31, 22:04:21</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2020/02/12/Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6rdb%E5%92%8Caof/" title="Redis持久化机制rdb和aof">http://yoursite.com/2020/02/12/Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6rdb%E5%92%8Caof/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/12/Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6rdb%E5%92%8Caof/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

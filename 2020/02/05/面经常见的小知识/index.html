@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="HF Blog">
 <meta property="og:description" content="针对一些常考知识，简答总结到一起，面试前必看">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-02-28T06:33:28.106Z">
+<meta property="og:updated_time" content="2020-04-28T05:02:01.661Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -254,11 +254,11 @@
 <p><strong>分布式锁：</strong><br>基于数据库（唯一索引）：唯一索引天然具有排他性，同一时刻只能允许一个竞争者获取锁<br>基于缓存：利用Redis的setnx key value这个命令，只有当key不存在时才会执行成功，如果key已经存在则命令执行失败。<br>基于Zookeeper：我们在Zookeeper中创建瞬时节点，利用节点不能重复创建的特性来保证排他性。</p>
 <p>操作系统：内核、驱动程序、接口库、外围<br>Linux系统一般有4个主要部分:内核、shell、文件系统和应用程序。</p>
 <p><strong>内存泄露</strong>：不再会被使用的对象的内存不能被回收，就是内存泄露。如果长生命周期的对象持有短生命周期的引用，就很可能会出现内存泄露。典型例子：<br>1 Vector v = new Vector(10);    //最简单的方法就是将 Vector 对象设置为 null。<br>2 for (int i = 1; i &lt; 100; i++) {<br>3     Object o = new Object();<br>4     v.add(o);      //循环申请Object对象，并将所申请的对象放入一个 Vector 中<br>5     o = null;  //仅仅释放引用本身，那么 Vector 仍然引用该对象，gc不可回收<br>6 }</p>
-<p><strong>Redis为什么单线程还那么快</strong>：1.纯内存访问，Redis将所有数据放在内存中<br>2.非阻塞I/O,Redis使用I/O多路复用技术，以让单个线程高效的处理多个连接请求                                          3.单线程避免了线程切换和竞争产生的消耗</p>
-<p><strong>为什么zset用跳表不用红黑树</strong>（查询单个数据时间复杂度一样但是如下）：<br>1.在做范围查找的时候，平衡树比skiplist操作要复杂。<br>2.平衡树的插入和删除操作会引发子树的调整，逻辑复杂，而skiplist的插入和删除只需要修改相邻节点的指针，操作简单又快速。<br>3.跳表的实现相较于红黑树更加简洁。</p>
+<p><strong>Redis为什么单线程还那么快</strong>：1.纯内存访问，Redis将所有数据放在内存中<br>2.非阻塞I/O,Redis使用I/O多路复用技术，以让单个线程高效的处理多个连接请求                                                  3.单线程避免了线程切换和竞争产生的消耗</p>
+<p><strong>为什么zset用跳表不用红黑树</strong>（查询单个数据时间复杂度一样但是如下）：<br>1.在做范围查找的时候，红黑树树比skiplist操作要复杂。<br>2.平衡树的插入和删除操作会引发子树的调整，逻辑复杂，而skiplist的插入和删除只需要修改相邻节点的指针，操作简单又快速。<br>3.跳表的实现相较于红黑树更加简洁。</p>
 <p><strong>一条SQL语句执行的很慢原因</strong>：先分成俩种情况<br>偶尔很慢：1.数据库在刷新脏页，例如 redo log 写满了需要同步到磁盘，此时其他操作需要等待<br>2.执行的时候，遇到锁，如表锁、行锁。<br>一直很慢：1.没有用上索引，例如该字段没有索引或者对索引字段进行运算、函数操作导致无法用索引。<br>2.数据库选错了索引，由于统计的失误，导致系统没有走索引，而是走了全表扫描</p>
 <p><strong>TCP粘包是什么</strong>:    TCP粘包就是指发送方发送的若干包数据到达接收方时粘成了一包，从接收缓冲区来看，后一包数据的头紧接着前一包数据的尾</p>
-<p><strong>造成粘包原因：</strong>发送方，TCP默认使用Nagle算法   1.只有上一个分组得到确认，才会发送下一个分组          2.收集多个小分组，在一个确认到来时一起发送给接受方，TCP接收到数据包时，应用层并不会立即处理。会先放入缓存，再等应用程序去读取。<strong>解决方式：</strong> 1.数据带固定的开始符和结束符 2.数据长度固定  </p>
+<p><strong>造成粘包原因：</strong>发送方，TCP默认使用Nagle算法 1.将多次间隔较小、数据量小的数据，合并成一个大的数据块，然后进行封包。2.TCP面向字节流，无消息边界。解决方式： 1.数据带固定的开始符和结束符 2.数据长度固定，定长发送</p>
 <p><strong>TCP如何保证数据的顺序化传输</strong>：1.为了保证数据包的可靠传递，发送方必须把已发送的数据包保留在缓冲区；<br>2.并为每个已发送的数据包启动一个超时定时器；<br>3.如在定时器超时之前收到了对方发来的应答信息（可能是对本包的应答，也可以是对本包后续包的应答），则释放该数据包占用的缓冲区;<br>4.否则，重传该数据包，直到收到应答或重传次数超过规定的最大次数为止。<br>5.接收方收到数据包后，先进行CRC校验，如果正确则把数据交给上层协议，然后给发送方发送一个累计应答包，表明该数据已收到，如果接收方正好也有数据要发给发送方，应答包也可方在数据包中捎带过去。</p>
 <p><strong>索引为什么能加快查询效率</strong>：索引通过事先排好序，从而在查找时可以应用二分查找等高效率的算法。</p>
 <p><strong>AQS</strong>就是基于双向队列，用volatile修饰共享变量state，线程通过CAS去改变状态符，成功则获取锁成功，失败则进入等待队列尾部，等待被唤醒。AQS是自旋锁：在等待唤醒的时候，经常会使用自旋的方式，不停地尝试获取锁，直到被其他线程获取成功</p>
@@ -282,12 +282,12 @@
 <p><strong>B树和B+树的区别</strong></p>
 <p>1）B树的每个结点都存储了key和data，B+树的data存储在叶子节点上。<br> 节点不存储data，这样一个节点就可以存储更多的key。可以使得树更矮，所以IO操作次数更少。<br> 2）B+树的所有叶结点构成一个有序链表，可以按照关键码排序的次序遍历全部记录<br> 由于数据顺序排列并且相连，所以便于区间查找和搜索。而B树则需要进行每一层的递归遍历。相邻的元素可能在内存中不相邻，所以缓存命中性没有B+树好。</p>
 <p><strong>慢查询</strong>是指执行时间超过慢查询时间的sql语句show variables like ‘long_query_time’;    <strong>Explain</strong>找到慢查询后，我们需要使用Explain来分析执行慢的原因，分析显示信息有：id,select_type,type</p>
-<p><strong>ps命令</strong>——查看静态的进程统计信息    ps aux | grep bash结合管道操作和grep命令进行过滤，用于查询某一个进程的信息。        <strong>top命令</strong>——查看进程动态信息，负载情况        <strong>rm删除文件</strong>：-r 递归删除文件夹下所有文件， -f不提示直接删除</p>
+<p><strong>ps命令</strong>——查看静态的进程统计信息    ps aux | grep bash结合管道操作和grep命令进行过滤，用于查询某一个进程的信息。        <strong>top命令</strong>——查看进程动态信息，CPU负载情况    top -d(每隔2秒显示所有进程的资源占用情况)    默认5秒     <strong>top-load average</strong>查看系统的负载情况                        <strong>rm删除文件</strong>：-r 递归删除文件夹下所有文件， -f不提示直接删除        <strong>iostat</strong>——Linux查看IO    查看<strong>Linux</strong>内核版本命令:    1.cat     2.uname -a                <strong>kill -9</strong>：立即杀死该进程kill**：释放资源后再杀死</p>
 <p><strong>QPS</strong>：是一台服务器每秒能够相应的查询次数，<strong>TPS</strong>   事务数/秒，客户机在发送请求时开始计时，收到服务器响应后结束计时，以此来计算使用的时间和完成的事务个数。</p>
 <p><strong>分布式数据库？</strong>：支持持久化存储的分布式存储系统；着重计算的分布式计算框架；着重计算的分布式计算框架；Redis ，ES，mongodb</p>
-<p><strong>Redis事务：</strong>Redis的事务实质上是<strong>命令的集合</strong>，在一个事务中要么所有命令都被执行，要么所有事物都不执行。 分为三步，<strong>MULTI</strong> 开始一个事务，放入一个队列中，<strong>EXEC</strong>执行一个事务。        需要注意的是，Redis不提供回滚，一个事务中的<strong>命令出现错误</strong>，那么<strong>所有的命令都不会执行</strong>；一个事务中出现<strong>运行错误</strong>，那么<strong>正确的命令会被执行</strong>。                利用WATCH命令来实现原子性。</p>
-<p><strong>ArrayList和LinkList</strong>，同样查找, 时间复杂度都是O(N), 但是数组要比链表快，因为数组是连续存储的，链表是散列存储的。数组随机访问性强（通过下标进行快速定位），所以数组的查询比链表要快，链表不能随机查找，必须从第一个开始遍历，查找效率低。</p>
-<p><strong>如何避免死锁</strong>：加锁顺序，加锁时限，死锁检测。</p>
+<p><strong>Redis事务：</strong>Redis的事务实质上是<strong>命令的集合</strong>，在一个事务中要么所有命令都被执行，要么所有事物都不执行。 分为三步，<strong>MULTI</strong> 开始一个事务，放入一个队列中，<strong>EXEC</strong>执行一个事务。        需要注意的是，Redis不提供回滚，一个事务中的<strong>命令出现错误</strong>，那么<strong>所有的命令都不会执行</strong>；一个事务中出现<strong>运行错误</strong>，那么<strong>正确的命令会被执行</strong>。    利用WATCH命令来实现原子性。</p>
+<p><strong>ArrayList和LinkList</strong>，同样查找, 时间复杂度都是O(N), 但是数组要比链表快，因为数组是连续存储的，链表是散列存储的。数组随机访问性强（通过下标进行快速定位），所以数组的查询比链表要快，链表不能随机查找，必须从第一个开始遍历，查找效率低。ArrayList新增和删除慢，因为ArrayList要移动数据。</p>
+<p><strong>如何避免死锁</strong>：加锁顺序，加锁时限，死锁检测。<strong>死锁</strong>是指两个或两个以上的进程在执行过程中，由于竞争资源或者由于彼此通信而造成的一种阻塞的现象，若无外力作用，它们都将无法推进下去。<strong>4个必要条件：</strong>互斥条件，请求与保持条件，不可剥夺条件，循环等待条件</p>
 <p><strong>数据库的乐观锁如何实现：</strong>给表加一个<strong>版本号</strong>或<strong>时间戳</strong>字段，当读取数据时，将version字段的值一同读出，数据每更新一次，对此version值加一。当我们提交更新的时候，判断当前版本信息与第一次取出来的版本值大小，相等则予以更新，否则认为过期，拒绝更新。</p>
 <p><strong>Java 泛型擦除</strong>，修饰成员变量等类结构相关的泛型不会被擦除，容器类泛型会被擦除</p>
 <p><strong>AOF阻塞：</strong>后台线程每秒对AOF文件做同步操作。当硬盘压力过大时，fsync操作需要等待，直到写入完成。如果主线程发现距离上一次的fsync（将内存已修改数据同步到存储结构）成功超过2秒，为了数据安全性它会阻塞直到后台线程执行fsync操作完成。这种阻塞行为主要是硬盘压力引起。</p>
@@ -304,7 +304,51 @@
 <p><strong>为什么不同引擎锁的粒度不一样？</strong>InnoDB之所以可以锁行，是因为<strong>聚簇索引</strong>，是因为Innodb的主索引结构上，既存储了主键值，又直接存储了行数据，可以方便的锁住行数据，而MyIsam索引指向另一片数据文件，没有办法精确锁住数据段，因为是<strong>非聚簇索引</strong>。</p>
 <p><strong>线程安全</strong>就是多线程访问时，采用了加锁机制，当一个线程访问该类的某个数据时，进行保护，其他线程不能进行访问直到该线程读取完，其他线程才可使用。不会出现数据不一致或者数据污染。</p>
 <p><strong>Object类有哪些方法</strong>：clone方法，getClass方法，toString方法，finalize方法，equals方法，hashCode方法，wait方法，notify方法，notifyAll方法</p>
-<p>建索引：（1）CREATE INDEX indexName ON tableName(username(length))；                            （2）ALTER table tableName ADD UNIQUE [indexName] (username(length))</p>
+<p><strong>建索引：</strong>（1）CREATE INDEX indexName ON tableName(username(length))；                            （2）ALTER table tableName ADD UNIQUE [indexName] (username(length))</p>
+<p>不借助第三变量，转换俩数值，a = a + b;//8        b = a - b;//3            a = a - b;//5</p>
+<p><strong>redis故障转移过程</strong>：1.检查从节点成为主节点的资格    2.准备选举时间，断线时间越短，丢失数据越少，优先获取选举资格    3.选举投票：主节点获取资格，向其他从节点发起请求，然后替换成主节点    4.替换主节点，投票成功后，向全体从节点广播pong消息，表示已替换主节点。</p>
+<p>一台机器最多能使用的端口也只有65535个，1024以下是系统保留的，从1024-65535是用户使用的，但是一台机器最多只能利用<strong>28232</strong>个端口。</p>
+<p>0-4先扩大五倍，变成0，5，10，15，20，随机产生0-20区间数字，即大于20重新生成，结果对3求商即可。</p>
+<p><strong>可重入锁</strong>毕竟是API这个级别的，后续的性能优化空间很小。synchronized则是JVM直接支持的，JVM能够在运行时作出相应的优化措施：锁粗化、锁消除、锁自旋等等。这就使得synchronized能够随着JDK版本的升级而不改动代码的前提下获得性能上的提升。</p>
+<p><strong>泛型</strong>，指定集合内元素的类型，也就是说，在编译阶段使用泛型，运行阶段取消泛型，即泛型擦除。 擦除是将泛型类型以其父类代替，如String 变成了Object等。其实在使用的时候还是进行带强制类型的转化，只不过这是比较安全的转换，因为在编译阶段已经确保了数据的一致性。</p>
+<p>当我们使用<strong>shutdownNow方法</strong>关闭线程池时，一定要对任务里进行异常捕获。当我们使用<strong>shuwdown方法</strong>关闭线程池时，一定要确保任务里不会有永久阻塞等待的逻辑，否则线程池就关闭不了。最后，一定要记得，shutdownNow和shuwdown调用完，线程池并不是立马就关闭了，要想等待线程池关闭，还需调用awaitTermination方法来阻塞等待。</p>
+<p>AOF文件太大解决方案：<strong>AOF重写</strong>方案，随着AOF文件越来越大，里面会有大部分是重复命令或者可以合并的命令，redis主进程fork一个子进程，子进程根据当前内存的数据，构建一个新的日志，写入一个新的AOF文件中。</p>
+<p><strong>linux查看文件中的某几行</strong>，用head&amp;tail命令，使用 ls -l 可以查看一个目录下文件的详细的相关信息，ls -a 查看当前目录下的所有文件        <strong>tail -n 10 log</strong>查看日志尾部后10行，<strong>tail -n +10 log</strong>查看日志10行之后所有的<strong>head -n 10 log</strong>查看日志首部前10行    <strong>head -n -10 log</strong>查看日志除了最后10行所有的    如何查看系统的启动时间    <strong>uptime</strong></p>
+<p>一个<strong>数组</strong>既可以存放基本类型值（如int,char,…)，也可以存放对象的引用（比如指针）。</p>
+<p>事实上现在都用虚拟内存的方式，把程序分段加载到虚拟内存中，再把内存分页，通过段表、页表的形式来映射程序在内存中的位置。</p>
+<p><strong>IOC容器加载过程：</strong>1.刷新容器，进行预处理。2.将配置信息解析，注册到BeanFactory。3.设置bean的类加载器4.bean加载注册完成后，初始化前可以做些一些操作，例如修改bean的scope为单例或者多例。5.初始化当前 ApplicationContext 的事件广播器。6.初始化所有的bean。 7.广播applicationcontext初始化完成。</p>
+<p><strong>Collections.shuffle（）</strong>：随机打乱数组中元素的顺序.</p>
+<p>从根节点到任意节点最多经历2lg(n+1)步，因此红黑树的时间复杂度为O(lgn).</p>
+<p>*<em>为什么用SpringMVC： *</em> springmvc作为spring的一部分，spring可提供一些功能，清晰的角色分配，dispatcherServlet,handlerMapping,HandlerAdapter,ViewResolver</p>
+<p><strong>linux是怎么创建进程和线程的：</strong>fork()是将父进程的全部资源复制给了子进程。而线程的clone()只是复制了一小部分必要的资源。</p>
+<p><strong>GBK编码</strong>：是指中国的中文字符，<strong>UTF-8编码</strong>：它是一种全国家通过的一种编码</p>
+<p><strong>孤儿进程：</strong>一个父进程退出，而它的一个或多个子进程还在运行，那么那些子进程将成为孤儿进程。<strong>僵尸进程：</strong>一个进程使用fork创建子进程，如果子进程退出，而父进程并没有调用wait或waitpid获取子进程的状态信息，那么子进程的进程描述符仍然保存在系统中。这种进程称之为僵死进程。</p>
+<p>利用<strong>select * for update</strong> 可以锁表/锁行。自然锁表的压力远大于锁行。所以我们采用锁行。当没有明确指定的时候锁表。</p>
+<p>线程虽然有自己的堆栈和局部变量，但线程没有单独的地址空间，<strong>一个线程死掉就等于整个进程死掉</strong></p>
+<p>已知有100个元素，那么<strong>hashmap默认容量</strong>应该是多少？100/0.75=134 所以取2的指数幂256。    </p>
+<p>我们的InnoDB存储引擎也有自己的最小储存单元——<strong>页（Page）</strong>，一个页的大小是16K。</p>
+<p><strong>Mybatis缓存：</strong>一级缓存是<strong>SqlSession级别</strong>的缓存。在操作数据库时需要构造 sqlSession对象，在对象中有一个(内存区域)数据结构（HashMap）用于存储缓存数据。    二级缓存：<strong>mapper级别的缓存</strong>，多个SqlSession去操作同一个Mapper的sql语句，多个SqlSession去操作数据库得到数据会存在二级缓存区域，多个SqlSession可以共用二级缓存，二级缓存是多个SqlSession共享的。</p>
+<p><strong>TCP的序号</strong>是：当前所携带的数据的第一个字节的顺序号（如：已发出了100个字节，现在发送下一个报文，假设每个报文携带的数据为100字节，则这个报文的头结构中的序号是100【注：<a href="https://www.baidu.com/s?wd=从0开始&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao" target="_blank" rel="noopener">从0开始</a>编号】）。以便于接收方能按顺序接受数据，提供了数据可靠性。<br><strong>确认序号</strong>是：接收端期望接收的下一个报文的序号，如上例中那个报文已被正确接收，则接收端会发送一个ACK=1且确认序号=200的应答报文给发送方。</p>
+<p><strong>虚拟内存的大小有什么来决定：</strong>由CPU的寻址能力和你虚拟内存页面文件所在盘符的硬盘剩余空间决定的．比如说，32位的CPU最多支持到2G的内存，应该是虚拟内存也是这么大．如果页面文件放在D盘，剩余空间是200M，那么也就是200M</p>
+<p><strong>count++不是原子操作</strong>，是3个原子操作组合    1.读取主存中的count值，赋值给一个局部成员变量tmp    2.tmp+1    3.将tmp赋值给count</p>
+<p><strong>信号量机制：</strong>即P(sv)和V(sv)（1）P(sv)：如果sv的值大于零，就给它减1；如果它的值为零，就挂起该进程的执行（2）V(sv)：如果有其他进程因等待sv而被挂起，就让它恢复运行，如果没有进程因等待sv而挂起，就给它加1.</p>
+<p><strong>SQL第二大薪水</strong>：1.select <strong>max(salary)</strong> as SecondHighestSalary   from Employee where salary not in (select max(salary) from Employee);                    2.SELECT    (SELECT DISTINCT   Salary    FROM    Employee    ORDER BY Salary DESC    LIMIT 1 OFFSET 1) AS SecondHighestSalary    使用临时表能解决null值问题as SecondHighestSalary</p>
+<p>1.<strong>重写</strong>必须继承，<strong>重载</strong>不用。2.重写的方法名，参数数目相同，参数类型兼容，重载的方法名相同，参数列表不同    3.<strong>重写</strong>的方法修饰符大于等于父类的方法，重载和修饰符无关。4.重写不可以抛出父类没有抛出的一般异常，可以抛出运行时异常</p>
+<p><strong>HashMap初始化的四种构造方法</strong>：1.HashMap()，使用默认初始容量16与默认负载因子0.75构造一个空的HashMap。    2.HashMap(int initialCapacity)，传入初始容量，使用默认负载因子        3.HashMap(int initialCapacity, float loadFactor)，传入初始容量和负载因子    4.根据已有的Map接口创建一个元素相同的HashMap</p>
+<p><strong>Spring的设计模式</strong>：工厂模式IOC，代理设计模式AOP，单例模式Sington，观察者模式，适配器模式，模板设计模式jdbcTemplate</p>
+<p><strong>最左前缀匹配原则</strong>，非常重要的原则，mysql会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like)就停止匹配，比如a = 1 and b = 2 and c &gt; 3 and d = 4  如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整。group by，order by 多个字段会用到多个字段的<strong>联合索引</strong>                     </p>
+<p>自己写一个<strong>java.lang.String</strong>在编译期的时候不会报错，但是运行期由于类加载机制，是会报错的，因为类加载器的双亲委派机制和沙箱安全机制，所以自己写的String类不会被加载到内存中，这时调用自己写的String会报错，找不到该方法由于类加载器的双亲委派机制        </p>
+<p><strong>Redis数据类型</strong>：String 类型的值最大能存储 512MB。</p>
+<p><strong>长连接是如何实现的：</strong>发送请求时会携带一个Connection： keep-alive参数，俩端看到该参数就不会关闭连接。</p>
+<p><strong>Memcache与Redis的区别都有哪些？</strong>1.Memecache把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小。 Redis有部份存在硬盘上，redis可以持久化其数据。            2.memcached所有的值均是简单的字符串，redis支持更为丰富的数据类型 ，提供list，set，zset，hash等数据结构的存储        3.value 值大小不同：Redis 最大可以达到 <strong>512M</strong>；memcache 只有 <strong>1mb</strong>。            4.redis的速度比memcached快很多<br>5.Redis支持数据的备份，即master-slave模式的数据备份。</p>
+<p><strong>TreeSet</strong>是自动排好序的，底层二叉树，<strong>HashSet</strong>无序，<strong>TreeMap</strong>默认按照keys的自然排序排列，底层红黑树。</p>
+<p>select * from student order by subject desc limit 10;</p>
+<p><strong>Spring Boot</strong>缺点：Spring Boot封装层数过多导致的性能问题。    Spring Boot优点：简化配置，简化部署，可以和spring很好结合起来使用。</p>
+<p>重载方法的选择是<strong>静态分派</strong>：依据<strong>参数的静态类型</strong>来判断使用哪个重载方法，而对于重写方法的选择则是<strong>动态分配</strong>：在<strong>运行时</strong>根据实际类型确定方法执行版本</p>
+<p>守护线程应该永远不去访问固有资源，如文件，数据库，因为他会在任何时刻甚至是一个操作的中间发生中断。</p>
+<p>数据库自增id,<strong>当id值大于MAXINT时</strong>，数据库会发生溢出错误，用bigint代替。</p>
+<p>当索引是很长的字符序列时，这个索引将会很占内存，而且会很慢，这时候就会用到<strong>前缀索引</strong>了。所谓的前缀索引就是去索引的前面几个字母作为索引，但是要降低索引的重复率，索引我们还必须要判断前缀索引的重复率。</p>
+<p><strong>Arraylist</strong>扩容为什么要复制一个，不直接复制，因为array具有连续性，要保证连续性才行。<strong>Linkedlist</strong>,如果用get到某一个索引，不是一定非要从头开始遍历，如果在中间位置靠后，是可以从后遍历的。</p>
 
       
     </div>
@@ -316,7 +360,7 @@
         <p><span>本文标题:</span><a href="/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/">面经知识点概述总结！</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
         <p><span>发布时间:</span>2020-02-05, 21:24:05</p>
-        <p><span>最后更新:</span>2020-02-28, 14:33:28</p>
+        <p><span>最后更新:</span>2020-04-28, 13:02:01</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/" title="面经知识点概述总结！">http://yoursite.com/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/05/%E9%9D%A2%E7%BB%8F%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
