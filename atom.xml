@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-09-17T02:10:42.175Z</updated>
+  <updated>2020-09-17T08:57:57.561Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="http://yoursite.com/2020/09/17/Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81/"/>
     <id>http://yoursite.com/2020/09/17/Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81/</id>
     <published>2020-09-17T01:44:57.000Z</published>
-    <updated>2020-09-17T02:10:42.175Z</updated>
+    <updated>2020-09-17T08:57:57.561Z</updated>
     
-    <content type="html"><![CDATA[<p>引言：部门最近接收了一个新的大型项目的需求，该项目大量地方使用到了Spring Cloud技术，老大为了让我们在新需求正式开工之前学会使用Spring Cloud技术，要求我们每天写一篇关于该技术各个组件的学习记录，而我同时也会写入到我的博客中，大家一起学习！</p>]]></content>
+    <content type="html"><![CDATA[<p>引言：部门最近接收了一个新的大型项目的需求，该项目大量地方使用到了Spring Cloud技术，老大为了让我们在新需求正式开工之前学会使用Spring Cloud技术，要求我们每天写一篇关于该技术各个组件的学习记录，而我同时也会写入到我的博客中，大家一起学习！</p><h3 id="先大致了解一下什么是Spring-Cloud"><a href="#先大致了解一下什么是Spring-Cloud" class="headerlink" title="先大致了解一下什么是Spring Cloud?"></a>先大致了解一下什么是Spring Cloud?</h3><p>官方：Spring Cloud 为最常见的分布式系统模式提供了一种简单且易于接受的编程模型，帮助开发人员构建有弹性的、可靠的、协调的应用程序。Spring Cloud 构建于 Spring Boot 之上，使得开发者很容易入手并快速应用于生产中。</p><p>通俗理解： <code>Spring Cloud</code> 就是微服务系统架构的一站式解决方案，在平时我们构建微服务的过程中需要做如 <strong>服务发现注册</strong> 、<strong>配置中心</strong> 、<strong>消息总线</strong> 、<strong>负载均衡</strong> 、<strong>断路器</strong> 、<strong>数据监控</strong> 等操作，而 Spring Cloud 为我们提供了一套简易的编程模型，使我们能在 Spring Boot 的基础上轻松地实现微服务项目的构建。</p><h4 id="Spirng-Cloud的服务发现框架——Eureka"><a href="#Spirng-Cloud的服务发现框架——Eureka" class="headerlink" title="Spirng Cloud的服务发现框架——Eureka"></a>Spirng Cloud的服务发现框架——Eureka</h4><p>官方：<code>Eureka</code>是基于<code>REST</code>（代表性状态转移）的服务，主要在 <code>AWS</code> 云中用于定位服务，以实现负载均衡和中间层服务器的故障转移。我们称此服务为<code>Eureka</code>服务器。Eureka还带有一个基于 <code>Java</code> 的客户端组件 <code>Eureka Client</code>，它使与服务的交互变得更加容易。客户端还具有一个内置的负载平衡器，可以执行基本的循环负载平衡。在 <code>Netflix</code>，更复杂的负载均衡器将 <code>Eureka</code> 包装起来，以基于流量，资源使用，错误条件等多种因素提供加权负载均衡，以提供出色的弹性。</p><p>通俗理解：Eureka就是一个服务发现框架。一方提供服务，另一方调用服务，我们可以把它当成一个<strong>服务中介</strong>。提供者只需要发布自己的服务到Eureka，不需要去寻找需要自己服务的消费者，而消费者同样也只需要去Eureka中取出自己需要的服务，而不去管服务的发布者是谁。Eureka内部已经集成了一些关于服务的功能!</p><p><strong>服务注册Register:</strong>当 <code>Eureka</code> 客户端向 <code>Eureka Server</code> 注册时，它提供自身的<strong>元数据</strong>，比如IP地址、端口，运行状况指示符URL，主页等。</p><p><strong>服务续约Renew:</strong>Eureka客户会每隔30秒(默认情况下)发送一次心跳来续约。 通过续约来告知 <code>Eureka Server</code> 该 <code>Eureka</code> 客户仍然存在，没有出现问题。 正常情况下，如果 <code>Eureka Server</code> 在90秒没有收到 <code>Eureka</code> 客户的续约，它会将实例从其注册表中删除。</p><p><strong>获取注册列表信息Fetch Registries:</strong><code>Eureka</code> 客户端从服务器获取注册表信息，并将其缓存在本地。客户端会使用该信息查找其他服务，从而进行远程调用。该注册列表信息定期（每30秒钟）更新一次。每次返回注册列表信息可能与 <code>Eureka</code> 客户端的缓存信息不同, <code>Eureka</code> 客户端自动处理。如果由于某种原因导致注册列表信息不能及时匹配，<code>Eureka</code> 客户端则会重新获取整个注册表信息。 <code>Eureka</code> 服务器缓存注册列表信息，整个注册表以及每个应用程序的信息进行了压缩，压缩内容和没有压缩的内容完全相同。<code>Eureka</code> 客户端和 <code>Eureka</code> 服务器可以使用JSON / XML格式进行通讯。(通俗来讲就是服务消费者会先去Eureka中获取所有的服务缓存带本地，并会定期向Eureka中进行数据更新)</p><p><strong>服务下线Cancel：</strong>Eureka客户端在程序关闭时向Eureka服务器发送取消请求。 <strong>发送请求后，该客户端实例信息将从服务器的实例注册表中删除。</strong>该下线请求不会自动完成，它需要调用以下内容：<code>DiscoveryManager.getInstance().shutdownComponent();</code></p><p><strong>服务剔除 Eviction：</strong>官方解释：在默认的情况下，<strong>当Eureka客户端连续90秒(3个续约周期)没有向Eureka服务器发送服务续约，即心跳，Eureka服务器会将该服务实例从服务注册列表删除</strong>，即服务剔除。</p><p><strong>Eureka与Zookeeper进行对比：</strong>Eureka:符合AP原则，为了保证可用性，Eureka不会等待集群所有节点都已同步信息完成，他会无时无刻提供服务。    Zookeeper:符合CP原则 为了保证一致性，在所有节点同步之前都是阻塞状态的。</p><p><strong>Eureka的自我保护机制：</strong>何为自我保护？ 假想一下，当一个 <code>server</code> 节点出现了网络分区等不可抗力原因，那么它会因此收不到 <code>client</code> 的续约心跳，如果网络波动比较大，也就可能导致 <code>server</code> 因为一次网络波动剔除了所有或者绝大部分 <code>Client</code> 。这种情况是我们不想看见的。所以 <code>Eureka</code> 会有一种自我保护机制，<strong>默认是15分钟内收到的续约低于原来的85%(这是上面的续约配置比例)那么就会开启 自我保护 。这阶段 <code>Eureka Server</code> 不会剔除其列表中的实例，即使过了 90秒 也不会。</strong></p>]]></content>
     
     <summary type="html">
     
