@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-02-22T02:47:23.884Z</updated>
+  <updated>2020-09-17T02:10:42.175Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Sping Cloud生态的各个组件！</title>
+    <link href="http://yoursite.com/2020/09/17/Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81/"/>
+    <id>http://yoursite.com/2020/09/17/Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81/</id>
+    <published>2020-09-17T01:44:57.000Z</published>
+    <updated>2020-09-17T02:10:42.175Z</updated>
+    
+    <content type="html"><![CDATA[<p>引言：部门最近接收了一个新的大型项目的需求，该项目大量地方使用到了Spring Cloud技术，老大为了让我们在新需求正式开工之前学会使用Spring Cloud技术，要求我们每天写一篇关于该技术各个组件的学习记录，而我同时也会写入到我的博客中，大家一起学习！</p>]]></content>
+    
+    <summary type="html">
+    
+      关于Spring Cloud组件的一些学习内容
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>动态代理JDK和cglib</title>
@@ -97,7 +116,7 @@
     <link href="http://yoursite.com/2020/02/10/String-StringBuffer-StringBuilder/"/>
     <id>http://yoursite.com/2020/02/10/String-StringBuffer-StringBuilder/</id>
     <published>2020-02-10T15:12:20.000Z</published>
-    <updated>2020-02-11T12:03:05.498Z</updated>
+    <updated>2020-07-13T13:15:28.957Z</updated>
     
     <content type="html"><![CDATA[<p>首先我们知道String 是被声明为 final class，是不可变字符串。因为它的不可变性，所以拼接字符串时候会产生很多无用的中间对象，如果频繁的进行这样的操作对性能有所影响。</p><p>所以StringBuffer  StringBuilder就出现了。</p><p>StringBuffer、StringBuilder、String 中都实现了 CharSequence 接口。CharSequence 是一个定义字符串操作的接口，它只包括 length()、charAt(int index)、subSequence(int start, int end) 这几个 API。</p><p>String是直接实现<strong>CharSequence</strong> 接口的，而StringBuffer、StringBuilder不一样，他们是先都继承了同一个类<strong>AbstractStringBuilder</strong>再实现了<strong>Serializable</strong>序列化接口，<strong>CharSequence</strong>接口以及<strong>Appendabe</strong>接口。</p><p>StringBuilder通过length()和capacity()来获取对应的总容量和已经使用的容量，初始容量为16个字符，如果使用append()方法在字符串后面追加东西的时候，会调用<strong>ensureCapacityInternal</strong> 这个方法判断是否需要扩容，需要就调用<strong>newCapacity</strong>方法进行扩容：<strong>构建新的存储空间更大的字符串，将旧的复制过去</strong>，<strong>扩容大小2倍+2</strong> 。</p><p>StringBuffer也是继承AbstractStringBuilder的，只是其在重写父类的方法的时候加上了synchronized关键字，使得StringBuffer的方法变成了线程安全的方法。通俗讲就是加了锁的StringBuilder，速度当然会降下来。</p>]]></content>
     
@@ -370,25 +389,6 @@
     <summary type="html">
     
       Git的add,push,commit
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>BIO,NIO,AIO</title>
-    <link href="http://yoursite.com/2020/01/31/BIO-NIO-AIO/"/>
-    <id>http://yoursite.com/2020/01/31/BIO-NIO-AIO/</id>
-    <published>2020-01-31T05:50:18.000Z</published>
-    <updated>2020-03-25T02:42:55.828Z</updated>
-    
-    <content type="html"><![CDATA[<p>1.同步：使用同步IO时，Java自己处理IO读写。</p><p>2.异步：使用异步IO时，Java将IO读写委托给OS处理，需要将数据缓冲区地址和大小传给OS，完成后OS通知Java处理（回调）。</p><p>3.阻塞：使用阻塞IO时，Java调用会一直阻塞到读写完成才返回。</p><p>4.非阻塞：使用非阻塞IO时，如果不能立马读写，Java调用会马上返回，当IO事件分发器通知可读写时在进行读写，不断循环直到读写完成。</p><p>下面是重点了（敲黑板！）！</p><p>1.BIO：<strong>同步并阻塞</strong>，服务器的实现模式是<strong>一个请求一个线程</strong>，即客户端有连接请求时服务器端就需要启动一个线程进行处理，可能造成不必要的线程开销，当然，这种情况可以通过线程池机制改善，但并不能从本质上消除这个弊端。</p><p>2.NIO：在JDK1.4以前，Java的IO模型一直是BIO，但从JDK1.4开始，JDK引入的新的IO模型NIO，它是<strong>同步非阻塞</strong>的。而服务器的实现模式是<strong>多个请求一个线程</strong>，即请求会注册到多路复用器Selector上，<strong>多路复用器</strong>轮询到连接有IO请求时才启动一个线程处理。    </p><p>3.AIO：JDK1.7发布了NIO2.0，这就是真正意义上的<strong>异步非阻塞</strong>，服务器的实现模式为<strong>多个有效请求一个线程</strong>，客户端的IO请求<strong>都是由OS先完成再通知</strong>服务器应用去启动线程处理（回调）。</p><p>应用场景：并发连接数不多时采用BIO，因为它编程和调试都非常简单，但如果涉及到高并发的情况，应选择NIO（连接数目多且连接比较短）或AIO（连接数目多且连接比较长），更好的建议是采用成熟的网络通信框架Netty。</p>]]></content>
-    
-    <summary type="html">
-    
-      Java中BIO、NIO和AIO的区别和应用场景
     
     </summary>
     

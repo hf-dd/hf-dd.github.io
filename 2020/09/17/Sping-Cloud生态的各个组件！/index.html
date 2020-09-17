@@ -15,14 +15,14 @@
 
 
 
-<meta name="description" content="这篇讲解O(1)、O(n)、O(n^2)、O(log n)、O(n log n)到底是个什么意思">
+<meta name="description" content="关于Spring Cloud组件的一些学习内容">
 <meta property="og:type" content="article">
-<meta property="og:title" content="时间复杂度常见讲解">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;04&#x2F;%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3&#x2F;index.html">
+<meta property="og:title" content="Sping Cloud生态的各个组件！">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;09&#x2F;17&#x2F;Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81&#x2F;index.html">
 <meta property="og:site_name" content="HF Blog">
-<meta property="og:description" content="这篇讲解O(1)、O(n)、O(n^2)、O(log n)、O(n log n)到底是个什么意思">
+<meta property="og:description" content="关于Spring Cloud组件的一些学习内容">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-02-21T06:51:50.488Z">
+<meta property="og:updated_time" content="2020-09-17T02:10:42.175Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -55,7 +55,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>时间复杂度常见讲解 | HF Blog</title>
+<title>Sping Cloud生态的各个组件！ | HF Blog</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -213,11 +213,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-时间复杂度常见讲解" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Sping-Cloud生态的各个组件！" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/" class="article-date">
-      <time datetime="2019-12-04T05:59:02.000Z" itemprop="datePublished">2019-12-04</time>
+      <a href="/2020/09/17/Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81/" class="article-date">
+      <time datetime="2020-09-17T01:44:57.000Z" itemprop="datePublished">2020-09-17</time>
 </a>
 
 
@@ -232,7 +232,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      时间复杂度常见讲解
+      Sping Cloud生态的各个组件！
     </h1>
   
 
@@ -249,19 +249,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>什么是时间复杂度？通俗讲就是算法运行的时间，官方定义为：</p>
-<p>若存在函数 f（n），使得当n趋近于无穷大时，T（n）/ f（n）的极限值为不等于零的常数，则称 f（n）是T（n）的同数量级函数。<strong>语句总的执行次数T(n)，f(n)是问题规模为n的某个函数。</strong></p>
-<p>记作 T（n）= O（f（n）），称O（f（n）） 为算法的渐进时间复杂度，简称时间复杂度。</p>
-<h2 id="O-1"><a href="#O-1" class="headerlink" title="O(1)"></a>O(1)</h2><p>O(1)就是最低的时空复杂度了，也就是耗时/耗空间与输入数据大小无关，无论输入数据增大多少倍，耗时/耗空间都不变。 哈希算法就是典型的O(1)时间复杂度，无论数据规模多大，都可以在一次计算后找到目标（不考虑冲突的话），<strong>冲突的话很麻烦的，指向的value会做二次hash到另外一快存储区域。</strong></p>
-<p>例子：比如你面前有十个盒子，分别标着1-10号数字，你要找哪个数字直接就可以看到找出，不用一个一个都看一遍。那如果是N个盒子呢？同理，直接找你要的数字就可以了，所以耗时永远不变，为1.</p>
-<h2 id="O-n"><a href="#O-n" class="headerlink" title="O(n)"></a>O(n)</h2><p>时间复杂度为O(n)，就代表数据量增大几倍，耗时也增大几倍。</p>
-<p>例子：遍历算法，要找到一个数组里面最大的一个数，你需要把n个变量都扫描一遍，操作次数为n，那么算法复杂度就是O(n).</p>
-<h2 id="O（n-2）"><a href="#O（n-2）" class="headerlink" title="O（n^2）"></a>O（n^2）</h2><p>时间复杂度O(n^2)，就代表数据量增大n倍时，耗时增大n的平方倍，这是比O(n)更高的时间复杂度</p>
-<p>例子：冒泡排序，双重循环，用冒泡排序排一个数组，对于n个变量的数组，需要交换变量位置O(n^2)次，那么算法复杂度就是O(n^2)。</p>
-<h2 id="O-log-n"><a href="#O-log-n" class="headerlink" title="O(log n)"></a>O(log n)</h2><p>O(log n)，当数据增大n倍时，耗时增大log n倍（这里的log是以2为底的，比如，当数据增大256倍时，耗时只增大8倍，是比O(n)还要低的时间复杂度）</p>
-<p>例子：二分查找就是O(log n)的算法，每找一次排除一半的可能，256个数据中查找只要找8次就可以找到目标。 </p>
-<h2 id="O-n-log-n"><a href="#O-n-log-n" class="headerlink" title="O(n log n)"></a>O(n log n)</h2><p>O(n log n)同理，就是n乘以log n，当数据增大256倍时，耗时增大256*8=2048倍。这个复杂度高于O(n)低于O(n^2)。</p>
-<p>例子：归并排序，两个顺序序列合并成一个顺序序列，就是O(n log n)的时间复杂度。</p>
+        <p>引言：部门最近接收了一个新的大型项目的需求，该项目大量地方使用到了Spring Cloud技术，老大为了让我们在新需求正式开工之前学会使用Spring Cloud技术，要求我们每天写一篇关于该技术各个组件的学习记录，而我同时也会写入到我的博客中，大家一起学习！</p>
 
       
     </div>
@@ -270,13 +258,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/">时间复杂度常见讲解</a></p>
+        <p><span>本文标题:</span><a href="/2020/09/17/Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81/">Sping Cloud生态的各个组件！</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
-        <p><span>发布时间:</span>2019-12-04, 13:59:02</p>
-        <p><span>最后更新:</span>2020-02-21, 14:51:50</p>
+        <p><span>发布时间:</span>2020-09-17, 09:44:57</p>
+        <p><span>最后更新:</span>2020-09-17, 10:10:42</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/" title="时间复杂度常见讲解">http://yoursite.com/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/12/04/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B8%B8%E8%A7%81%E8%AE%B2%E8%A7%A3/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2020/09/17/Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81/" title="Sping Cloud生态的各个组件！">http://yoursite.com/2020/09/17/Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/09/17/Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -288,16 +276,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2019/12/07/JDK-JRE-JVM%E7%9A%84%E5%85%B3%E7%B3%BB/">
-                    JDK,JRE,JVM的关系
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/12/04/%E5%8F%AF%E7%88%B1%E5%8F%88%E6%98%93%E6%87%82%E7%9A%84%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/">
-                    可爱又易懂的贪心算法
+                <a href="/2020/02/21/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86JDK%E5%92%8Ccglib/">
+                    动态代理JDK和cglib
                 </a>
             </div>
         
@@ -309,7 +291,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#O-1"><span class="toc-number">1.</span> <span class="toc-text">O(1)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#O-n"><span class="toc-number">2.</span> <span class="toc-text">O(n)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#O（n-2）"><span class="toc-number">3.</span> <span class="toc-text">O（n^2）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#O-log-n"><span class="toc-number">4.</span> <span class="toc-text">O(log n)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#O-n-log-n"><span class="toc-number">5.</span> <span class="toc-text">O(n log n)</span></a></li></ol>
+            
         
     </div>
     <style>
@@ -345,7 +327,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"时间复杂度常见讲解　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Sping Cloud生态的各个组件！　| HF Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -365,15 +347,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/12/07/JDK-JRE-JVM%E7%9A%84%E5%85%B3%E7%B3%BB/" title="上一篇: JDK,JRE,JVM的关系">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/12/04/%E5%8F%AF%E7%88%B1%E5%8F%88%E6%98%93%E6%87%82%E7%9A%84%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" title="下一篇: 可爱又易懂的贪心算法">
+            <a href="/2020/02/21/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86JDK%E5%92%8Ccglib/" title="下一篇: 动态代理JDK和cglib">
                 <i class="fa fa-angle-right"></i>
             </a>
         
