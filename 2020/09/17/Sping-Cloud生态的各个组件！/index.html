@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="HF Blog">
 <meta property="og:description" content="关于Spring Cloud组件的一些学习内容">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-09-17T09:08:30.659Z">
+<meta property="og:updated_time" content="2020-09-26T02:17:10.505Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -261,6 +261,70 @@
 <p><strong>服务剔除 Eviction：</strong>官方解释：在默认的情况下，<strong>当Eureka客户端连续90秒(3个续约周期)没有向Eureka服务器发送服务续约，即心跳，Eureka服务器会将该服务实例从服务注册列表删除</strong>，即服务剔除。</p>
 <p><strong>Eureka与Zookeeper进行对比：</strong>Eureka:符合AP原则，为了保证可用性，Eureka不会等待集群所有节点都已同步信息完成，他会无时无刻提供服务。    Zookeeper:符合CP原则 为了保证一致性，在所有节点同步之前都是阻塞状态的。</p>
 <p><strong>Eureka的自我保护机制：</strong>何为自我保护？ 假想一下，当一个 <code>server</code> 节点出现了网络分区等不可抗力原因，那么它会因此收不到 <code>client</code> 的续约心跳，如果网络波动比较大，也就可能导致 <code>server</code> 因为一次网络波动剔除了所有或者绝大部分 <code>Client</code> 。这种情况是我们不想看见的。所以 <code>Eureka</code> 会有一种自我保护机制，<strong>默认是15分钟内收到的续约低于原来的85%(这是上面的续约配置比例)那么就会开启 自我保护 。这阶段 <code>Eureka Server</code> 不会剔除其列表中的实例，即使过了 90秒 也不会。</strong></p>
+<h3 id="Hystrix原理与实战-自我理解"><a href="#Hystrix原理与实战-自我理解" class="headerlink" title="Hystrix原理与实战+自我理解"></a>Hystrix原理与实战+自我理解</h3><p>Hystrix的概念：中文含义是豪猪，因其背上长满棘刺，从而拥有了自我保护的能力，是Netflix开源的一款容错框架。<br><strong>设计背景</strong>：在当前大多都是分布式系统环境下，服务之间的依赖非常繁多，一个服务通常会调用多个服务，而如果一个<br>服务出现了错误，可能会导致所有的服务都瘫痪，而Hystrix就是为了解决这种情况而产生的组件。</p>
+<p>说到了服务调用有可能会出现错误，那么具体有哪些实例呢？我们可以来想一想：服务器宕机，缓存穿透(某一时间缓存大量失效，同时击中数据库造成瘫痪)，<br>内存泄漏，JVM长时间FullGC一直等待，或者最普通的Bug等等都是会造成这一系列的服务调用错误，说明这是很常见的一种情况，同时也能体现出Hystrix的重要性。</p>
+<p>从产生背景中可以看出，Hystrix最主要的能力便是容错能力，但了解一个组件的工作流程是必不可少的。根据官方的流程图我们可以一步一步走下去：<br>1.构造一个 HystrixCommand或HystrixObservableCommand对象，用于封装请求，并在构造方法配置请求被执行需要的参数;<br>2.执行命令，Hystrix提供了4种执行命令的方法{execute():以同步堵塞方式执行run(),queue():以异步非阻塞方式执行run(),observe():事件注册前执行run()/construct()，<br>支持接收多个值对象,toObservable():事件注册后执行run()/construct()，支持接收多个值对象};<br>3.判断是否使用缓存响应请求，若启用了缓存，且缓存可用，直接使用缓存响应请求。Hystrix支持请求缓存，但需要用户自定义启动;<br>4.判断熔断器是否打开，如果打开，跳到第8步;<br>5.判断线程池/队列/信号量是否已满，已满则跳到第8步;<br>6.执行HystrixObservableCommand.construct()或HystrixCommand.run()，如果执行失败或者超时，跳到第8步；否则，跳到第9步;<br>7.统计熔断器监控指标;<br>8.走Fallback备用逻辑;<br>9.返回请求响应;</p>
+<p><strong>Hystrix的特性（容错能力）：</strong><br>1.当Hystrix Command请求后端服务失败数量超过一定比例(默认50%), 断路器会切换到开路状态(Open). 这时所有请求会直接失败而不会发送到后端服务.<br>断路器保持在开路状态一段时间后(默认5秒), 自动切换到半开路状态(HALF-OPEN).这时会判断下一次请求的返回情况, 如果请求成功, 断路器切回闭路状态(CLOSED), 否则重新切换到开路状态(OPEN).<br>就类似与家里电线的保险丝一样，一旦请求太多造成温度太高就会烧断保险丝，防止太多的请求继续走下去，造成更大的危害。<br>2.服务降级就很好理解了，我们单独写一个Fallback方法，等到服务出现异常的时候，自动调用Fallback方法，返回该方法的值，告诉后面的不用再请求了，已经出问题啦。<br>3.依赖隔离(采用舱壁模式，Docker就是舱壁模式的一种)，说白了就是一个服务调用A B两个服务，如果这时我有100个线程可用，我给A服务分配50个，给B服务分配50个，这样就算A服务挂了，我的B服务依然可以用。<br>4.请求缓存很好理解，同样的请求走缓存，不走新的<br>5.请求合并：我依赖于某一个服务，我要调用N次，比如说查数据库的时候，我发了N条请求发了N条SQL然后拿到一堆结果，这时候我们可以把多个请求合并成一个请求，发送一个查询多条数据的SQL的请求，这样我们只需查询一次数据库，提升了效率。</p>
+<p>实战演练：1.manven先导入包<br>        <dependency><br>            <groupId>org.springframework.cloud</groupId><br>            <artifactId>spring-cloud-starter-hystrix</artifactId><br>            <version>1.4.0.RELEASE</version><br>        </dependency><br>        <dependency><br>            <groupId>org.springframework.cloud</groupId><br>            <artifactId>spring-cloud-starter-hystrix-dashboard</artifactId><br>            <version>1.4.0.RELEASE</version><br>        </dependency></p>
+<pre><code>    2.写一个启动类，并允许断路器的使用
+    @SpringBootApplication
+    @EnableDiscoveryClient
+    //允许断路器，关键的就是下面这个注解
+    @EnableCircuitBreaker
+    public class RibbonApplication {
+        public static void main(String[] args) {
+    SpringApplication.run(RibbonApplication.class, args);
+    }
+
+    @Bean
+    public IRule ribbonRule(){
+        return new RandomRule();
+    }
+
+    @Bean
+    @LoadBalanced        //负载均衡，使用Ribbon模板
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
+    }
+}
+    3.业务层写一个实例
+    @Service
+    public class HelloService {
+    @Autowired
+    private RestTemplate restTemplate;
+    //请求熔断注解，当服务出现问题时候会执行fallbackMetho属性的名为helloFallBack的方法
+    @HystrixCommand(fallbackMethod = &quot;helloFallBack&quot;)
+    public String helloService() throws ExecutionException, InterruptedException {
+        return restTemplate.getForEntity(&quot;http://HELLO-SERVICE/hello&quot;,String.class).getBody();
+　　}
+　　public String helloFallBack(){
+    　　return &quot;error&quot;;
+　　}
+}
+    4.注册俩个服务到Eureka注册中心，并且启动Ribbon模块，浏览器本地搜索可以出现轮询俩个服务的返回值，
+    如果我们突然将其中一个服务断开，你会发现，本地会输出error,也就是会走helloFallBack方法，不会走其他的服务了，
+    证明我们的服务降级啦。</code></pre><p>总结:Hystrix就是一个在分布式系统中的保护机制，防止因一个服务导致全部服务失效，是一个不可缺少的组件。</p>
+<h3 id="微服务之Ribbon原理-自我理解"><a href="#微服务之Ribbon原理-自我理解" class="headerlink" title="微服务之Ribbon原理+自我理解"></a>微服务之Ribbon原理+自我理解</h3><p><strong>Ribbon是什么？</strong>Ribbon是Netflix发布的云中间层服务开源项目，其主要功能是提供客户端实现负载均衡算法。<br>Ribbon客户端组件提供一系列完善的配置项如连接超时，重试等。简单的说，Ribbon是一个客户端负载均衡器，我们可以在配置文件中Load Balancer后面的所有机器，<br>Ribbon会自动的帮助你基于某种规则（如简单轮询，随机连接等）去连接这些机器，我们也很容易使用Ribbon实现自定义的负载均衡算法。 </p>
+<p><strong>那么Ribbon的工作流程是什么？</strong>根据官方的架构我们可以做一个简单的总结，Ribbon工作时大致分为两步：第一步选择Eureka Server，它优先选择在同一个Zone且负载较少的Server；<br>第二步再根据用户指定的策略，再从Server取到的服务注册列表中选择一个地址。其中Ribbon提供了很多策略，例如轮询round robin、随机Random、根据响应时间加权等。</p>
+<p>zuul也有负载均衡的功能，它是针对外部请求做负载，那客户端ribbon的负载均衡又是怎么一回事？客户端ribbon的负载均衡，解决的是服务发起方（在Eureka注册的服务）对被调用的服务的负载，<br>比如我们查询商品服务要调用显示库存和商品明细服务，通过商品服务的接口将两个服务组合，可以减少外部应用的请求，比如手机App发起一次请求即可，可以节省网络带宽，也更省电。<br>ribbon是对服务之间调用做负载，是服务之间的负载均衡，zuul是可以对外部请求做负载均衡。</p>
+<p><strong>Ribbon提供的主要负载均衡策略有哪些？</strong><br>1:简单轮询负载均衡（RoundRobin):以轮询的方式依次将请求调度不同的服务器，即每次调度执行i = (i + 1) mod n，并选出第i台服务器。<br>2:随机负载均衡 （Random): 随机选择状态为UP的Server    3:加权响应时间负载均衡 （WeightedResponseTime):根据相应时间分配一个weight，相应时间越长，weight越小，被选中的可能性越低。<br>4:区域感知轮询负载均衡（ZoneAvoidanceRule):复合判断server所在区域的性能和server的可用性选择serverRibbon自带负载均衡策略比较</p>
+<p>实战演练：1.manven先导入包<br> <dependency><br>   <groupId>org.springframework.cloud</groupId><br>   <artifactId>spring-cloud-starter-ribbon</artifactId><br></dependency><br>但是其实是不需要的加入这个依赖的，在spring-cloud-starter-eureka依赖中就已经包含了Ribbon Starter，也就是说Eureka中已经集合了Ribbon。所以一般我们只写下面这个依赖:<br><dependency><br><groupId>org.springframework.cloud</groupId><br><artifactId>spring-cloud-starter-eureka</artifactId><br></dependency><br>2.那么如何用Ribbon呢？其实就是一个关键注解@LoadBalanced，就可以实现负载均衡的功能啦。<br>@Bean<br>@LoadBalanced<br>  public RestTemplate restTemplate() {<br>  return new RestTemplate();<br>}<br>3.如何解决硬编码<br>使用添加@LoadBalanced注解后的RestTemplate调用服务提供者的接口时，可以使用虚拟IP替代真实IP地址。所谓的虚拟IP就是服务提供者在application.properties或yml文件中配置的spring.application.name属性的值。<br>    @GetMapping(“/movie/{id}”)<br>    public User findById(@PathVariable Long id) {<br>      return this.restTemplate.getForObject(“http://虚拟IP放在这里” + id, User.class);<br>    }<br>4.之后便可以运行，启动之后便可以登录Eureka注册中心进行查询。</p>
+<p>虽然Eureka中已经集合了Ribbon,但是如果有一些只针对某一特定服务的时候，用我们自定义的RibbonClient会有更多的奇效。所谓的自定义Ribbon Client的主要作用就是使用自定义配置替代Ribbon默认的负载均衡策略，<br>注意：自定义的Ribbon Client是有针对性的，一般一个自定义的Ribbon Client是对一个服务提供者(包括服务名相同的一系列副本)而言的。自定义了一个Ribbon Client 它所设定的负载均衡策略只对某一特定服务名的服务提供者有效，<br>但不能影响服务消费者与别的服务提供者通信所使用的策略。<br>代码示例：<br>    @Configuration<br>    public class TestConfiguration {<br>        @Autowired<br>        private IClientConfig config;<br>        @Bean<br>        public IRule ribbonRule(IClientConfig config) { // 自定义为随机规则<br>            return new RandomRule();<br>        }<br>    }<br>    //name表示服务提供者的服务名<br>    @RibbonClient(name = “microservice-provider-user”,configuration = TestConfiguration.class)</p>
+<p>另外一种方式则是:<br>@RibbonClient(name = “microservice-provider-user”,configuration = TestConfiguration1.class)<br>@ComponentScan(excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION,value = ExcludeFromComponentScan.class)})</p>
+<p>总结:Ribbon是一个用于负载均衡高效的组件，并且已经整合到了Eureka中，提供了便捷的使用方式，需要记忆的Ribbon是针对服务调用之间的负载，且可以自定义单独使用。</p>
+<h3 id="Spring-Cloud-Zuul网关的理解及使用"><a href="#Spring-Cloud-Zuul网关的理解及使用" class="headerlink" title="Spring Cloud Zuul网关的理解及使用"></a>Spring Cloud Zuul网关的理解及使用</h3><p><strong>首先什么是API网关？</strong><br>Zuul是Spring Cloud全家桶中的微服务API网关。网关： 是一个网络整体系统中的前置门户入口。请求首先通过网关，进行路径的路由，定位到具体的服务节点上。<br>所有从设备或网站来的请求都会经过Zuul到达后端的Netflix应用程序。作为一个边界性质的应用程序，Zuul提供了动态路由、监控、弹性负载和安全功能。</p>
+<p><strong>Zuul底层利用各种filter实现如下功能</strong>：<br>1.动态路由:动态地将客户端的请求路由到后端不同的服务，做一些逻辑处理，比如聚合多个服务的数据返回。<br>2.请求监控:可以对整个系统的请求进行监控，记录详细的请求响应日志，可以实时统计出当前系统的访问量以及监控状态。<br>3.认证鉴权:对每一个访问的请求做认证，拒绝非法请求，保护好后端的服务。<br>4.压力测试:压力测试是一项很重要的工作，像一些电商公司需要模拟更多真实的用户并发量来保证重大活动时系统的稳定。通过 Zuul 可以动态地将请求转发到后端服务的集群中，还可以识别测试流量和真实流量，从而做一些特殊处理。<br>5.灰度发布:灰度发布可以保证整体系统的稳定，在初始灰度的时候就可以发现、调整问题，以保证其影响度。 </p>
+<p>在微服务架构中，通常会有多个服务提供者。设想一个电商系统，可能会有商品、订单、支付、用户等多个类型的服务，而每个类型的服务数量也会随着整个系统体量的增大也会随之增长和变更。作为UI端，在展示页面时可能需要从多个微服务中聚合数据，<br>而且服务的划分位置结构可能会有所改变。网关就可以对外暴露聚合API，屏蔽内部微服务的微小变动，保持整个系统的稳定性。</p>
+<p>实战演练：<br>1.manven先导入包<br><dependency><br>    <groupId>org.springframework.cloud</groupId><br>    <artifactId>spring-cloud-starter-netflix-zuul</artifactId><br></dependency><br>2.配置文件<br>spring.application.name=zuul-demo<br>server.port=2103<br>zuul.routes.biancheng.path=/biancheng/**<br>zuul.routes.biancheng.url=<a href="http://c.biancheng.net" target="_blank" rel="noopener">http://c.biancheng.net</a><br>3.启动类代码<br>    @EnableZuulProxy<br>    @SpringBootApplication<br>    public class App {<br>        public static void main(String[] args) {<br>            SpringApplication.run(App.class, args);<br>        }<br>    }<br>这只是一个简单的路由转发。</p>
+<p>那么Zuul路由的配置又是什么呢？<br>默认规则举例：<br>    API 网关地址：<a href="http://localhost:2103。" target="_blank" rel="noopener">http://localhost:2103。</a><br>    用户服务名称：user-service。<br>    用户登录接口：/user/login。<br>那么通过 Zuul 访问登录接口的规则就是 <a href="http://localhost：2103/user-service/user/login。" target="_blank" rel="noopener">http://localhost：2103/user-service/user/login。</a></p>
+<p>我们可以为每一个服务都配置一个路由转发规则：</p>
+<p>zuul.routes.fsh-house.path=/api-house/**<br>上述代码将 fsh-house 服务的路由地址配置成了 api-house，也就是当需要访问 fsh-house 中的接口时，我们可以通过 api-house/house/hello 来进行。这其实就是将服务名称变成了我们自定义的名称。<br>/**代表可以转发任意层级的URL。</p>
+<p>有的时候我们会想在 API 前面配置一个统一的前缀zuul.prefix=/rest，本地路由可以通过 forward 就可以实现。 </p>
+<p>Zuul最关键的也是最核心的部分便是过滤器<br>Zuul 中的过滤器跟我们之前使用的 javax.servlet.Filter 不一样，javax.servlet.Filter 只有一种类型，可以通过配置 urlPatterns 来拦截对应的请求。</p>
+<p>而 Zuul 中的过滤器总共有 4 种类型，且每种类型都有对应的使用场景。<br>pre：可以在请求被路由之前调用。适用于身份认证的场景，认证通过后再继续执行下面的流程。<br>route：在路由请求时被调用。适用于灰度发布场景，在将要路由的时候可以做一些自定义的逻辑。<br>post：在route 和error 过滤器之后被调用。这种过滤器将请求路由到达具体的服务之后执行。适用于需要添加响应头，记录响应日志等应用场景。<br>error：处理请求时发生错误时被调用。在执行过程中发送错误时会进入 error 过滤器，可以用来统一记录错误信息。</p>
+<p>过滤器实现方式：<br>继承父类ZuulFilter。在父类中提供了4个抽象方法，分别是：filterType, filterOrder, shouldFilter, run。其功能分别是：<br>filterType：方法返回字符串数据，代表当前过滤器的类型。可选值有-pre, route, post, error。<br>filterOrder：返回int数据，用于为同filterType的多个过滤器定制执行顺序，返回值越小，执行顺序越优先。<br>shouldFilter：返回boolean数据，代表当前filter是否生效。<br>run：具体的过滤执行逻辑。如pre类型的过滤器，可以通过对请求的验证来决定是否将请求路由到服务上；如post类型的过滤器，可以对服务响应结果做加工处理（如为每个响应增加footer数据）。</p>
+<p>如果我们要禁用过滤器的时候可以配置：zuul.IpFilter.pre.disable=true，并且Zuul整合了Hystrix,同样可以添加回退功能<br>补充：Zuul网关不是必要的。是推荐使用的。使用Zuul，一般在微服务数量较多（多于10个）的时候推荐使用，对服务的管理有严格要求的时候推荐使用，当微服务权限要求严格的时候推荐使用。</p>
+<p>总结:Zuul起到了服务网关的作用，为微服务架构提供了前门保护的作用，同时将权限控制这些较重的非业务逻辑内容迁移到服务路由层面，使得服务集群主体能够具备更高的可复用性和可测试性。<br>通俗讲就是，路由拦截请求进行转发,隐藏服务端层面，给用户和开发人员更好的体验。</p>
 
       
     </div>
@@ -272,7 +336,7 @@
         <p><span>本文标题:</span><a href="/2020/09/17/Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81/">Sping Cloud生态的各个组件！</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">HF</a></p>
         <p><span>发布时间:</span>2020-09-17, 09:44:57</p>
-        <p><span>最后更新:</span>2020-09-17, 17:08:30</p>
+        <p><span>最后更新:</span>2020-09-26, 10:17:10</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2020/09/17/Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81/" title="Sping Cloud生态的各个组件！">http://yoursite.com/2020/09/17/Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/09/17/Sping-Cloud%E7%94%9F%E6%80%81%E7%9A%84%E5%90%84%E4%B8%AA%E7%BB%84%E4%BB%B6%EF%BC%81/　　作者: HF" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -302,7 +366,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#先大致了解一下什么是Spring-Cloud"><span class="toc-number">1.</span> <span class="toc-text">先大致了解一下什么是Spring Cloud?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spirng-Cloud的服务发现框架——Eureka"><span class="toc-number">1.1.</span> <span class="toc-text">Spirng Cloud的服务发现框架——Eureka</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#先大致了解一下什么是Spring-Cloud"><span class="toc-number">1.</span> <span class="toc-text">先大致了解一下什么是Spring Cloud?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spirng-Cloud的服务发现框架——Eureka"><span class="toc-number">1.1.</span> <span class="toc-text">Spirng Cloud的服务发现框架——Eureka</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hystrix原理与实战-自我理解"><span class="toc-number">1.2.</span> <span class="toc-text">Hystrix原理与实战+自我理解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#微服务之Ribbon原理-自我理解"><span class="toc-number">1.3.</span> <span class="toc-text">微服务之Ribbon原理+自我理解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-Cloud-Zuul网关的理解及使用"><span class="toc-number">1.4.</span> <span class="toc-text">Spring Cloud Zuul网关的理解及使用</span></a></li></ol></li></ol>
         
     </div>
     <style>
